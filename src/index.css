@@ -1,0 +1,130 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Light Theme - Clean and Minimal like Unlox */
+    --background: 0 0% 100%;
+    --foreground: 220 15% 20%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 15% 20%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 15% 20%;
+
+    /* Vibrant Blue Primary */
+    --primary: 217 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 217 100% 45%;
+
+    /* Light Gray Secondary */
+    --secondary: 210 20% 96%;
+    --secondary-foreground: 220 15% 20%;
+
+    --muted: 210 20% 96%;
+    --muted-foreground: 220 10% 50%;
+
+    /* Subtle Accent */
+    --accent: 210 20% 94%;
+    --accent-foreground: 220 15% 20%;
+
+    --destructive: 0 85% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 15% 90%;
+    --input: 220 15% 90%;
+    --ring: 217 100% 50%;
+
+    --radius: 0.75rem;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(217 100% 50%), hsl(200 100% 55%));
+    --gradient-hero: linear-gradient(180deg, hsl(0 0% 100%), hsl(210 20% 98%));
+    
+    /* Shadows */
+    --shadow-sm: 0 2px 8px hsl(217 100% 50% / 0.08);
+    --shadow-md: 0 4px 16px hsl(217 100% 50% / 0.12);
+    --shadow-lg: 0 8px 32px hsl(217 100% 50% / 0.16);
+  }
+
+  .dark {
+    /* Dark Theme - Deep Navy with Cyan Accents */
+    --background: 220 40% 8%;
+    --foreground: 210 30% 96%;
+
+    --card: 220 35% 12%;
+    --card-foreground: 210 30% 96%;
+
+    --popover: 220 35% 12%;
+    --popover-foreground: 210 30% 96%;
+
+    /* Bright Cyan/Neon Blue Primary for Dark Mode */
+    --primary: 190 100% 55%;
+    --primary-foreground: 220 40% 8%;
+    --primary-hover: 190 100% 50%;
+
+    /* Dark Navy Secondary */
+    --secondary: 220 30% 15%;
+    --secondary-foreground: 210 30% 96%;
+
+    --muted: 220 30% 15%;
+    --muted-foreground: 210 15% 65%;
+
+    --accent: 220 30% 18%;
+    --accent-foreground: 210 30% 96%;
+
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 25% 20%;
+    --input: 220 25% 20%;
+    --ring: 190 100% 55%;
+
+    /* Dark Mode Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(190 100% 55%), hsl(217 100% 60%));
+    --gradient-hero: linear-gradient(180deg, hsl(220 40% 8%), hsl(220 35% 12%));
+    
+    /* Dark Mode Shadows */
+    --shadow-sm: 0 2px 8px hsl(0 0% 0% / 0.3);
+    --shadow-md: 0 4px 16px hsl(0 0% 0% / 0.4);
+    --shadow-lg: 0 8px 32px hsl(0 0% 0% / 0.5);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: 'cv11', 'ss01';
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hover-lift {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
+  }
+
+  .smooth-transition {
+    @apply transition-all duration-300 ease-in-out;
+  }
+}
