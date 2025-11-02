@@ -1,4 +1,4 @@
-import { Navigation } from "@/components/Navigation";
+import { Navigation } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,7 +37,7 @@ const Contact = () => {
   return (
     <div className="flex min-h-screen flex-col">
       <Navigation />
-      
+
       <main className="flex-1 pt-16">
         {/* Hero Section */}
         <section className="bg-gradient-to-b from-accent/20 to-background py-20">

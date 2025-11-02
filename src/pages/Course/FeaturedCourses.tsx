@@ -7,111 +7,80 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 const FeaturedCourses = () => {
-
-
-
-
-  const courses = [
-    {
-      title: "Complete Web Development Bootcamp",
-      description: "Master modern web development from scratch to advanced level",
-      instructor: "Dr. Sarah Johnson",
-      rating: 4.8,
-      students: 15420,
-      duration: "48 hours",
-      level: "Beginner",
-      category: "Development",
-      image: "/placeholder.svg",
-    },
-    {
-      title: "UI/UX Design Mastery",
-      description: "Learn to create beautiful and intuitive user interfaces",
-      instructor: "Mike Chen",
-      rating: 4.9,
-      students: 12300,
-      duration: "36 hours",
-      level: "Intermediate",
-      category: "Design",
-      image: "/placeholder.svg",
-    },
-    {
-      title: "Digital Marketing Pro",
-      description: "Grow your business with strategic digital marketing",
-      instructor: "Emily Rodriguez",
-      rating: 4.7,
-      students: 18500,
-      duration: "24 hours",
-      level: "Beginner",
-      category: "Marketing",
-      image: "/placeholder.svg",
-    },
-    {
-      title: "Data Science Fundamentals",
-      description: "Analyze data and build machine learning models",
-      instructor: "Prof. David Kim",
-      rating: 4.9,
-      students: 14200,
-      duration: "60 hours",
-      level: "Advanced",
-      category: "Data Science",
-      image: "/placeholder.svg",
-    },
-    {
-      title: "Mobile App Development",
-      description: "Build native iOS and Android applications",
-      instructor: "Lisa Anderson",
-      rating: 4.6,
-      students: 10800,
-      duration: "42 hours",
-      level: "Intermediate",
-      category: "Development",
-      image: "/placeholder.svg",
-    },
-    {
-      title: "Cloud Computing Essentials",
-      description: "Deploy and manage applications in the cloud",
-      instructor: "James Wilson",
-      rating: 4.8,
-      students: 13400,
-      duration: "32 hours",
-      level: "Intermediate",
-      category: "Cloud",
-      image: "/placeholder.svg",
-    },
-  ];
   const { toast } = useToast();
   const { user } = useAppSelector((state) => state.auth);
-  // const [courses, setCourses] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [courses, setCourses] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // const fetchCourses = async () => {
-  //   try {
-  //     setIsLoading(true);
-  //     const res = await courseService.getAllCourses();
-  //     const coursesData = res.data || [];
+  // Function to infer category from title (fallback)
+  const inferCategory = (title: string): string => {
+    const titleLower = title.toLowerCase();
+    if (titleLower.includes('web') || titleLower.includes('mern') || titleLower.includes('react') || titleLower.includes('node')) {
+      return 'Development';
+    } else if (titleLower.includes('ds') || titleLower.includes('data structure')) {
+      return 'Data Science';
+    } else if (titleLower.includes('java')) {
+      return 'Development';
+    }
+    return 'General';
+  };
 
-  //     // Sort by newest (createdAt)
-  //     const sortedCourses = coursesData
-  //       .sort((a: any, b: any) => 
-  //         new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
-  //       )
-  //       .slice(0, 6); // Only 6 featured
+  // Function to infer level from title (fallback)
+  const inferLevel = (title: string): string => {
+    const titleLower = title.toLowerCase();
+    if (titleLower.includes('full stack') || titleLower.includes('advanced')) {
+      return 'Intermediate';
+    } else if (titleLower.includes('beginner') || titleLower.includes('fundamentals')) {
+      return 'Beginner';
+    }
+    return 'All Levels';
+  };
 
-  //     setCourses(sortedCourses);
-  //   } catch (error: any) {
-  //     toast({
-  //       title: "Error",
-  //       description: "Failed to load featured courses. Please try again.",
-  //       variant: "destructive",
-  //     });
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
+  const fetchCourses = async () => {
+    try {
+      setIsLoading(true);
+      const res = await courseService.getAllCourses();
+      const coursesData = res.data || [];
 
-  // useEffect(() => {
-  //   fetchCourses();
-  // }, []);
+      // Transform API data to match CourseCard props
+      const transformedCourses = coursesData.map((course: any) => ({
+        id: course._id,
+        title: course.courseName,
+        description: course.courseDescription || course.whatYouWillLearn || "Explore this comprehensive course to master essential skills and advance your career.",
+        instructor: course.instructor?.fullNamme || "Unknown Instructor",
+        rating: course.ratingAndReviews?.length > 0 
+          ? course.ratingAndReviews.reduce((acc: number, review: any) => acc + (review.rating || 0), 0) / course.ratingAndReviews.length 
+          : 4.5,
+        students: course.studentsEnrolled?.length || 0,
+        duration: course.duration || "Varies",
+        level: inferLevel(course.courseName) || "All Levels",
+        category: course.category?.name || inferCategory(course.courseName) || "General",
+        image: course.thumbnail,
+        price: course.price || "Free",
+      }));
+
+      // Sort by newest (createdAt)
+      const sortedCourses = transformedCourses
+        .sort((a: any, b: any) => 
+          new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
+        )
+        .slice(0, 6); // Only 6 featured
+
+      setCourses(sortedCourses);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: "Failed to load featured courses. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCourses();
+  }, []);
 
   // Loading State
   if (isLoading) {
@@ -151,7 +120,7 @@ const FeaturedCourses = () => {
         {/* Course Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {courses.map((course: any) => (
-            <CourseCard key={course._id} {...course} />
+            <CourseCard key={course.id} {...course} />
           ))}
         </div>
 

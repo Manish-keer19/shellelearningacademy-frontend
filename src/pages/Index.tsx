@@ -1,41 +1,15 @@
-import { Navigation } from "@/components/Navigation";
+import { Navigation } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { CourseCard } from "@/components/CourseCard";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { ArrowRight, BookOpen, Users, Award, Zap } from "lucide-react";
 import FeaturedCourses from "./Course/FeaturedCourses";
+import certificate1 from "@/assets/certificate1.png";
+import certificate2 from "@/assets/certificate2.png";
 
 const Index = () => {
-  const courses = [
-    {
-      title: "Web Development Bootcamp",
-      description: "Master modern web development with React, Node.js, and more. Build real-world projects.",
-      duration: "12 weeks",
-      students: 2340,
-      rating: 4.9,
-      image: "/placeholder-course.jpg",
-      category: "Development",
-    },
-    {
-      title: "UI/UX Design Mastery",
-      description: "Learn to create stunning user interfaces and exceptional user experiences.",
-      duration: "8 weeks",
-      students: 1820,
-      rating: 4.8,
-      image: "/placeholder-course.jpg",
-      category: "Design",
-    },
-    {
-      title: "Digital Marketing Pro",
-      description: "Become a digital marketing expert. SEO, social media, content strategy & more.",
-      duration: "10 weeks",
-      students: 3150,
-      rating: 4.7,
-      image: "/placeholder-course.jpg",
-      category: "Marketing",
-    },
-  ];
 
   const features = [
     {
@@ -63,7 +37,7 @@ const Index = () => {
   return (
     <div className="flex min-h-screen flex-col">
       <Navigation />
-      
+
       <main className="flex-1">
         <Hero />
 
@@ -72,10 +46,17 @@ const Index = () => {
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-16 text-center">
               <h2 className="mb-4 font-display text-3xl font-bold sm:text-4xl">
-                Why Choose Shell Entertainment?
+                Why Choose Shell E-Learning Academy?
+
               </h2>
               <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-                We provide everything you need to succeed in your learning journey
+                At Shell E-Learning Academy, we don’t just teach — we help you build your career.
+
+                •Practical, project-based learning
+                •Live sessions with industry experts
+                •Dual certification programs
+                •Job & internship assistance
+                •Affordable, high-value learning
               </p>
             </div>
 
@@ -96,7 +77,55 @@ const Index = () => {
           </div>
         </section>
 
-      <FeaturedCourses/>
+        <FeaturedCourses />
+
+        {/* Certification Section */}
+        <section className="py-20 bg-gradient-to-b from-background to-secondary/10">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <Award className="w-16 h-16 text-primary mx-auto mb-4" />
+              <h2 className="mb-4 font-display text-3xl font-bold sm:text-4xl">
+                Earn Industry-Recognized Certificates
+              </h2>
+              <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
+                Complete our courses and receive professional certificates that validate your skills and boost your career prospects.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+              <Card className="p-6 hover-lift smooth-transition">
+                <img 
+                  src={certificate1} 
+                  alt="Professional Certificate" 
+                  className="w-full rounded-lg mb-4 shadow-md"
+                />
+                <h3 className="text-xl font-semibold mb-2">Professional Certificate</h3>
+                <p className="text-muted-foreground text-sm">
+                  Awarded upon successful completion of our comprehensive courses with practical projects.
+                </p>
+              </Card>
+              
+              <Card className="p-6 hover-lift smooth-transition">
+                <img 
+                  src={certificate2} 
+                  alt="Achievement Certificate" 
+                  className="w-full rounded-lg mb-4 shadow-md"
+                />
+                <h3 className="text-xl font-semibold mb-2">Achievement Certificate</h3>
+                <p className="text-muted-foreground text-sm">
+                  Recognition for outstanding performance and mastery of advanced skills in your chosen field.
+                </p>
+              </Card>
+            </div>
+
+            <div className="text-center mt-12">
+              <Button size="lg" className="gap-2">
+                View Sample Certificate
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        </section>
 
         {/* CTA Section */}
         <section className="border-y border-border bg-gradient-to-br from-primary/5 via-background to-primary/10 py-20">

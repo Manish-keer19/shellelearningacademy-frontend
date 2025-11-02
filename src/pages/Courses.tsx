@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Navigation } from "@/components/Navigation";
+import { Navigation } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { CourseCard } from "@/components/CourseCard";
 import { Button } from "@/components/ui/button";
@@ -22,14 +22,14 @@ const Courses = () => {
         const data = res?.data || [];
         setCourses(Array.isArray(data) ? data : []);
       } catch (error: any) {
-        toast({ title: "Failed to load courses", description: error?.response?.data?.message || "" , variant: "destructive"});
+        toast({ title: "Failed to load courses", description: error?.response?.data?.message || "", variant: "destructive" });
       }
       try {
         const catRes = await courseService.getAllCategories();
         const catData = catRes?.data || [];
         const names = ["All", ...catData.map((c: any) => c?.name).filter(Boolean)];
         setCategories(names);
-      } catch (_) {}
+      } catch (_) { }
     };
     fetchData();
   }, [toast]);
@@ -46,7 +46,7 @@ const Courses = () => {
   return (
     <div className="flex min-h-screen flex-col">
       <Navigation />
-      
+
       <main className="flex-1 pt-16">
         {/* Header Section */}
         <section className="border-b border-border bg-gradient-to-b from-accent/20 to-background py-16">
@@ -58,7 +58,7 @@ const Courses = () => {
               <p className="mb-8 text-lg text-muted-foreground">
                 Choose from hundreds of courses taught by industry experts. Start learning today.
               </p>
-              
+
               {/* Search Bar */}
               <div className="flex gap-2">
                 <div className="relative flex-1">

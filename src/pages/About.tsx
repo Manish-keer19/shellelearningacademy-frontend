@@ -1,4 +1,4 @@
-import { Navigation } from "@/components/Navigation";
+import { Navigation } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Target, Users, Award, Zap } from "lucide-react";
@@ -8,22 +8,22 @@ const About = () => {
     {
       icon: Target,
       title: "Our Mission",
-      description: "To make quality education accessible to everyone, everywhere, at any time.",
+      description: "To make industry-ready education accessible to everyone, everywhere, at any time.",
     },
     {
       icon: Users,
       title: "Community First",
-      description: "Building a global community of learners who support and inspire each other.",
+      description: "We're building a global community of learners and professionals who support, inspire, and grow together.",
     },
     {
       icon: Award,
-      title: "Excellence",
-      description: "Committed to delivering the highest quality educational content and experiences.",
+      title: "Excellence in Learning",
+      description: "We're committed to delivering top-quality, practical, and future-focused education through expert trainers and structured learning paths.",
     },
     {
       icon: Zap,
-      title: "Innovation",
-      description: "Continuously evolving our platform with the latest learning technologies.",
+      title: "Innovation & Growth",
+      description: "We constantly upgrade our teaching methods and course content to ensure our learners stay ahead of industry trends.",
     },
   ];
 
@@ -37,18 +37,18 @@ const About = () => {
   return (
     <div className="flex min-h-screen flex-col">
       <Navigation />
-      
+
       <main className="flex-1 pt-16">
         {/* Hero Section */}
         <section className="bg-gradient-to-b from-accent/20 to-background py-20">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-3xl text-center">
               <h1 className="mb-6 font-display text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-                About <span className="text-gradient">Shell Entertainment</span>
+                About <span className="text-gradient">Shell E-Learning Academy</span>
               </h1>
               <p className="text-lg text-muted-foreground sm:text-xl">
-                We're on a mission to transform education and make learning accessible, 
-                engaging, and effective for everyone around the world.
+                At Shell E-Learning Academy, we're on a mission to make career-focused education accessible, engaging, and affordable for learners across the globe.
+                We believe learning should not just give knowledge — it should build skills, confidence, and real opportunities for growth.
               </p>
             </div>
           </div>
@@ -61,18 +61,47 @@ const About = () => {
               <h2 className="mb-6 font-display text-3xl font-bold">Our Story</h2>
               <div className="space-y-4 text-lg text-muted-foreground">
                 <p>
-                  Shell Entertainment was founded with a simple yet powerful belief: "Learning Made Easy". 
-                  We recognized that traditional education wasn't meeting the needs of modern learners who 
-                  demand flexibility, quality, and practical skills.
+                  Shell E-Learning Academy was founded with a simple yet powerful vision — "Empowering learners through practical and industry-driven education."
                 </p>
                 <p>
-                  Today, we're proud to serve over 50,000 students worldwide, offering cutting-edge courses 
-                  taught by industry experts. Our platform combines the best of technology and pedagogy to 
+                  Today, we're proud to serve over 50,000 students worldwide, offering cutting-edge courses
+                  taught by industry experts. Our platform combines the best of technology and pedagogy to
                   deliver an unparalleled learning experience.
                 </p>
                 <p>
-                  From web development to digital marketing, from design to data science, we offer courses 
+                  From web development to digital marketing, from design to data science, we offer courses
                   that help you build real-world skills and advance your career.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Founders Section */}
+        <section className="py-20">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="mb-16 text-center">
+              <h2 className="mb-4 font-display text-3xl font-bold sm:text-4xl">
+                Our Founders
+              </h2>
+            </div>
+
+            <div className="grid gap-8 md:grid-cols-2 max-w-4xl mx-auto">
+              <div className="rounded-xl border border-border bg-card p-8 text-center hover-lift">
+                <h3 className="mb-2 font-display text-xl font-bold">Kartik Gupta</h3>
+                <p className="mb-4 text-primary font-medium">Founder & Director</p>
+                <p className="text-muted-foreground">
+                  A visionary entrepreneur with a mission to transform education through innovation and digital learning. 
+                  Kartik believes in creating opportunities that empower learners to achieve personal and professional success.
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-border bg-card p-8 text-center hover-lift">
+                <h3 className="mb-2 font-display text-xl font-bold">Mayank Jain</h3>
+                <p className="mb-4 text-primary font-medium">Associate Founder</p>
+                <p className="text-muted-foreground">
+                  A creative mind and strategic thinker who focuses on building meaningful learning experiences. 
+                  Mayank ensures that every course at Shell E-Learning Academy aligns with industry demand and student goals.
                 </p>
               </div>
             </div>

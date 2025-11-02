@@ -1,4 +1,4 @@
-import { Navigation } from "@/components/Navigation";
+import { Navigation } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { CourseCard } from "@/components/CourseCard";
 
@@ -42,7 +42,7 @@ const CoursesList = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary/10">
       <Navigation />
-      
+
       <main className="container mx-auto px-4 pt-32 pb-20">
         <h1 className="text-4xl md:text-5xl font-bold mb-12 text-gradient">
           Featured Courses

@@ -1,4 +1,4 @@
-import { Navigation } from "@/components/Navigation";
+import { Navigation } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -47,7 +47,7 @@ const Services = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary/10">
       <Navigation />
-      
+
       <main className="container mx-auto px-4 pt-32 pb-20">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-20">
@@ -62,8 +62,8 @@ const Services = () => {
         {/* Services Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
           {services.map((service, index) => (
-            <Card 
-              key={index} 
+            <Card
+              key={index}
               className="p-8 hover-lift smooth-transition bg-card/50 backdrop-blur-sm border-primary/10 group"
             >
               <div className="mb-6 text-primary group-hover:scale-110 smooth-transition">

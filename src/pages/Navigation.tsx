@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { Navigation as NavComponent } from "@/components/Navigation";
+import { Navigation as NavComponent } from "@/components/Navbar";
 
 const Navigation = () => {
   const navigate = useNavigate();
@@ -54,7 +54,7 @@ const Navigation = () => {
             Quick access to all pages in the application
           </p>
         </div>
-        
+
         <div className="space-y-12">
           {routeCategories.map((category) => (
             <div key={category.title} className="">
