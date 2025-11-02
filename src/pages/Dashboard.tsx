@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { BookOpen, Award, Clock, TrendingUp, GraduationCap, Play, LogOut, Settings, Users, CheckCircle, Search, Loader2 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import toast from "react-hot-toast";
 import { useAppSelector } from "@/hooks/redux";
 import { courseService } from "@/service/course.service";
 import { studentService } from '@/service/student.service';
@@ -16,7 +16,6 @@ import CourseSearch from "./Course/CourseSearch";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
   const { user, token } = useAppSelector((state) => state.auth);
   const [isLoadingStats, setIsLoadingStats] = useState(false);
   const [viewType, setViewType] = useState<'student' | 'admin'>('student');
@@ -154,11 +153,7 @@ const Dashboard = () => {
       
     } catch (error: any) {
       console.error('Error fetching student stats:', error);
-      toast({
-        title: "Error",
-        description: "Failed to fetch dashboard statistics",
-        variant: "destructive"
-      });
+      toast.error("Failed to fetch dashboard statistics");
     } finally {
       setIsLoadingStats(false);
     }
@@ -187,11 +182,7 @@ const Dashboard = () => {
       ]);
     } catch (error: any) {
       console.error('Error fetching admin stats:', error);
-      toast({
-        title: "Error",
-        description: "Failed to fetch dashboard statistics",
-        variant: "destructive"
-      });
+      toast.error("Failed to fetch dashboard statistics");
     } finally {
       setIsLoadingStats(false);
     }
@@ -326,10 +317,10 @@ const Dashboard = () => {
     if (viewType === 'admin') {
       return (
         <>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gradient">
+          <h1 className="text-2xl md:text-5xl font-bold mb-4 text-gradient">
             Welcome Back, {user?.firstName || 'Admin'}!
           </h1>
-          <p className="text-xl text-muted-foreground">
+          <p className="text-base sm:text-xl text-muted-foreground">
             Manage your courses, track student progress, and grow your platform
           </p>
         </>
@@ -581,7 +572,7 @@ const Dashboard = () => {
           <div className="flex items-center justify-center">
             <div className="text-center">
               <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
-              <p>Loading your dashboard...</p>
+              <p className="text-sm sm:text-base">Loading your dashboard...</p>
             </div>
           </div>
         </div>

@@ -1,5 +1,3 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -7,6 +5,8 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { Provider } from "react-redux";
 import { store } from "@/store";
 import AuthLoader from "@/components/AuthLoader";
+import ScrollToTop from "@/components/ScrollToTop";
+import { Toaster } from "react-hot-toast";
 import Index from "./pages/Index";
 import Courses from "./pages/Courses";
 import About from "./pages/About";
@@ -29,6 +29,14 @@ import EditCourse from "./pages/Course/EditCourse";
 import ManageCourses from "./pages/Course/ManageCourses";
 import Navigation from "./pages/Navigation";
 import NotFound from "./pages/NotFound";
+import { Certifications } from "./pages/Certifications";
+import { Interviews } from "./pages/Interviews";
+import { HelpCenter } from "./pages/HelpCenter";
+import { Community } from "./pages/Community";
+import { PrivacyPolicy } from "./pages/PrivacyPolicy";
+import { TermsOfService } from "./pages/TermsOfService";
+import { FAQ } from "./pages/FAQ";
+import { Careers } from "./pages/Careers";
 
 const queryClient = new QueryClient();
 
@@ -37,9 +45,19 @@ const App = () => (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="light">
         <TooltipProvider>
-          <Toaster />
-          <Sonner />
           <BrowserRouter>
+            <ScrollToTop />
+            <Toaster 
+              position="top-right"
+              toastOptions={{
+                duration: 3000,
+                style: {
+                  background: 'hsl(var(--background))',
+                  color: 'hsl(var(--foreground))',
+                  border: '1px solid hsl(var(--border))',
+                },
+              }}
+            />
             <AuthLoader>
           <Routes>
             <Route path="/" element={<Index />} />
@@ -66,6 +84,16 @@ const App = () => (
             <Route path="/edit-course/:courseId" element={<EditCourse />} />
             <Route path="/manage-courses" element={<ManageCourses />} />
             <Route path="/add-category" element={<CreateCategory />} />
+            
+            {/* New Feature Routes */}
+            <Route path="/certifications" element={<Certifications />} />
+            <Route path="/interviews" element={<Interviews />} />
+            <Route path="/help-center" element={<HelpCenter />} />
+            <Route path="/community" element={<Community />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/terms" element={<TermsOfService />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/careers" element={<Careers />} />
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

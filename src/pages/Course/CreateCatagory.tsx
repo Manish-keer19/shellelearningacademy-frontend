@@ -8,14 +8,13 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Tag, Send, Loader2 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import toast from "react-hot-toast";
 import { useAppSelector } from '@/hooks/redux';
 import { adminService } from '@/service/admin.service';
 import { useNavigate } from 'react-router-dom';
 
 const CreateCategory = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
   const { token } = useAppSelector((state) => state.auth);
 
   const [categoryData, setCategoryData] = useState({
@@ -54,11 +53,11 @@ const CreateCategory = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!categoryData.name.trim()) {
-      toast({ title: "Incomplete form", description: "Please fill required fields.", variant: "destructive" });
+      toast.error("Please fill required fields.");
       return;
     }
     if (!token) {
-      toast({ title: "Authentication Error", description: "Please login again", variant: "destructive" });
+      toast.error("Authentication Error. Please login again.");
       return;
     }
 
@@ -66,18 +65,11 @@ const CreateCategory = () => {
       setIsLoading(true);
       const res = await adminService.createCatagory(categoryData, token);
       
-      toast({
-        title: "Success",
-        description: res.message || "Category created successfully!"
-      });
+      toast.success(res.message || "Category created successfully!");
       setCategoryData({ name: '', description: '' });
       fetchCategories();
     } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.response?.data?.message || "Failed to create category",
-        variant: "destructive"
-      });
+      toast.error(error.response?.data?.message || "Failed to create category");
     } finally {
       setIsLoading(false);
     }

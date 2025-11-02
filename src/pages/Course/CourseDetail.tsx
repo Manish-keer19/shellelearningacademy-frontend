@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Play, Clock, Users, Award, Star, ArrowLeft, Loader2, CheckCircle, Lock } from "lucide-react";
 import { courseService } from "@/service/course.service";
-import { useToast } from "@/hooks/use-toast";
+import toast from "react-hot-toast";
 import { useAppSelector } from '@/hooks/redux';
 import CourseEnrollment from './CourseEnrollment';
 import CourseSignupForm from '../CourseSignupForm';
@@ -21,7 +21,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 const CourseDetail = () => {
   const { courseId } = useParams();
   const navigate = useNavigate();
-  const { toast } = useToast();
   const { token, user } = useAppSelector((state) => state.auth);
   
   const [course, setCourse] = useState<any | null>(null);
@@ -62,7 +61,7 @@ const CourseDetail = () => {
         }
       }
     } catch (error: any) {
-      toast({ title: "Failed to load course", description: error?.response?.data?.message || "Unable to fetch course details.", variant: "destructive" });
+      toast.error(error?.response?.data?.message || "Failed to load course. Unable to fetch course details.");
     } finally {
       setIsLoading(false);
     }
@@ -100,7 +99,7 @@ const CourseDetail = () => {
         <main className="container mx-auto px-4 pt-32 pb-20 flex items-center justify-center">
           <div className="text-center">
             <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
-            <p className="text-lg">Loading course details...</p>
+            <p className="text-sm sm:text-lg">Loading course details...</p>
           </div>
         </main>
         <Footer />
@@ -113,7 +112,7 @@ const CourseDetail = () => {
       <div className="min-h-screen bg-gradient-to-b from-background to-secondary/10">
         <Navigation />
         <main className="container mx-auto px-4 pt-32 pb-20 text-center">
-          <h1 className="text-2xl font-bold mb-4">Course not found</h1>
+          <h1 className="text-lg sm:text-2xl font-bold mb-4">Course not found</h1>
           <Button onClick={() => navigate('/all-courses')} variant="outline">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Courses
@@ -176,13 +175,13 @@ const CourseDetail = () => {
               <div className="flex flex-wrap gap-2 mb-4">
                 <Badge>{course?.category?.name || "Course"}</Badge>
               </div>
-              <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gradient">
+              <h1 className="text-2xl md:text-5xl font-bold mb-4 text-gradient">
                 {course?.courseName || "Course"}
               </h1>
-              <p className="text-xl text-muted-foreground mb-6">
+              <p className="text-base md:text-lg text-muted-foreground mb-6">
                 {course?.courseDescription || ""}
               </p>
-              <div className="flex flex-wrap items-center gap-6 text-sm">
+              <div className="flex flex-wrap items-center gap-6 text-xs sm:text-sm">
                 <div className="flex items-center gap-2">
                   <Star className="w-5 h-5 fill-primary text-primary" />
                   <span className="font-semibold">{averageRating}</span>
@@ -430,10 +429,7 @@ const CourseDetail = () => {
                   course={course}
                   isEnrolled={isEnrolled}
                   onEnrollmentSuccess={() => {
-                    toast({
-                      title: "🎉 Payment Successful!",
-                      description: "Welcome to the course! You can now start learning.",
-                    });
+                    toast.success("🎉 Payment Successful! Welcome to the course! You can now start learning.");
                     setIsEnrolled(true);
                     setProgress(0);
                     fetchCourseDetails();

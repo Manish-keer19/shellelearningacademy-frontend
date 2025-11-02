@@ -25,7 +25,7 @@ import {
   Users,
   Award
 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import toast from "react-hot-toast";
 import { courseService } from '@/service/course.service';
 import { useAppSelector } from '@/hooks/redux';
 import '../../styles/video-protection.css'
@@ -34,7 +34,6 @@ const ViewCourse = () => {
   const { id } = useParams();
   const courseId = id;
   const navigate = useNavigate();
-  const { toast } = useToast();
   const { token, user } = useAppSelector((state) => state.auth);
   const [searchParams, setSearchParams] = useSearchParams();
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -59,22 +58,14 @@ const ViewCourse = () => {
       
       // Check if user is enrolled
       if (!courseData.studentsEnrolled?.includes(user?._id)) {
-        toast({
-          title: "Access Denied",
-          description: "You need to enroll in this course to access the content",
-          variant: "destructive"
-        });
+        toast.error("Access Denied. You need to enroll in this course to access the content.");
         navigate(`/course-detail/${courseId}`);
         return;
       }
       
       // Verify course has content
       if (!courseData.courseContent || courseData.courseContent.length === 0) {
-        toast({
-          title: "No Content Available",
-          description: "This course doesn't have any content yet",
-          variant: "destructive"
-        });
+        toast.error("No Content Available. This course doesn't have any content yet.");
         navigate(`/course-detail/${courseId}`);
         return;
       }
@@ -114,11 +105,7 @@ const ViewCourse = () => {
       }
       
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to fetch course details",
-        variant: "destructive"
-      });
+      toast.error("Failed to fetch course details");
       navigate('/courses');
     } finally {
       setIsLoading(false);
@@ -138,10 +125,7 @@ const ViewCourse = () => {
       const newCompleted = completedLessons.length + 1;
       setProgress(totalLessons > 0 ? (newCompleted / totalLessons) * 100 : 0);
       
-      toast({
-        title: "Progress Updated",
-        description: "Lesson marked as complete!",
-      });
+      toast.success("Progress Updated! Lesson marked as complete!");
     } catch (error) {
       console.error('Error marking lesson complete:', error);
     }

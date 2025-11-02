@@ -6,11 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search } from "lucide-react";
 import { courseService } from "@/service/course.service";
-import { useToast } from "@/hooks/use-toast";
+import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 
 const AllCourses = () => {
-  const { toast } = useToast();
+
   const [courses, setCourses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -78,11 +78,7 @@ const AllCourses = () => {
 
       setCourses(sortedCourses);
     } catch (error: any) {
-      toast({
-        title: "Error",
-        description: "Failed to load courses. Please try again.",
-        variant: "destructive",
-      });
+      toast.error("Failed to load courses. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -107,7 +103,7 @@ const AllCourses = () => {
       <div className="min-h-screen bg-gradient-to-b from-background to-secondary/10">
         <Navigation />
         <main className="container mx-auto px-4 pt-32 pb-20 text-center">
-          <p className="text-lg text-muted-foreground">Loading courses...</p>
+          <p className="text-sm sm:text-lg text-muted-foreground">Loading courses...</p>
         </main>
         <Footer />
       </div>
@@ -120,7 +116,7 @@ const AllCourses = () => {
       <div className="min-h-screen bg-gradient-to-b from-background to-secondary/10">
         <Navigation />
         <main className="container mx-auto px-4 pt-32 pb-20 text-center">
-          <p className="text-lg text-muted-foreground">No courses match your filters. Try adjusting your search.</p>
+          <p className="text-sm sm:text-lg text-muted-foreground">No courses match your filters. Try adjusting your search.</p>
         </main>
         <Footer />
       </div>
@@ -133,10 +129,10 @@ const AllCourses = () => {
 
       <main className="container mx-auto px-4 pt-32 pb-20">
         <div className="mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gradient">
+          <h1 className="text-2xl md:text-5xl font-bold mb-4 text-gradient">
             All Courses
           </h1>
-          <p className="text-xl text-muted-foreground">
+          <p className="text-base sm:text-xl text-muted-foreground">
             Explore our complete course catalog
           </p>
         </div>

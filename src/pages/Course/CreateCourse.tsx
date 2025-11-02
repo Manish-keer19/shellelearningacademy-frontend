@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Plus, Trash2, X, Image, Tag, Video, FileText, Edit, Send, Upload, Loader2, CheckCircle, ArrowRight, ArrowLeft } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import toast from "react-hot-toast";
 
 import { courseService } from '@/service/course.service';
 import { useAppSelector } from '@/hooks/redux';
@@ -17,7 +17,6 @@ import { Navigation } from '@/components/Navbar';
 
 const CreateCourse = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
   const { token } = useAppSelector((state) => state.auth);
 
   const [currentStage, setCurrentStage] = useState(1);
@@ -129,7 +128,7 @@ const CreateCourse = () => {
   // Stage 1: Create Course
   const handleStage1Submit = async () => {
     if (!courseData.courseName || !courseData.price || courseData.tags.length === 0) {
-      toast({ title: "Incomplete form", description: "Please fill required fields.", variant: "destructive" });
+      toast.error("Please fill required fields: Course name, price, and at least one tag.");
       return;
     }
 
@@ -153,18 +152,11 @@ const CreateCourse = () => {
       const courseRes = await courseService.createCourse(formData, token);
       setCreatedCourseId(courseRes.data._id);
       
-      toast({
-        title: "Course Created Successfully!",
-        description: "Now let's add sections and lessons to your course."
-      });
+      toast.success("Course Created Successfully! Now let's add sections and lessons to your course.");
       
       setCurrentStage(2);
     } catch (error) {
-      toast({
-        title: "Error",
-        description: error.response?.data?.message || "Failed to create course",
-        variant: "destructive"
-      });
+      toast.error(error.response?.data?.message || "Failed to create course");
     } finally {
       setIsLoading(false);
     }
@@ -255,11 +247,7 @@ const CreateCourse = () => {
   const handleAddOrUpdate = useCallback((sectionIndex) => {
     const form = sectionForms[sectionIndex] || initialForm;
     if (!form.title.trim() || !form.videoFile) {
-      toast({
-        title: "Incomplete Lesson",
-        description: "Lesson title and video file are required.",
-        variant: "destructive"
-      });
+      toast.error("Lesson title and video file are required.");
       return;
     }
 
@@ -342,7 +330,7 @@ const CreateCourse = () => {
   // Stage 2: Create Sections and Subsections
   const handleStage2Submit = async () => {
     if (sections.length === 0) {
-      toast({ title: "No sections", description: "Please add at least one section.", variant: "destructive" });
+      toast.error("Please add at least one section.");
       return;
     }
 
@@ -380,18 +368,11 @@ const CreateCourse = () => {
         }
       }
       
-      toast({
-        title: "Sections & Lessons Created!",
-        description: "Now choose whether to publish or keep as draft."
-      });
+      toast.success("Sections & Lessons Created! Now choose whether to publish or keep as draft.");
       
       setCurrentStage(3);
     } catch (error) {
-      toast({
-        title: "Error",
-        description: error.response?.data?.message || "Failed to create sections",
-        variant: "destructive"
-      });
+      toast.error(error.response?.data?.message || "Failed to create sections");
     } finally {
       setIsLoading(false);
     }
@@ -402,11 +383,7 @@ const CreateCourse = () => {
     const totalLessons = sections.reduce((total, section) => total + section.subSections.length, 0);
     
     if (finalStatus === 'Published' && (sections.length === 0 || totalLessons === 0)) {
-      toast({
-        title: "Validation Error",
-        description: "To publish a course, you must add at least one section with at least one lesson.",
-        variant: "destructive"
-      });
+      toast.error("To publish a course, you must add at least one section with at least one lesson.");
       return;
     }
 
@@ -419,18 +396,11 @@ const CreateCourse = () => {
       
       await courseService.editCourse(formData, token);
       
-      toast({
-        title: "Course Complete!",
-        description: `Course has been ${finalStatus === 'Published' ? 'published' : 'saved as draft'} successfully.`
-      });
+      toast.success(`Course has been ${finalStatus === 'Published' ? 'published' : 'saved as draft'} successfully!`);
       
       navigate('/profile');
     } catch (error) {
-      toast({
-        title: "Error",
-        description: error.response?.data?.message || "Failed to update course status",
-        variant: "destructive"
-      });
+      toast.error(error.response?.data?.message || "Failed to update course status");
     } finally {
       setIsLoading(false);
     }
@@ -444,11 +414,7 @@ const CreateCourse = () => {
 
   const handlePublishClick = () => {
     if (sections.length === 0 || totalLessons === 0) {
-      toast({
-        title: "Cannot Publish",
-        description: "Add at least one section with lessons before publishing.",
-        variant: "destructive"
-      });
+      toast.error("Add at least one section with lessons before publishing.");
       return;
     }
     setFinalStatus('Published');

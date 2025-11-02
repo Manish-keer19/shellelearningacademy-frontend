@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { useDispatch } from "react-redux";
 import { authService } from "@/service/auth.service";
 import { loginStart, loginSuccess, loginFailure } from "@/store/authSlice";
-import { useToast } from "@/hooks/use-toast";
+import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
 import { Loader2 } from "lucide-react";
 import logo from "../assets/logo.png";
@@ -20,7 +20,6 @@ interface LoginForm {
 const Auth = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { toast } = useToast();
   
   const {
     register,
@@ -37,15 +36,11 @@ const Auth = () => {
       });
       const { token, user } = response;
       dispatch(loginSuccess({ token, user }));
-      toast({ title: "Signed in successfully" });
+      toast.success("Signed in successfully!");
       navigate("/");
     } catch (error: any) {
       dispatch(loginFailure());
-      toast({ 
-        title: "Login failed", 
-        description: error?.response?.data?.message || "Please check your credentials.", 
-        variant: "destructive" 
-      });
+      toast.error(error?.response?.data?.message || "Login failed. Please check your credentials.");
     }
   };
 

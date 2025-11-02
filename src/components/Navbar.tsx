@@ -12,17 +12,27 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useToast } from "@/hooks/use-toast";
+import toast from "react-hot-toast";
 import logo from "../assets/logo.png"
 
 export const Navigation = () => {
   const { theme, toggleTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useAppDispatch();
-  const { toast } = useToast();
   const { isAuthenticated, user, token } = useAppSelector((state) => state.auth);
 
   const isActive = (path: string) => {
@@ -32,11 +42,9 @@ export const Navigation = () => {
 
   const handleLogout = () => {
     dispatch(logout());
-    toast({
-      title: "Logged out successfully",
-      description: "See you soon!",
-    });
+    toast.success("Logged out successfully! See you soon!");
     navigate('/');
+    setShowLogoutDialog(false);
   };
 
   const navItems = [
@@ -45,7 +53,6 @@ export const Navigation = () => {
     { name: "Courses", path: "/all-courses" },
     { name: "About", path: "/about" },
     { name: "Contact", path: "/contact" },
-    
   ];
 
   const AuthButtons = () => {
@@ -99,7 +106,7 @@ export const Navigation = () => {
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout}>
+            <DropdownMenuItem onClick={() => setShowLogoutDialog(true)}>
               <LogOut className="mr-2 h-4 w-4" />
               Log out
             </DropdownMenuItem>
@@ -110,137 +117,212 @@ export const Navigation = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 smooth-transition hover:opacity-80 group">
-            <img loading="lazy" src={logo} alt="Logo" className="h-12 w-12 object-contain" />
-            <div className="flex flex-col">
-              <span className="font-display text-sm font-bold text-foreground group-hover:text-primary transition-colors">Shell E-learning academy</span>
-              <span className="text-xs text-muted-foreground font-body">MSME Verified</span>
-            </div>
-          </Link>
-    
-          {/* Desktop Navigation */}
-          <div className="hidden items-center gap-8 lg:flex">
-            {navItems.map((item) => (
-              <Link
-                key={item.name}
-                to={item.path}
-                className={`text-sm font-medium transition-all duration-300 ${
-                  isActive(item.path)
-                    ? "text-primary bg-secondary"
-                    : "text-foreground smooth-transition hover:text-primary"
-                }`}
-              >
-                {item.name}
-              </Link>
-            ))}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              className="smooth-transition ml-2"
-              aria-label="Toggle theme"
-            >
-              {theme === "light" ? (
-                <Moon className="h-5 w-5" />
-              ) : (
-                <Sun className="h-5 w-5" />
-              )}
-            </Button>
-            <AuthButtons />
-          </div>
-
-          {/* Mobile Menu Toggle */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="lg:hidden"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {mobileMenuOpen ? (
-              <X className="h-5 w-5" />
-            ) : (
-              <Menu className="h-5 w-5" />
-            )}
-          </Button>
-        </div>
-      </div>
-
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="border-t border-border bg-background lg:hidden animate-fade-in">
-          <div className="container mx-auto space-y-1 px-4 py-4">
-            {navItems.map((item) => (
-              <Link
-                key={item.name}
-                to={item.path}
-                className={`block rounded-lg px-4 py-3 text-base font-medium transition-all duration-300 ${
-                  isActive(item.path)
-                    ? "text-primary bg-secondary"
-                    : "text-foreground smooth-transition hover:bg-accent hover:text-primary"
-                }`}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {item.name}
-              </Link>
-            ))}
-            <Button
-              variant="ghost"
-              onClick={() => {
-                toggleTheme();
-                setMobileMenuOpen(false);
-              }}
-              className="w-full justify-start px-4 py-3"
-            >
-              {theme === 'light' ? <Moon className="w-4 h-4 mr-2" /> : <Sun className="w-4 h-4 mr-2" />}
-              {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
-            </Button>
-            {!token ? (
-              <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>
-                <Button variant="default" className="w-full bg-gradient-to-r from-primary to-accent hover:shadow-blue">
-                  Login
-                </Button>
-              </Link>
-            ) : (
-              <>
-                <Link to="/dashboard" onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="outline" className="w-full justify-start px-4 py-3">
-                    <User className="w-4 h-4 mr-2" />
-                    Dashboard
-                  </Button>
-                </Link>
-                <Link to="/profile" onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="outline" className="w-full justify-start px-4 py-3">
-                    <User className="w-4 h-4 mr-2" />
-                    Profile
-                  </Button>
-                </Link>
-                <Link to="/all-courses" onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="outline" className="w-full justify-start px-4 py-3">
-                    <BookOpen className="w-4 h-4 mr-2" />
-                    All Courses
-                  </Button>
-                </Link>
-                <Button
-                  variant="destructive"
-                  onClick={() => {
-                    handleLogout();
-                    setMobileMenuOpen(false);
-                  }}
-                  className="w-full justify-start px-4 py-3"
+    <>
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between">
+            {/* Logo */}
+            <Link to="/" className="flex items-center gap-1 sm:gap-2 smooth-transition hover:opacity-80 group">
+              <img loading="lazy" src={logo} alt="Logo" className="h-8 w-8 sm:h-12 sm:w-12 object-contain" />
+              <div className="flex flex-col">
+                <span className="font-display text-xs sm:text-sm font-bold text-foreground group-hover:text-primary transition-colors">Shell E-learning academy</span>
+                <span className="text-xs text-muted-foreground font-body hidden sm:block">MSME Verified</span>
+              </div>
+            </Link>
+      
+            {/* Desktop Navigation */}
+            <div className="hidden items-center gap-8 lg:flex">
+              {navItems.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.path}
+                  className={`text-sm font-medium transition-all duration-300 ${
+                    isActive(item.path)
+                      ? "text-primary bg-secondary"
+                      : "text-foreground smooth-transition hover:text-primary"
+                  }`}
                 >
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Logout
+                  {item.name}
+                </Link>
+              ))}
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={toggleTheme}
+                className="smooth-transition ml-2"
+                aria-label="Toggle theme"
+              >
+                {theme === "light" ? (
+                  <Moon className="h-5 w-5" />
+                ) : (
+                  <Sun className="h-5 w-5" />
+                )}
+              </Button>
+              <AuthButtons />
+            </div>
+
+            {/* Mobile Menu Toggle */}
+            <div className="lg:hidden flex items-center space-x-2">
+              {token ? (
+                <>
+                  <Button
+                    variant="ghost"
+                    className="relative h-8 w-8 rounded-full p-0"
+                    onClick={() => navigate('/profile')}
+                  >
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src={user?.image} alt={user?.firstName} />
+                      <AvatarFallback>
+                        {user?.firstName?.[0]}{user?.lastName?.[0]}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                  {location.pathname.includes('/course-learning') && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setShowLogoutDialog(true)}
+                      aria-label="Logout"
+                    >
+                      <LogOut className="h-4 w-4" />
+                    </Button>
+                  )}
+                  {!location.pathname.includes('/course-learning') && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                      aria-label="Toggle menu"
+                    >
+                      {mobileMenuOpen ? (
+                        <X className="h-5 w-5" />
+                      ) : (
+                        <Menu className="h-5 w-5" />
+                      )}
+                    </Button>
+                  )}
+                </>
+              ) : (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  aria-label="Toggle menu"
+                >
+                  {mobileMenuOpen ? (
+                    <X className="h-5 w-5" />
+                  ) : (
+                    <Menu className="h-5 w-5" />
+                  )}
                 </Button>
-              </>
-            )}
+              )}
+            </div>
           </div>
         </div>
+      </nav>
+
+      {/* Mobile Menu Overlay for Better UX */}
+      {mobileMenuOpen && (
+        <>
+          {/* Backdrop Overlay */}
+          <div 
+            className="fixed inset-0 z-40 bg-black/50 lg:hidden animate-fade-in"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+          {/* Slide-in Menu from Top */}
+          <div className="fixed top-16 left-0 right-0 z-50 bg-background border-b border-border lg:hidden animate-slide-down">
+            <div className="container mx-auto px-4 py-4 space-y-2 max-h-[calc(100vh-4rem)] overflow-y-auto">
+              {/* Nav Items */}
+              {navItems.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.path}
+                  className={`block w-full rounded-xl px-4 py-4 text-base font-semibold transition-all duration-300 ease-in-out ${
+                    isActive(item.path)
+                      ? "text-primary bg-secondary/50 shadow-sm"
+                      : "text-foreground hover:bg-accent hover:text-primary"
+                  }`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {item.name}
+                </Link>
+              ))}
+              
+              {/* Theme Toggle */}
+              <Button
+                variant="ghost"
+                onClick={() => {
+                  toggleTheme();
+                  setMobileMenuOpen(false);
+                }}
+                className="w-full justify-start px-4 py-4 text-left rounded-xl transition-all duration-300 hover:bg-accent"
+              >
+                {theme === 'light' ? <Moon className="w-5 h-5 mr-3" /> : <Sun className="w-5 h-5 mr-3" />}
+                {theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+              </Button>
+
+              {/* Auth Section */}
+              {!token ? (
+                <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>
+                  <Button 
+                    variant="default" 
+                    className="w-full rounded-xl py-4 bg-gradient-to-r from-primary to-accent hover:shadow-lg hover:shadow-primary/25 text-base font-semibold"
+                  >
+                    Sign In
+                  </Button>
+                </Link>
+              ) : (
+                <>
+                  {/* User Profile Card */}
+                  <div className="bg-secondary/30 rounded-xl p-4 space-y-3">
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-10 w-10">
+                        <AvatarImage src={user?.image} alt={user?.firstName} />
+                        <AvatarFallback className="text-sm font-semibold">
+                          {user?.firstName?.[0]}{user?.lastName?.[0]}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col">
+                        <p className="font-semibold text-foreground">{user?.firstName} {user?.lastName}</p>
+                        <p className="text-xs text-muted-foreground">{user?.accountType}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Authenticated Actions */}
+                  <Button
+                    variant="destructive"
+                    onClick={() => {
+                      setShowLogoutDialog(true);
+                      setMobileMenuOpen(false);
+                    }}
+                    className="w-full justify-start px-4 py-4 text-left rounded-xl transition-all duration-300 hover:bg-destructive/90"
+                  >
+                    <LogOut className="w-5 h-5 mr-3 flex-shrink-0" />
+                    Log Out
+                  </Button>
+                </>
+              )}
+            </div>
+          </div>
+        </>
       )}
-    </nav>
+      
+      {/* Logout Confirmation Dialog */}
+      <AlertDialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure you want to logout?</AlertDialogTitle>
+            <AlertDialogDescription>
+              You will be signed out of your account and redirected to the home page.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleLogout}>Logout</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 };

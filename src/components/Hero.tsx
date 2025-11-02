@@ -119,17 +119,17 @@ export const Hero = () => {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"></span>
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-primary"></span>
               </span>
-              <span className="text-sm font-medium">Learning Reimagined For The Future</span>
+              <span className="text-xs sm:text-sm font-medium">Learning Reimagined For The Future</span>
             </div>
 
             {/* Main Heading */}
-            <h1 className="mb-6 font-display text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+            <h1 className="mb-6 font-display text-2xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
               Learn The Future {" "}
               <span className="text-gradient">TODAY</span>
             </h1>
 
             {/* Description */}
-            <p className="mb-10 text-lg text-muted-foreground sm:text-xl">
+            <p className="mb-10 text-sm text-muted-foreground sm:text-xl">
               Shell e-learning academy is built on the core belief: "Learning Made Easy." Dive into our dynamic programs, connect with awesome mentors, and transform your education journey TODAY.
             </p>
 
@@ -148,16 +148,16 @@ export const Hero = () => {
             {/* Stats */}
             <div className="grid grid-cols-3 gap-8">
               <div>
-                <div className="mb-1 font-display text-3xl font-bold text-primary">10K+</div>
-                <div className="text-sm text-muted-foreground">Active Students</div>
+                <div className="mb-1 font-display text-xl sm:text-3xl font-bold text-primary">10K+</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Active Students</div>
               </div>
               <div>
-                <div className="mb-1 font-display text-3xl font-bold text-primary">500+</div>
-                <div className="text-sm text-muted-foreground">Expert Mentors</div>
+                <div className="mb-1 font-display text-xl sm:text-3xl font-bold text-primary">500+</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Expert Mentors</div>
               </div>
               <div>
-                <div className="mb-1 font-display text-3xl font-bold text-primary">95%</div>
-                <div className="text-sm text-muted-foreground">Success Rate</div>
+                <div className="mb-1 font-display text-xl sm:text-3xl font-bold text-primary">95%</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Success Rate</div>
               </div>
             </div>
           </div>

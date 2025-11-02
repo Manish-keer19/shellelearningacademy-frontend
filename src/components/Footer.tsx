@@ -1,57 +1,85 @@
 import { Link } from "react-router-dom";
-import { Facebook, Twitter, Instagram, Linkedin, Youtube } from "lucide-react";
+import { Facebook, Twitter, Instagram, Linkedin, Youtube, Mail, Phone, MapPin, ExternalLink } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import logo from "../assets/logo.png";
 
 export const Footer = () => {
   const footerLinks = {
     Company: [
       { name: "About Us", path: "/about" },
-      { name: "Careers", path: "/careers" },
-      { name: "Press", path: "/press" },
-      { name: "Blog", path: "/blog" },
+      { name: "Services", path: "/services" },
+      { name: "contact", path: "/contact" },
+     
     ],
     Programs: [
-      { name: "Courses", path: "/courses" },
+      { name: "All Courses", path: "/all-courses" },
+      { name: "Certifications", path: "/certifications" },
+      { name: "Interviews", path: "/interviews" },
       { name: "Workshops", path: "/workshops" },
       { name: "Internships", path: "/internships" },
-      { name: "Certifications", path: "/certifications" },
     ],
     Support: [
-      { name: "Help Center", path: "/help" },
+      { name: "Help Center", path: "/help-center" },
       { name: "Contact Us", path: "/contact" },
-      { name: "FAQ", path: "/faq" },
       { name: "Community", path: "/community" },
+      { name: "FAQ", path: "/faq" },
+      { name: "Student Support", path: "/student-support" },
     ],
     Legal: [
       { name: "Privacy Policy", path: "/privacy" },
       { name: "Terms of Service", path: "/terms" },
       { name: "Cookie Policy", path: "/cookies" },
+      { name: "Refund Policy", path: "/refund-policy" },
       { name: "Licenses", path: "/licenses" },
     ],
   };
 
   const socialLinks = [
-    { icon: Facebook, href: "#", label: "Facebook" },
-    { icon: Twitter, href: "#", label: "Twitter" },
-    { icon: Instagram, href: "#", label: "Instagram" },
-    { icon: Linkedin, href: "#", label: "LinkedIn" },
-    { icon: Youtube, href: "#", label: "YouTube" },
+    { icon: Facebook, href: "https://facebook.com/shellelearning", label: "Facebook" },
+    { icon: Twitter, href: "https://twitter.com/shellelearning", label: "Twitter" },
+    { icon: Instagram, href: "https://instagram.com/shellelearning", label: "Instagram" },
+    { icon: Linkedin, href: "https://linkedin.com/company/shell-elearning", label: "LinkedIn" },
+    { icon: Youtube, href: "https://youtube.com/@shellelearning", label: "YouTube" },
+  ];
+
+  const contactInfo = [
+    { icon: Mail, text: "support@shellelearning.com", href: "mailto:support@shellelearning.com" },
+    { icon: Phone, text: "+1 (555) 123-4567", href: "tel:+15551234567" },
+    { icon: MapPin, text: "123 Learning Street, Education City", href: "#" },
   ];
 
   return (
     <footer className="border-t border-border bg-background">
       <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
         {/* Main Footer Content */}
-        <div className="grid gap-8 lg:grid-cols-5">
+        <div className="grid gap-8 lg:grid-cols-6">
           {/* Brand Section */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-2">
             <Link to="/" className="mb-4 flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-                <span className="text-xl font-bold text-primary-foreground">S</span>
+              <img src={logo} alt="Shell E-learning Academy" className="h-10 w-10 object-contain" />
+              <div className="flex flex-col">
+                <span className="font-bold text-foreground">Shell E-learning Academy</span>
+                <span className="text-xs text-muted-foreground">MSME Verified</span>
               </div>
             </Link>
             <p className="mb-4 text-sm text-muted-foreground">
-              Empowering learners worldwide with quality education and innovative programs.
+              Empowering learners worldwide with quality education, certifications, and career opportunities.
             </p>
+            
+            {/* Contact Info */}
+            <div className="mb-4 space-y-2">
+              {contactInfo.map((contact, index) => (
+                <a
+                  key={index}
+                  href={contact.href}
+                  className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  <contact.icon className="h-4 w-4" />
+                  {contact.text}
+                </a>
+              ))}
+            </div>
+            
             {/* Social Links */}
             <div className="flex gap-3">
               {socialLinks.map((social) => (
@@ -89,15 +117,48 @@ export const Footer = () => {
           ))}
         </div>
 
+        {/* Newsletter Section */}
+        <div className="mt-8 rounded-lg border border-border bg-muted/30 p-6">
+          <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+            <div>
+              <h3 className="font-semibold text-foreground">Stay Updated</h3>
+              <p className="text-sm text-muted-foreground">Get the latest courses and updates delivered to your inbox</p>
+            </div>
+            <div className="flex gap-2">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+              <Button size="sm" className="bg-primary hover:bg-primary/90">
+                Subscribe
+              </Button>
+            </div>
+          </div>
+        </div>
+
         {/* Bottom Bar */}
         <div className="mt-12 border-t border-border pt-8">
           <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-            <p className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} Shell Entertainment. All rights reserved.
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Made with ❤️ for learners worldwide
-            </p>
+            <div className="flex flex-col items-center gap-2 sm:flex-row sm:gap-4">
+              <p className="text-sm text-muted-foreground">
+                © {new Date().getFullYear()} Shell E-learning Academy. All rights reserved.
+              </p>
+              <div className="flex gap-4">
+                <Link to="/sitemap" className="text-xs text-muted-foreground hover:text-primary">
+                  Sitemap
+                </Link>
+                <Link to="/accessibility" className="text-xs text-muted-foreground hover:text-primary">
+                  Accessibility
+                </Link>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <p className="text-sm text-muted-foreground">
+                Made with ❤️ for learners worldwide
+              </p>
+              <ExternalLink className="h-3 w-3 text-muted-foreground" />
+            </div>
           </div>
         </div>
       </div>

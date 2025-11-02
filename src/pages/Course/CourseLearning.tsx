@@ -16,7 +16,8 @@ import {
   Circle,
   Clock,
   Loader2,
-  Volume2
+  Volume2,
+  Maximize2
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { courseService } from '@/service/course.service';
@@ -172,6 +173,25 @@ const CourseLearning = () => {
     }
   };
 
+  const toggleFullscreen = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    
+    if (!document.fullscreenElement) {
+      // Enter fullscreen (try video first, fallback to document)
+      if (video.requestFullscreen) {
+        video.requestFullscreen();
+      } else if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen();
+      }
+    } else {
+      // Exit fullscreen
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  };
+
   // Navigation handlers
   const goToPreviousLesson = () => {
     if (!currentSection || !currentLesson) return;
@@ -296,7 +316,7 @@ const CourseLearning = () => {
           <div className="flex items-center justify-center py-8 sm:py-16">
             <div className="text-center">
               <Loader2 className="w-6 h-6 sm:w-8 sm:h-8 animate-spin mx-auto mb-4" />
-              <p className="text-base sm:text-lg">Loading course...</p>
+              <p className="text-sm sm:text-lg">Loading course...</p>
             </div>
           </div>
         </main>
@@ -311,7 +331,7 @@ const CourseLearning = () => {
         <Navigation />
         <main className="container mx-auto px-2 sm:px-4 pt-8 sm:pt-32 pb-20">
           <div className="text-center py-8">
-            <h1 className="text-xl sm:text-2xl font-bold mb-4">Course not accessible</h1>
+            <h1 className="text-lg sm:text-2xl font-bold mb-4">Course not accessible</h1>
             <Button onClick={() => navigate('/all-courses')} variant="outline" className="w-full sm:w-auto max-w-xs mx-auto">
               <ChevronLeft className="w-4 h-4 mr-2" />
               Back to Courses
@@ -324,13 +344,13 @@ const CourseLearning = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background mt-[10vh] md:mt-0 ">
       <Navigation />
 
       <main className="container mx-auto px-2 sm:px-4 pt-8 sm:pt-32 pb-8 sm:pb-20">
-        <div className="w-full space-y-4 lg:space-y-6">
+        <div className="w-full space-y-4 lg:space-y-6 mt-4">
           {/* Video Player */}
-          <div className="w-full">
+          <div className="w-full mt-2">
             <div className="aspect-video relative bg-black rounded-lg overflow-hidden video-container mx-auto w-full max-w-full" 
                  onContextMenu={handleContextMenu}
                  onDragStart={handleDragStart}
@@ -344,7 +364,8 @@ const CourseLearning = () => {
                 ref={videoRef}
                 className="w-full h-full"
                 controls
-                controlsList="nodownload nofullscreen noremoteplayback"
+                controlsList="nodownload noremoteplayback"
+                playsInline
                 disablePictureInPicture
                 disableRemotePlayback
                 onContextMenu={handleContextMenu}
@@ -381,6 +402,16 @@ const CourseLearning = () => {
                   </button>
                 ))}
               </div>
+
+              {/* Custom fullscreen button */}
+              <button
+                onClick={toggleFullscreen}
+                className="absolute bottom-12 sm:bottom-16 right-20 sm:right-24 bg-black/70 hover:bg-black/80 rounded-full p-2 text-white transition-all flex items-center justify-center w-10 h-10 z-20"
+                title="Toggle Fullscreen"
+                aria-label="Toggle Fullscreen"
+              >
+                <Maximize2 className="w-4 h-4 sm:w-5 sm:h-5" />
+              </button>
             </div>
           </div>
           
@@ -389,7 +420,7 @@ const CourseLearning = () => {
             <div className="lg:col-span-2 order-1">
               <Card className="p-4 sm:p-6">
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4 gap-2 sm:gap-0">
-                  <h2 className="text-xl sm:text-2xl font-bold flex-1">{currentLesson.title}</h2>
+                  <h2 className="text-lg sm:text-2xl font-bold flex-1">{currentLesson.title}</h2>
                   <div className="flex gap-1 sm:gap-2 w-full sm:w-auto justify-start sm:justify-end mt-2 sm:mt-0">
                     <Button
                       variant="outline"
@@ -412,7 +443,7 @@ const CourseLearning = () => {
                   </div>
                 </div>
                 
-                <p className="text-sm sm:text-base text-muted-foreground mb-4 line-clamp-3 sm:line-clamp-4 lg:line-clamp-none">
+                <p className="text-xs sm:text-base text-muted-foreground mb-4 line-clamp-3 sm:line-clamp-4 lg:line-clamp-none">
                   {currentLesson.description}
                 </p>
                 
@@ -440,7 +471,7 @@ const CourseLearning = () => {
 
             {/* Sidebar - Progress and Content */}
             <div className="lg:col-span-1 order-2 lg:order-1">
-              <Card className="p-4 sm:p-6 h-fit sticky top-4 lg:top-0">
+              <Card className="p-4 sm:p-6 h-fit sticky top-20 lg:top-4">
                 <div className="mb-4 sm:mb-6">
                   <div className="flex justify-between text-xs sm:text-sm mb-2">
                     <span>Course Progress</span>

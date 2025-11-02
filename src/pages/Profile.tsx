@@ -119,8 +119,8 @@ const Profile = () => {
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <CardTitle className="text-2xl">{user.fullNamme}</CardTitle>
-                  <CardDescription className="text-lg">{user.email}</CardDescription>
+                  <CardTitle className="text-lg sm:text-2xl">{user.fullNamme}</CardTitle>
+                  <CardDescription className="text-sm sm:text-lg">{user.email}</CardDescription>
                   <Badge variant={isAdmin ? "default" : "secondary"} className="mt-2">
                     {user.accountType}
                   </Badge>
@@ -132,7 +132,7 @@ const Profile = () => {
 
         {/* Quick Actions */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold mb-6">Quick Actions</h2>
+          <h2 className="text-lg sm:text-2xl font-bold mb-6">Quick Actions</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <Card className="bg-card/80 backdrop-blur-lg border-border hover:shadow-lg transition-shadow cursor-pointer"
                   onClick={() => navigate('/dashboard')}>
@@ -207,7 +207,7 @@ const Profile = () => {
 
         {/* My Courses */}
         <div>
-          <h2 className="text-2xl font-bold mb-6">{isAdmin ? 'Created Courses' : 'My Courses'}</h2>
+          <h2 className="text-lg sm:text-2xl font-bold mb-6">{isAdmin ? 'Created Courses' : 'My Courses'}</h2>
           {isLoading ? (
             <div className="flex justify-center py-8">
               <Loader2 className="w-6 h-6 animate-spin" />
@@ -261,8 +261,8 @@ const Profile = () => {
             <Card className="bg-card/80 backdrop-blur-lg border-border">
               <CardContent className="text-center py-12">
                 <BookOpen className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
-                <h3 className="text-xl font-semibold mb-2">{isAdmin ? 'No Courses Created' : 'No Courses Yet'}</h3>
-                <p className="text-muted-foreground mb-4">
+                <h3 className="text-lg sm:text-xl font-semibold mb-2">{isAdmin ? 'No Courses Created' : 'No Courses Yet'}</h3>
+                <p className="text-sm sm:text-base text-muted-foreground mb-4">
                   {isAdmin 
                     ? 'Create your first course to get started!'
                     : "You haven't enrolled in any courses yet. Browse our catalog to get started!"
