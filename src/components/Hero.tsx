@@ -28,8 +28,8 @@ export const Hero = () => {
 
           {/* Main Heading */}
           <h1 className="mb-6 font-display text-5xl font-bold leading-tight tracking-tight sm:text-6xl lg:text-7xl">
-            Learning Made{" "}
-            <span className="text-gradient">Easy</span>
+            Learn The Future {" "}
+            <span className="text-gradient">TODAY</span>
           </h1>
 
           {/* Description */}
