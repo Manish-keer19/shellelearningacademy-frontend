@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import toast from "react-hot-toast";
-import logo from "../assets/logo1.png"
+import logo from "../assets/logo2.png"
 
 export const Navigation = () => {
   const { theme, toggleTheme } = useTheme();
@@ -123,9 +123,9 @@ export const Navigation = () => {
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-1 sm:gap-2 smooth-transition hover:opacity-80 group">
-              <img loading="lazy" src={logo} alt="Logo" className="h-16 w-16 sm:h-40 sm:w-40 object-cover "/>
+              <img loading="lazy" src={logo} alt="Logo" className="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-16 lg:w-16 object-cover"/>
               <div className="flex flex-col">
-                <span className="font-display text-xs sm:text-sm font-bold group-hover:text-primary transition-colors" style={{color: '#38871E'}}>Shell E-learning academy</span>
+                <span className="font-display text-xs sm:text-sm md:text-base font-bold group-hover:text-primary transition-colors" style={{color: '#38871E'}}>Shell E-learning academy</span>
                 <span className="text-xs font-body hidden sm:block" style={{color: '#38871E'}}>MSME Verified</span>
               </div>
             </Link>

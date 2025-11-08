@@ -167,7 +167,7 @@ const CourseDetail = () => {
 
       <main className="container mx-auto px-4 pt-32 pb-20">
         <Button 
-          onClick={() => navigate('/courses')} 
+          onClick={() => navigate('/all-courses')} 
           variant="ghost" 
           className="mb-6"
         >
