@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   CheckCircle,
   CreditCard,
@@ -13,7 +14,8 @@ import {
   Award,
   Loader2,
   Tag,
-  X
+  X,
+  Search
 } from "lucide-react";
 import useCustomToast from '@/hooks/use-custom-toast';
 import { useAppSelector, useAppDispatch } from '@/hooks/redux';
@@ -23,10 +25,11 @@ import { paymentService } from '@/service/payment.service';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import toast from 'react-hot-toast';
 import { Label } from "@/components/ui/label";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useToast } from "@/components/ui/use-toast";
 import { authService } from "@/service/auth.service";
 import { loginSuccess } from '@/store/authSlice';
+import { INDIAN_STATES, BATCHES } from '@/constants/states';
 
 interface CourseEnrollmentProps {
   course: any;
@@ -437,14 +440,25 @@ const CourseEnrollment: React.FC<CourseEnrollmentProps> = ({
 // Personal info form component for course enrollment
 const EnrollmentSignupForm = ({ courseName, onSuccess }: { courseName?: string, onSuccess: () => void }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [stateSearch, setStateSearch] = useState("");
+  const [batchSearch, setBatchSearch] = useState("");
   const { toast } = useToast();
   const dispatch = useAppDispatch();
 
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm();
+
+  const filteredStates = INDIAN_STATES.filter(state =>
+    state.toLowerCase().includes(stateSearch.toLowerCase())
+  );
+
+  const filteredBatches = BATCHES.filter(batch =>
+    batch.toLowerCase().includes(batchSearch.toLowerCase())
+  );
 
   const handleSignup = async (data: any) => {
     try {
@@ -542,13 +556,37 @@ const EnrollmentSignupForm = ({ courseName, onSuccess }: { courseName?: string, 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           <div className="space-y-1.5 sm:space-y-2">
             <Label htmlFor="batch" className="text-sm font-medium">Batch <span className="text-red-500">*</span></Label>
-            <Input
-              id="batch"
-              placeholder="Enter your batch"
-              {...register("batch", {
-                required: "Batch is required"
-              })}
-              className={`h-10 sm:h-11 ${errors.batch ? "border-red-500" : ""}`}
+            <Controller
+              name="batch"
+              control={control}
+              rules={{ required: "Batch is required" }}
+              render={({ field }) => (
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <SelectTrigger className={`h-10 sm:h-11 ${errors.batch ? "border-red-500" : ""}`}>
+                    <SelectValue placeholder="Select your batch" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <div className="p-2">
+                      <div className="relative">
+                        <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          placeholder="Search batches..."
+                          value={batchSearch}
+                          onChange={(e) => setBatchSearch(e.target.value)}
+                          className="pl-8 h-9"
+                        />
+                      </div>
+                    </div>
+                    <div className="max-h-48 overflow-y-auto">
+                      {filteredBatches.map((batch) => (
+                        <SelectItem key={batch} value={batch}>
+                          {batch}
+                        </SelectItem>
+                      ))}
+                    </div>
+                  </SelectContent>
+                </Select>
+              )}
             />
             {errors.batch && (
               <p className="text-xs sm:text-sm text-red-500">{errors.batch.message}</p>
@@ -557,13 +595,37 @@ const EnrollmentSignupForm = ({ courseName, onSuccess }: { courseName?: string, 
 
           <div className="space-y-1.5 sm:space-y-2">
             <Label htmlFor="state" className="text-sm font-medium">State <span className="text-red-500">*</span></Label>
-            <Input
-              id="state"
-              placeholder="Enter your state"
-              {...register("state", {
-                required: "State is required"
-              })}
-              className={`h-10 sm:h-11 ${errors.state ? "border-red-500" : ""}`}
+            <Controller
+              name="state"
+              control={control}
+              rules={{ required: "State is required" }}
+              render={({ field }) => (
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <SelectTrigger className={`h-10 sm:h-11 ${errors.state ? "border-red-500" : ""}`}>
+                    <SelectValue placeholder="Select your state" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <div className="p-2">
+                      <div className="relative">
+                        <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          placeholder="Search states..."
+                          value={stateSearch}
+                          onChange={(e) => setStateSearch(e.target.value)}
+                          className="pl-8 h-9"
+                        />
+                      </div>
+                    </div>
+                    <div className="max-h-48 overflow-y-auto">
+                      {filteredStates.map((state) => (
+                        <SelectItem key={state} value={state}>
+                          {state}
+                        </SelectItem>
+                      ))}
+                    </div>
+                  </SelectContent>
+                </Select>
+              )}
             />
             {errors.state && (
               <p className="text-xs sm:text-sm text-red-500">{errors.state.message}</p>

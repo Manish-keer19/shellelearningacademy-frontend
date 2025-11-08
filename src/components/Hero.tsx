@@ -91,7 +91,7 @@
 
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Link, Play } from "lucide-react";
-import logo from "@/assets/logo1.png";
+import logo from "@/assets/logo2.png";
 
 export const Hero = () => {
   return (
@@ -110,12 +110,17 @@ export const Hero = () => {
       <div className="container relative mx-auto px-4 py-8 md:py-12 lg:py-24 xl:py-32">
         <div className="grid lg:grid-cols-2 gap-6 md:gap-8 lg:gap-12 items-center">
           {/* Right Side - Logo (top on mobile) */}
-          <div className="order-1 lg:order-2 flex justify-center lg:justify-end mb-4 md:mb-6 lg:mb-0">
+          <div className="order-1 lg:order-2 flex items-center justify-center lg:justify-end mb-4 md:mb-6 lg:mb-0 gap-4">
             <img 
               src={logo} 
-              alt="Shell E-learning Academy Logo" 
-              className="w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 xl:w-[500px] xl:h-[500px] object-contain rounded-md"
+              alt="SHELL E-learning Academy Logo" 
+              className="hidden md:block w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 object-contain"
+              loading="lazy"
             />
+            <div className="text-center lg:text-left hidden md:block">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary mb-2 ">SHELL</h2>
+              <p className="text-lg md:text-xl text-muted-foreground font-medium">E-Learning Platform</p>
+            </div>
           </div>
 
           {/* Left Side - Content (bottom on mobile) */}
