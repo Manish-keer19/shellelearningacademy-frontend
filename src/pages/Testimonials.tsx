@@ -3,14 +3,14 @@ import { Navigation } from "@/components/Navbar";
 import { Star, MessageCircle } from "lucide-react";
 
 // Assuming these images are correctly resolved by your bundler/Webpack/Vite setup
-import img1 from "../assets/students/1.jpg"
-import img2 from "../assets/students/2.jpg"
-import img3 from "../assets/students/3.jpg"
-import img4 from "../assets/students/4.jpg"
-import img5 from "../assets/students/5.jpg"
-import img6 from "../assets/students/6.jpg"
-import img7 from "../assets/students/7.jpg"
-import img8 from "../assets/students/8.jpg"
+import img1 from "../assets/new_student/1.jpg"
+import img2 from "../assets/new_student/2.jpg"
+import img3 from "../assets/new_student/3.jpg"
+import img4 from "../assets/new_student/4.jpg"
+import img5 from "../assets/new_student/5.jpg"
+// import img6 from "../assets/new_student/6.jpg"
+// import img7 from "../assets/new_student/7.jpg"
+// import img8 from "../assets/new_student/8.jpg"
 import dummy from "../assets/students/dummy.png"
 
 
@@ -49,38 +49,38 @@ const Testimonials = () => {
             rating: 5,
             avatar: img4,
         },
-        {
-            id: 5,
-            name: "Manish Tiwari",
-            role: "Mastering SEO & SEM",
-            quote: "Earlier I struggled to rank websites. After learning from Shell E-Learning Academy, I ranked 3 local business sites on Google’s first page. Their step-by-step teaching style is the best!",
-            rating: 5,
-            avatar: img5,
-        },
+        // {
+        //     id: 5,
+        //     name: "Manish Tiwari",
+        //     role: "Mastering SEO & SEM",
+        //     quote: "Earlier I struggled to rank websites. After learning from Shell E-Learning Academy, I ranked 3 local business sites on Google’s first page. Their step-by-step teaching style is the best!",
+        //     rating: 5,
+        //     avatar: img5,
+        // },
         {
             id: 6,
             name: "Sneha Patel",
             role: "Prompt Engineering Masterclass",
             quote: "I never knew how powerful AI tools could be until I joined this program. The Prompt Engineering Masterclass was a game-changer — now I create content for 5 brands using ChatGPT and Midjourney.",
             rating: 5,
-            avatar: img6 || dummy,
+            avatar: img5 || dummy,
         },
-        {
-            id: 7,
-            name: "Megha Rathi",
-            role: "Cloud Computing (AWS, Azure, Google Cloud)",
-            quote: "The Cloud Computing course gave me the clarity I needed to switch from IT support to cloud architecture. The live AWS demos and mentor guidance were top-notch. Highly recommend for career shifters.",
-            rating: 5,
-            avatar: img7 || dummy,
-        },
-        {
-            id: 8,
-            name: "Ravi Kumar",
-            role: "Full Stack Development",
-            quote: "The dedicated support and deep-dive sessions on MERN stack were invaluable. I moved from basic HTML/CSS to launching my own SaaS product in just 6 months, thanks to the structured curriculum.",
-            rating: 4,
-            avatar: img8 || dummy,
-        },
+        // {
+        //     id: 7,
+        //     name: "Megha Rathi",
+        //     role: "Cloud Computing (AWS, Azure, Google Cloud)",
+        //     quote: "The Cloud Computing course gave me the clarity I needed to switch from IT support to cloud architecture. The live AWS demos and mentor guidance were top-notch. Highly recommend for career shifters.",
+        //     rating: 5,
+        //     avatar: img5|| dummy,
+        // },
+        // {
+        //     id: 8,
+        //     name: "Ravi Kumar",
+        //     role: "Full Stack Development",
+        //     quote: "The dedicated support and deep-dive sessions on MERN stack were invaluable. I moved from basic HTML/CSS to launching my own SaaS product in just 6 months, thanks to the structured curriculum.",
+        //     rating: 4,
+        //     avatar: img5 || dummy,
+        // },
     ];
 
     // Sub-component for a single testimonial card

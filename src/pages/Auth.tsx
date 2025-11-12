@@ -156,7 +156,7 @@ const Auth = () => {
                 {/* Registration Link */}
                 <p className="mt-6 text-center text-sm text-muted-foreground">
                     Don't have an account?{" "}
-                    <Link to="/auth/register" className="font-semibold text-primary hover:text-primary/80 transition-colors underline">
+                    <Link to="/sign-up" className="font-semibold text-primary hover:text-primary/80 transition-colors underline">
                         Sign up here
                     </Link>
                 </p>

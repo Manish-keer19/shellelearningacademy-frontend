@@ -38,6 +38,7 @@ import { TermsOfService } from "./pages/TermsOfService";
 import { FAQ } from "./pages/FAQ";
 import { Careers } from "./pages/Careers";
 import Demo from "./pages/Demo";
+import Register from "./pages/Register";
 
 
 const queryClient = new QueryClient();
@@ -69,7 +70,7 @@ const App = () => (
             <Route path="/contact" element={<Contact />} />
             <Route path="/services" element={<Services />} />
             <Route path="/auth" element={<Auth />} />
-            <Route path="/sign-up" element={<CourseSignupForm />} />
+            <Route path="/sign-up" element={<Register />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/certificate/:courseId" element={<Certificate />} />

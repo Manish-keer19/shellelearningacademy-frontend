@@ -73,14 +73,7 @@ export const Navigation = () => {
     const UserAuthSection = () => {
         return (
             <div className="flex items-center gap-2">
-                {/* Theme Toggle Button (Desktop) */}
-                <Button variant="ghost" size="icon" className="h-9 w-9" onClick={toggleTheme} aria-label="Toggle theme">
-                    {theme === 'light' ? (
-                        <Moon className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 text-gray-700" />
-                    ) : (
-                        <Sun className="h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 text-yellow-500" />
-                    )}
-                </Button>
+        
 
                 {isAuthenticated ? (
                     // Authenticated Dropdown
@@ -192,16 +185,7 @@ export const Navigation = () => {
 
                         {/* Mobile/Tablet Controls */}
                         <div className="flex items-center gap-2 xl:hidden">
-                            
-                            {/* Theme Toggle (Mobile) */}
-                             <Button variant="ghost" size="icon" className="h-9 w-9" onClick={toggleTheme} aria-label="Toggle theme">
-                                {theme === 'light' ? (
-                                    <Moon className="h-5 w-5 text-gray-700" />
-                                ) : (
-                                    <Sun className="h-5 w-5 text-yellow-500" />
-                                )}
-                            </Button>
-
+                        
                             {/* User Avatar (Mobile - if logged in) */}
                             {token && (
                                 <Button
