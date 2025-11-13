@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useParams, useNavigate, useSearchParams } from "react-router-dom";
 // NOTE: Adjust the paths below to match your project's component structure
 import { Navigation } from "@/components/Navbar"; 
 import { Footer } from "@/components/Footer";
@@ -26,46 +26,9 @@ import { paymentService } from '@/service/payment.service';
 import { authService } from "@/service/auth.service";
 import toast from "react-hot-toast";
 import { useForm, Controller } from "react-hook-form";
-// MOCK useToast - replace with your actual component import if using Shadcn
-const useToast = () => ({ toast: (options: any) => toast[options.variant === 'destructive' ? 'error' : 'success'](options.description) }); 
-// END MOCK
+import { useSelector } from "react-redux";
 
-// MOCK REDUX HOOKS AND CONSTANTS (REPLACE WITH YOUR ACTUAL IMPORTS)
-// This mock simulates an unauthenticated user initially, and provides data for prefill later.
-const MOCK_INITIAL_STATE = { auth: { token: null, user: null } }; // Initial unauthenticated state
-const MOCK_AUTH_USER_DATA = { auth: { token: 'mock-token-123', user: { id: 'user-456', firstName: 'Test', lastName: 'User', email: 'test@example.com', additionalDetails: { contactNumber: '9876543210' } } } }; // State after successful signup/login
 
-const useAppSelector = (selector: (state: any) => any) => {
-    // NOTE: This is a complex mock. In a real app, this would be Redux or Context.
-    // We check for the presence of a 'token' in localStorage/sessionStorage to mock login persistence
-    const mockToken = localStorage.getItem('mockAuthToken');
-    const state = mockToken ? MOCK_AUTH_USER_DATA : MOCK_INITIAL_STATE;
-    return selector(state);
-};
-const useAppDispatch = () => (action: any) => {
-    console.log('Dispatching:', action.type);
-    if (action.type === 'auth/loginSuccess') {
-        localStorage.setItem('mockAuthToken', action.payload.token); // Mock persisting login
-    }
-};
-const loginSuccess = (payload: any) => ({ type: 'auth/loginSuccess', payload });
-
-// MOCK CONSTANTS (REPLACE WITH YOUR ACTUAL IMPORTS)
-const INDIAN_STATES = [
-    "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat", 
-    "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", 
-    "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", 
-    "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", 
-    "Uttarakhand", "West Bengal", "Andaman and Nicobar Islands", "Chandigarh", 
-    "Dadra and Nagar Haveli and Daman and Diu", "Delhi", "Jammu and Kashmir", "Ladakh", 
-    "Lakshadweep", "Puducherry"
-].sort();
-const BATCHES = [
-    "January 2025", "February 2025", "March 2025", "April 2025", "May 2025", "June 2025",
-    "July 2025", "August 2025", "September 2025", "October 2025", "November 2025", "December 2025",
-    "January 2026", "February 2026", "March 2026", "April 2026", "May 2026", "June 2026"
-].sort();
-// ====================================================================
 
 declare global {
     interface Window {
@@ -73,291 +36,7 @@ declare global {
     }
 }
 
-// ====================================================================
-// 1. Enrollment Signup Form Component (The requested Form)
-// ====================================================================
 
-interface EnrollmentFormFields {
-    fullName: string;
-    email: string;
-    password: string;
-    accountType: string;
-    contactNumber: string;
-    contactNo: string;
-    batch: string;
-    state: string;
-    college: string;
-}
-
-const EnrollmentSignupForm = ({ courseName, onSuccess }: { courseName?: string, onSuccess: () => void }) => {
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [stateSearch, setStateSearch] = useState("");
-    const [batchSearch, setBatchSearch] = useState("");
-    const { toast: hookToast } = useToast();
-    const dispatch = useAppDispatch();
-
-    const {
-        register,
-        handleSubmit,
-        control,
-        formState: { errors },
-    } = useForm<EnrollmentFormFields>();
-
-    const filteredStates = INDIAN_STATES.filter(state =>
-        state.toLowerCase().includes(stateSearch.toLowerCase())
-    );
-
-    const filteredBatches = BATCHES.filter(batch =>
-        batch.toLowerCase().includes(batchSearch.toLowerCase())
-    );
-
-    const handleSignup = async (data: EnrollmentFormFields) => {
-        try {
-            setIsSubmitting(true);
-            
-            // API call for signup/registration using all required fields
-            const response = await authService.signup({
-                fullName: data.fullName,
-                email: data.email,
-                password: data.password,
-                accountType: "Student",
-                contactNumber: data.contactNo,
-                contactNo: data.contactNo,
-                batch: data.batch,
-                state: data.state,
-                college: data.college
-            });
-
-            if (response.token && response.user) {
-                // Log the user in upon successful registration
-                dispatch(loginSuccess({ token: response.token, user: response.user }));
-                hookToast({
-                    title: "Details Saved!",
-                    description: "You're all set! Proceeding to secure payment.",
-                    duration: 3000
-                });
-                onSuccess(); // Closes modal and triggers payment
-            } else {
-                 // The mock service should return an error if details are bad, etc.
-                 throw new Error("Registration failed or user data missing in response.");
-            }
-        } catch (error: any) {
-            hookToast({
-                title: "Detail Submission Failed",
-                description: error?.response?.data?.message || "Please check your details and try again.",
-                variant: "destructive"
-            });
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
-
-    return (
-        <div className="space-y-4 sm:space-y-6 px-1">
-            <form onSubmit={handleSubmit(handleSignup)} className="space-y-4 sm:space-y-5">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                    {/* Full Name */}
-                    <div className="space-y-1.5 sm:space-y-2">
-                        <Label htmlFor="fullName" className="text-sm font-medium">Full Name <span className="text-red-500">*</span></Label>
-                        <Input
-                            id="fullName"
-                            placeholder="Your full name"
-                            {...register("fullName", {
-                                required: "Full name is required",
-                                minLength: { value: 2, message: "Name must be at least 2 characters" }
-                            })}
-                            className={`h-10 sm:h-11 ${errors.fullName ? "border-red-500" : ""}`}
-                        />
-                        {errors.fullName && (
-                            <p className="text-xs sm:text-sm text-red-500">{errors.fullName.message}</p>
-                        )}
-                    </div>
-
-                    {/* Contact Number */}
-                    <div className="space-y-1.5 sm:space-y-2">
-                        <Label htmlFor="contactNo" className="text-sm font-medium">Contact Number <span className="text-red-500">*</span></Label>
-                        <Input
-                            id="contactNo"
-                            type="tel"
-                            placeholder="10-digit number"
-                            {...register("contactNo", {
-                                required: "Contact number is required",
-                                pattern: {
-                                    value: /^[0-9]{10}$/,
-                                    message: "Please enter a valid 10-digit contact number"
-                                }
-                            })}
-                            className={`h-10 sm:h-11 ${errors.contactNo ? "border-red-500" : ""}`}
-                        />
-                        {errors.contactNo && (
-                            <p className="text-xs sm:text-sm text-red-500">{errors.contactNo.message}</p>
-                        )}
-                    </div>
-                </div>
-
-                {/* Email Address */}
-                <div className="space-y-1.5 sm:space-y-2">
-                    <Label htmlFor="email" className="text-sm font-medium">Email Address <span className="text-red-500">*</span></Label>
-                    <Input
-                        id="email"
-                        type="email"
-                        placeholder="Your email address"
-                        {...register("email", {
-                            required: "Email is required",
-                            pattern: {
-                                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                message: "Invalid email address"
-                            }
-                        })}
-                        className={`h-10 sm:h-11 ${errors.email ? "border-red-500" : ""}`}
-                    />
-                    {errors.email && (
-                        <p className="text-xs sm:text-sm text-red-500">{errors.email.message}</p>
-                    )}
-                </div>
-
-                {/* Password */}
-                <div className="space-y-1.5 sm:space-y-2">
-                    <Label htmlFor="password" className="text-sm font-medium">Password <span className="text-red-500">*</span></Label>
-                    <Input
-                        id="password"
-                        type="password"
-                        placeholder="Create a password"
-                        {...register("password", {
-                            required: "Password is required",
-                            minLength: { value: 6, message: "Password must be at least 6 characters" }
-                        })}
-                        className={`h-10 sm:h-11 ${errors.password ? "border-red-500" : ""}`}
-                    />
-                    {errors.password && (
-                        <p className="text-xs sm:text-sm text-red-500">{errors.password.message}</p>
-                    )}
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                    {/* Batch Select */}
-                    <div className="space-y-1.5 sm:space-y-2">
-                        <Label htmlFor="batch" className="text-sm font-medium">Batch <span className="text-red-500">*</span></Label>
-                        <Controller
-                            name="batch"
-                            control={control}
-                            rules={{ required: "Batch is required" }}
-                            render={({ field }) => (
-                                <Select onValueChange={field.onChange} value={field.value}>
-                                    <SelectTrigger className={`h-10 sm:h-11 ${errors.batch ? "border-red-500" : ""}`}>
-                                        <SelectValue placeholder="Select your batch" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <div className="p-2">
-                                            <div className="relative">
-                                                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                                                <Input
-                                                    placeholder="Search batches..."
-                                                    value={batchSearch}
-                                                    onChange={(e) => setBatchSearch(e.target.value)}
-                                                    className="pl-8 h-9"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="max-h-48 overflow-y-auto">
-                                            {filteredBatches.map((batch) => (
-                                                <SelectItem key={batch} value={batch}>
-                                                    {batch}
-                                                </SelectItem>
-                                            ))}
-                                        </div>
-                                    </SelectContent>
-                                </Select>
-                            )}
-                        />
-                        {errors.batch && (
-                            <p className="text-xs sm:text-sm text-red-500">{errors.batch.message}</p>
-                        )}
-                    </div>
-
-                    {/* State Select */}
-                    <div className="space-y-1.5 sm:space-y-2">
-                        <Label htmlFor="state" className="text-sm font-medium">State <span className="text-red-500">*</span></Label>
-                        <Controller
-                            name="state"
-                            control={control}
-                            rules={{ required: "State is required" }}
-                            render={({ field }) => (
-                                <Select onValueChange={field.onChange} value={field.value}>
-                                    <SelectTrigger className={`h-10 sm:h-11 ${errors.state ? "border-red-500" : ""}`}>
-                                        <SelectValue placeholder="Select your state" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <div className="p-2">
-                                            <div className="relative">
-                                                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                                                <Input
-                                                    placeholder="Search states..."
-                                                    value={stateSearch}
-                                                    onChange={(e) => setStateSearch(e.target.value)}
-                                                    className="pl-8 h-9"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="max-h-48 overflow-y-auto">
-                                            {filteredStates.map((state) => (
-                                                <SelectItem key={state} value={state}>
-                                                    {state}
-                                                </SelectItem>
-                                            ))}
-                                        </div>
-                                    </SelectContent>
-                                </Select>
-                            )}
-                        />
-                        {errors.state && (
-                            <p className="text-xs sm:text-sm text-red-500">{errors.state.message}</p>
-                        )}
-                    </div>
-                </div>
-
-                {/* College/Institution */}
-                <div className="space-y-1.5 sm:space-y-2">
-                    <Label htmlFor="college" className="text-sm font-medium">College/Institution <span className="text-red-500">*</span></Label>
-                    <Input
-                        id="college"
-                        placeholder="College or institution name"
-                        {...register("college", {
-                            required: "College/Institution is required"
-                        })}
-                        className={`h-10 sm:h-11 ${errors.college ? "border-red-500" : ""}`}
-                    />
-                    {errors.college && (
-                        <p className="text-xs sm:text-sm text-red-500">{errors.college.message}</p>
-                    )}
-                </div>
-
-                <div className="pt-1 sm:pt-2">
-                    <p className="text-xs text-muted-foreground mb-3 sm:mb-4 text-center">
-                        <span className="text-red-500">*</span> Required fields | By submitting, you agree to our Terms.
-                    </p>
-                    <Button
-                        type="submit"
-                        className="w-full h-11 sm:h-12 bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white font-medium text-sm sm:text-base"
-                        disabled={isSubmitting}
-                    >
-                        {isSubmitting ? (
-                            <>
-                                <Loader2 className="mr-2 h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
-                                Submitting Details...
-                            </>
-                        ) : (
-                            <>
-                                <CreditCard className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-                                Proceed to Payment
-                            </>
-                        )}
-                    </Button>
-                </div>
-            </form>
-        </div>
-    );
-};
 
 // ====================================================================
 // 2. Course Enrollment Card Component (Modified to handle Auth check)
@@ -376,12 +55,10 @@ const CourseEnrollment: React.FC<CourseEnrollmentProps> = ({
     onEnrollmentSuccess,
     setIsEnrolledLocally
 }) => {
-    // Mocking the useCustomToast from the user's provided context
+  
     const useCustomToast = () => ({ showToast: (type: string, title: string, description: string) => toast[type === 'error' ? 'error' : type === 'info' ? 'success' : 'success'](description) });
     const { showToast } = useCustomToast();
     
-    const authState = useAppSelector((state) => state.auth);
-    const { token, user } = authState; // Use destructured state from mock hook
 
     const navigate = useNavigate();
     const [enrolling, setEnrolling] = useState(false);
@@ -390,6 +67,7 @@ const CourseEnrollment: React.FC<CourseEnrollmentProps> = ({
     const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
     const [applyingCoupon, setApplyingCoupon] = useState(false);
     const [finalPrice, setFinalPrice] = useState(course.price || course.finalPrice || course.discountedPrice);
+    const EnrollMentToken = localStorage.getItem("EnrollMentToken");
 
     // Ref to track if the modal/payment flow needs to resume after a successful signup/login
     const paymentAttemptRef = React.useRef(false); 
@@ -417,14 +95,20 @@ const CourseEnrollment: React.FC<CourseEnrollmentProps> = ({
     };
 
     const handlePayment = async () => {
-        if (!token) {
-            // User is NOT logged in. Show the signup/detail collection modal.
-            setShowSignupModal(true);
-            paymentAttemptRef.current = true; // Mark that payment needs to proceed after login
-            return;
-        }
+        const courseId = course.id;
+        // Check if user is logged in
+        if (!EnrollMentToken) {
+      navigate("/personal-info", {
+        state: {
+          courseName: course.title,
+          courseId: course.id,
+          price: course.finalPrice || course.price,
+        },
+      });
+      return 
+    }
         
-        // If logged in (token exists), proceed with payment logic
+        // If logged in (EnrollMentToken exists), proceed with payment logic
         try {
             setEnrolling(true);
 
@@ -434,14 +118,14 @@ const CourseEnrollment: React.FC<CourseEnrollmentProps> = ({
                 return;
             }
 
-            const orderData = await paymentService.capturePayment([course.id], token);
+            const orderData = await paymentService.capturePayment([course.id], EnrollMentToken);
 
             if (!orderData.success) {
                 showToast('error', 'Order Creation Failed', orderData.message || 'Failed to create order. Please try again.');
                 return;
             }
 
-            const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY || "rzp_test_yQNkACsEOX8zkO";
+            const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY ;
 
             const options = {
                 key: razorpayKey,
@@ -453,28 +137,33 @@ const CourseEnrollment: React.FC<CourseEnrollmentProps> = ({
                 handler: async (response: any) => {
                     // Payment successful on Razorpay side, now verify it on your server
                     try {
+                        // Show loading during verification
+                        showToast('info', 'Processing Payment', 'Verifying your payment, please wait...');
+                        
                         const verifyData = await paymentService.verifyPayment({
                             razorpay_payment_id: response.razorpay_payment_id,
                             razorpay_order_id: response.razorpay_order_id,
                             razorpay_signature: response.razorpay_signature,
                             courses: [course.id]
-                        }, token);
+                        }, EnrollMentToken);
 
                         if (verifyData.success) {
                             setIsEnrolledLocally(true);
-                            showToast('success', 'Payment Successful! 🎉', `You have been enrolled in ${course.title} successfully!`);
                             onEnrollmentSuccess();
+                            
+                            // Show success message before redirect
+                            showToast('success', 'Payment Successful! 🎉', 'Redirecting to confirmation page...');
+                            
+                            // Small delay before redirect for better UX
+                            setTimeout(() => {
+                                navigate(`/enrollment-success?courseName=${encodeURIComponent(course.title)}&price=${course.finalPrice}&originalPrice=${course.originalPrice}&courseId=${course.id}`);
+                            }, 1500);
                         } else {
                             showToast('error', 'Payment Failed', 'Payment verification failed. Please contact support.');
                         }
                     } catch (error) {
                         showToast('error', 'Verification Error', 'Payment verification failed. Please contact support if amount was deducted.');
                     }
-                },
-                prefill: {
-                    name: `${user?.firstName} ${user?.lastName}`,
-                    email: user?.email,
-                    contact: user?.additionalDetails?.contactNumber || ""
                 },
                 theme: { color: "#3B82F6" },
                 modal: { ondismiss: () => showToast('warning', 'Payment Cancelled', 'Payment was cancelled.') }
@@ -493,19 +182,19 @@ const CourseEnrollment: React.FC<CourseEnrollmentProps> = ({
 
     // Effect to automatically retry payment after a successful login/detail collection from the modal
     useEffect(() => {
-        // We only check if the token just became available AND a payment attempt was flagged as pending
-        if (token && paymentAttemptRef.current) {
+        // We only check if the EnrollMentToken just became available AND a payment attempt was flagged as pending
+        if (EnrollMentToken && paymentAttemptRef.current) {
             // Slight delay to ensure React state updates and the modal is fully closed
             setTimeout(() => {
                 handlePayment();
             }, 100);
         }
-    }, [token]);
+    }, [EnrollMentToken]);
 
-    // Cleanup mock auth token on component unmount (optional, for clean demo state)
+   
     useEffect(() => {
         return () => {
-             // localStorage.removeItem('mockAuthToken'); 
+         
         };
     }, []);
 
@@ -596,6 +285,7 @@ const CourseEnrollment: React.FC<CourseEnrollmentProps> = ({
 
                     {/* Main Enrollment Button */}
                     <Button
+                        data-testid="enroll-button"
                         className="w-full bg-gradient-to-r from-primary to-accent h-10 sm:h-12 mb-3 sm:mb-4 text-sm sm:text-base"
                         onClick={handlePayment}
                         disabled={enrolling}
@@ -603,12 +293,12 @@ const CourseEnrollment: React.FC<CourseEnrollmentProps> = ({
                         {enrolling ? (
                             <>
                                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                Securing Payment...
+                                Processing Payment...
                             </>
                         ) : (
                             <>
                                 <CreditCard className="w-4 h-4 mr-2" />
-                                {token ? `Enroll Now - ₹${finalPrice}` : `Enroll Now & Register`}
+                                {`Enroll Now - ₹${finalPrice}` }
                             </>
                         )}
                     </Button>
@@ -635,7 +325,7 @@ const CourseEnrollment: React.FC<CourseEnrollmentProps> = ({
             </Card>
 
             {/* Combined Signup/Enrollment Modal - Only shows if NOT LOGGED IN */}
-            <Dialog open={showSignupModal && !token} onOpenChange={setShowSignupModal}>
+            <Dialog open={showSignupModal && !EnrollMentToken} onOpenChange={setShowSignupModal}>
                 <DialogContent className="max-w-lg w-[95vw] max-h-[95vh] overflow-y-auto">
                     <DialogHeader className="space-y-2 sm:space-y-3 pb-2">
                         <div className="mx-auto w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-full flex items-center justify-center">
@@ -648,14 +338,7 @@ const CourseEnrollment: React.FC<CourseEnrollmentProps> = ({
                             Please provide your details to register and secure your spot in <span className="font-medium text-primary">{course?.title}</span>.
                         </p>
                     </DialogHeader>
-                    {/* On successful form submission, onSuccess will trigger the payment re-attempt */}
-                    <EnrollmentSignupForm
-                        courseName={course?.title}
-                        onSuccess={() => {
-                            setShowSignupModal(false);
-                            // The useEffect in CourseEnrollment will handle the re-attempted payment
-                        }}
-                    />
+                    
                 </DialogContent>
             </Dialog>
         </>
@@ -670,10 +353,12 @@ const CourseEnrollment: React.FC<CourseEnrollmentProps> = ({
 
 const CourseDetail = () => {
     const { courseId } = useParams();
-    const { user } = useAppSelector((state) => state.auth); // Get user for enrollment check
+    const [searchParams] = useSearchParams();
+    const { user } = useSelector((state:any) => state.auth); // Get user for enrollment check
     const [course, setCourse] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isEnrolled, setIsEnrolled] = useState(false);
+    const [enrollmentRef, setEnrollmentRef] = useState<any>(null);
     
     const [expandedSections, setExpandedSections] = useState(new Set([0]));
 
@@ -689,7 +374,7 @@ const CourseDetail = () => {
     };
 
     const fetchCourseDetails = async () => {
-        const currentCourseId = courseId || "691089e919284282b7b850d5"; 
+        const currentCourseId = courseId;
         if (!currentCourseId) return;
         
         setIsLoading(true);
@@ -702,7 +387,7 @@ const CourseDetail = () => {
             }
 
             const mappedCourse = {
-                // ... (rest of course data mapping) ...
+               
                 id: apiData._id,
                 title: apiData.courseName,
                 description: apiData.courseDescription ? apiData.courseDescription.replace(/\r\n|\n/g, ' ').trim() : '', 
@@ -720,7 +405,7 @@ const CourseDetail = () => {
                 reviews: 120, 
                 enrolledCount: apiData.studentsEnrolled ? apiData.studentsEnrolled.length : 0,
                 studentsEnrolled: apiData.studentsEnrolled,
-                instructorName: "Jane Doe (Java Expert)", 
+                instructorName: "Indurstry expert", 
                 instructorAvatar: "https://api.dicebear.com/7.x/adventurer/svg?seed=JavaExpert&backgroundColor=b6e3f4,c0aede,d1d4f9&hairColor=2c1b12,654522,54456f&glasses=variant01",
                 instructorBio: "Experienced software engineer specializing in scalable Java and Spring Boot solutions.",
                 whatYouLearn: apiData.whatYouWillLearn 
@@ -758,6 +443,23 @@ const CourseDetail = () => {
     useEffect(() => { 
         fetchCourseDetails(); 
     }, [courseId, user?.id]); // Re-fetch or re-check enrollment if user status changes
+
+    // Auto-enrollment effect
+    useEffect(() => {
+        const autoEnroll = searchParams.get('autoEnroll');
+        const enrollmentToken = localStorage.getItem('EnrollMentToken');
+        
+        if (autoEnroll === 'true' && enrollmentToken && course && !isEnrolled) {
+            // Small delay to ensure component is fully rendered
+            setTimeout(() => {
+                // Find the enrollment button and click it
+                const enrollButton = document.querySelector('[data-testid="enroll-button"]') as HTMLButtonElement;
+                if (enrollButton) {
+                    enrollButton.click();
+                }
+            }, 1000);
+        }
+    }, [course, isEnrolled, searchParams]);
 
     const toggleSection = (index: number) => {
         setExpandedSections(prev => {

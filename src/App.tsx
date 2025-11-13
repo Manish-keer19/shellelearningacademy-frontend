@@ -39,6 +39,8 @@ import { FAQ } from "./pages/FAQ";
 import { Careers } from "./pages/Careers";
 import Demo from "./pages/Demo";
 import Register from "./pages/Register";
+import CourseSignUpForm from "./pages/CourseSignUpForm";
+import EnrollmentSuccess from "./pages/EnrollmentSuccess";
 
 
 
@@ -70,7 +72,10 @@ const App = () => (
             <Route path="/about" element={<About />} />
             <Route path="/demo" element={<Demo />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/personal-info" element={<CourseSignUpForm onSuccess={()=>{console.log("hello ")}}/>} />
+
             <Route path="/services" element={<Services />} />
+            <Route path="/enrollment-success" element={<EnrollmentSuccess />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/sign-up" element={<Register />} />
             <Route path="/dashboard" element={<Dashboard />} />
