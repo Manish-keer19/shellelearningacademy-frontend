@@ -1906,10 +1906,10 @@ const CourseDetail = () => {
                             <Badge variant="secondary" className="text-xs font-semibold">{course.category}</Badge>
                         </div>
                         
-                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground leading-tight">
+                        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground leading-tight">
                             {course.title}
                         </h1>
-                        <p className="text-lg md:text-xl text-muted-foreground max-w-3xl pt-2">
+                        <p className="text-sm md:text-base text-muted-foreground max-w-3xl pt-2">
                             {course.description}
                         </p>
 
@@ -1941,16 +1941,16 @@ const CourseDetail = () => {
                         {/* 1. What You'll Learn (Card emphasized) */}
                         {course.whatYouLearn.length > 0 && (
                             <Card className="border-primary/20 bg-card shadow-lg">
-                                <CardHeader className="p-6 border-b border-border/70">
-                                    <CardTitle className="text-2xl font-bold flex items-center gap-2 text-primary">
-                                        <ShieldCheck className="w-6 h-6" /> Key Skills &    Mastery Goals  
+                                <CardHeader className="p-5 border-b border-border/70">
+                                    <CardTitle className="text-xl font-bold flex items-center gap-2 text-primary">
+                                        <ShieldCheck className="w-6 h-6" /> Key Skills & Mastery Goals
                                     </CardTitle>
                                 </CardHeader>
-                                <CardContent className="p-6">
+                                <CardContent className="p-5">
                                     <div className="grid sm:grid-cols-2 gap-4">
                                         {course.whatYouLearn.map((item: string, idx: number) => (
-                                            <div key={idx} className="flex items-start gap-3 p-3 bg-muted/20 rounded-xl border border-border/70 text-sm font-medium hover:shadow-md transition-shadow">
-                                                <Check className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
+                                            <div key={idx} className="flex items-start gap-3 p-3 bg-muted/20 rounded-lg border border-border/70 text-sm font-medium hover:shadow-md transition-shadow">
+                                                <Check className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
                                                 <span className="text-foreground">{item}</span>
                                             </div>
                                         ))}
@@ -1963,8 +1963,8 @@ const CourseDetail = () => {
 
                         {/* 2. Course Overview */}
                         <div>
-                            <h3 className="text-3xl font-bold mb-6 text-foreground border-l-4 border-primary pl-4">Course Overview</h3>
-                            <div className="prose dark:prose-invert max-w-none text-lg text-muted-foreground leading-relaxed whitespace-pre-line">
+                            <h3 className="text-2xl font-bold mb-5 text-foreground border-l-4 border-primary pl-4">Course Overview</h3>
+                            <div className="prose dark:prose-invert max-w-none text-base text-muted-foreground leading-relaxed whitespace-pre-line">
                                 {course.overview}
                             </div>
                         </div>
@@ -1973,32 +1973,32 @@ const CourseDetail = () => {
 
                         {/* 3. Curriculum / Content (Accordion Style) */}
                         <div>
-                            <h3 className="text-3xl font-bold mb-6 text-foreground border-l-4 border-primary pl-4">Detailed Curriculum</h3>
+                            <h3 className="text-2xl font-bold mb-5 text-foreground border-l-4 border-primary pl-4">Detailed Curriculum</h3>
                             <div className="space-y-4">
                                 {course.curriculum.map((section: any, idx: number) => {
                                     const isOpen = expandedSections.has(idx);
                                     const totalLessons = section.lessons.length;
                                     return (
-                                        <div key={section.id} className="border border-border/70 rounded-xl overflow-hidden bg-card shadow-lg hover:shadow-xl transition-shadow">
+                                        <div key={section.id} className="border border-border/70 rounded-lg overflow-hidden bg-card shadow-sm hover:shadow-md transition-shadow">
                                             <button
                                                 onClick={() => toggleSection(idx)}
-                                                className="w-full flex items-center justify-between p-5 hover:bg-accent/50 transition-colors"
+                                                className="w-full flex items-center justify-between p-4 hover:bg-accent/50 transition-colors"
                                             >
-                                                <div className="flex items-center gap-4">
-                                                    <ChevronDown className={`w-6 h-6 transition-transform text-primary shrink-0 ${isOpen ? 'rotate-180' : ''}`}/>
-                                                    <span className="text-xl font-extrabold text-foreground text-left">{section.title}</span>
+                                                <div className="flex items-center gap-3">
+                                                    <ChevronDown className={`w-5 h-5 transition-transform text-primary shrink-0 ${isOpen ? 'rotate-180' : ''}`}/>
+                                                    <span className="text-lg font-semibold text-foreground text-left">{section.title}</span>
                                                 </div>
-                                                <Badge variant="outline" className="text-sm font-semibold bg-muted/70 px-3 py-1 ml-auto shrink-0">{totalLessons} Lectures</Badge>
+                                                <Badge variant="outline" className="text-sm font-medium bg-muted/70 px-3 py-1 ml-auto shrink-0">{totalLessons} Lectures</Badge>
                                             </button>
 
                                             {isOpen && (
                                                 <div className="border-t bg-muted/20 divide-y divide-border/50">
                                                     {totalLessons > 0 ? (
                                                         section.lessons.map((lesson: any, lIdx: number) => (
-                                                            <div key={lIdx} className="p-4 pl-14 flex items-start gap-4 text-sm transition-colors">
+                                                            <div key={lIdx} className="p-3 pl-12 flex items-start gap-3 text-sm transition-colors">
                                                                 <Code className="w-4 h-4 text-secondary-foreground/70 shrink-0 mt-1" />
                                                                 <div className="flex flex-col">
-                                                                    <span className="font-semibold text-foreground">{lesson.title}</span>
+                                                                    <span className="font-medium text-foreground">{lesson.title}</span>
                                                                     {lesson.description && (
                                                                         <span className="text-xs text-muted-foreground italic mt-0.5">{lesson.description}</span>
                                                                     )}

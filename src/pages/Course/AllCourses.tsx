@@ -6,7 +6,7 @@ import { Footer } from "@/components/Footer";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Slider } from "@/components/ui/slider";
+
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Search, Star, Loader2, Frown, Filter, FilterX, X, Users, BookOpen } from "lucide-react";
@@ -17,15 +17,7 @@ import { courseService } from "@/service/course.service";
 const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 const getRandomFloat = (min, max) => (Math.random() * (max - min) + min).toFixed(1);
 
-// --- Sub-Components (DEFINED FIRST to resolve ReferenceError) ---
 
-// Placeholder/Dummy data for multiple instructors
-const INDUSTRY_EXPERTS = [
-    { name: "Manish Keer", avatarSeed: "Manish+Keer" },
-    { name: "Sushma Patel", avatarSeed: "Sushma+Patel" },
-    { name: "Vijay Sharma", avatarSeed: "Vijay+Sharma" },
-    { name: "Priya Singh", avatarSeed: "Priya+Singh" },
-];
 
 // 1. Reusable Course Card Component (Updated for better UI/UX and pricing)
 const CourseCard = ({ course }) => {
@@ -51,19 +43,7 @@ const CourseCard = ({ course }) => {
                         {course.discountPercent}% OFF
                     </div>
                 )}
-                {/* Price Badge on Image */}
-                <div className="absolute bottom-3 left-3 bg-black/80 backdrop-blur-sm text-white px-3 py-1.5 rounded-lg">
-                    <div className="flex items-center gap-2">
-                        {course.originalPrice > course.discountedPrice && (
-                            <span className="text-xs line-through text-gray-300">
-                                ₹{course.originalPrice.toLocaleString()}
-                            </span>
-                        )}
-                        <span className="font-bold text-sm">
-                            ₹{course.discountedPrice.toLocaleString()}
-                        </span>
-                    </div>
-                </div>
+                
             </Link>
 
             {/* Content */}
@@ -78,6 +58,12 @@ const CourseCard = ({ course }) => {
                         <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
                         <span className="font-semibold text-sm text-primary">Industry Expert</span>
                     </div>
+                </div>
+
+                {/* Course Duration */}
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <BookOpen className="w-4 h-4" />
+                    <span className="font-medium">{course.duration}</span>
                 </div>
 
                 {/* Rating, Students, Level */}
@@ -221,8 +207,6 @@ const AllCourses = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedCategories, setSelectedCategories] = useState(new Set());
     const [selectedLevels, setSelectedLevels] = useState(new Set());
-    const [priceRange, setPriceRange] = useState([0, 7000]);
-    const [initialMaxPrice, setInitialMaxPrice] = useState(7000);
     const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
     const levels = useMemo(() => ["Beginner", "Intermediate", "Advanced", "All Levels"], []);
@@ -260,9 +244,6 @@ const AllCourses = () => {
                 });
                 
                 setCourses(mappedCourses);
-                const maxP = Math.max(...mappedCourses.map((c) => c.price || 0), 7000);
-                setInitialMaxPrice(maxP); 
-                setPriceRange([0, maxP]); 
                 setCategories(categoriesRes.data || []);
 
                 const categoryParam = searchParams.get('category');
@@ -313,6 +294,8 @@ const AllCourses = () => {
         });
     };
 
+
+
     const categoryOptions = useMemo(() => {
         if (courses.length === 0) return [];
         const countMap = courses.reduce((acc, c) => {
@@ -341,21 +324,18 @@ const AllCourses = () => {
                 course.level.toLowerCase().includes(lowerSearch);
             const matchesCategory = selectedCategories.size === 0 || selectedCategories.has(course.category);
             const matchesLevel = selectedLevels.size === 0 || selectedLevels.has(course.level);
-            const matchesPrice = course.price >= priceRange[0] && course.price <= priceRange[1];
-
-            return matchesSearch && matchesCategory && matchesLevel && matchesPrice;
+            return matchesSearch && matchesCategory && matchesLevel;
         });
-    }, [searchTerm, selectedCategories, selectedLevels, priceRange, courses]);
+    }, [searchTerm, selectedCategories, selectedLevels, courses]);
 
     const totalCourses = courses.length;
     const showingCourses = filteredCourses.length;
-    const isFiltered = selectedCategories.size > 0 || selectedLevels.size > 0 || searchTerm.length >= 2 || priceRange[1] < initialMaxPrice;
+    const isFiltered = selectedCategories.size > 0 || selectedLevels.size > 0 || searchTerm.length >= 2;
 
     const clearFilters = () => {
         setSearchTerm("");
         setSelectedCategories(new Set());
         setSelectedLevels(new Set());
-        setPriceRange([0, initialMaxPrice]);
         setSearchParams(new URLSearchParams());
     };
     
@@ -411,24 +391,7 @@ const AllCourses = () => {
                     ))}
                 </FilterCard>
 
-                {/* Price Range Filter */}
-                <FilterCard title="Price Range (₹)">
-                    <Slider
-                        value={priceRange}
-                        onValueChange={setPriceRange}
-                        max={initialMaxPrice}
-                        step={100}
-                        className="w-full mt-4"
-                    />
-                    <div className="flex justify-between text-sm font-semibold text-primary mt-2">
-                        <span>₹{priceRange[0].toLocaleString()}</span>
-                        <span>₹{priceRange[1].toLocaleString()}</span>
-                    </div>
-                    <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                        <span>Min Price</span>
-                        <span>Max Price</span>
-                    </div>
-                </FilterCard>
+
             </div>
         </>
     );
@@ -511,11 +474,11 @@ const AllCourses = () => {
 
                         {/* Content Display */}
                         {isLoading ? (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {Array.from({ length: skeletonCount }).map((_, i) => <CourseCardSkeleton key={i} />)}
                             </div>
                         ) : filteredCourses.length > 0 ? (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {filteredCourses.map((course) => (
                                     <CourseCard key={course.id} course={course} />
                                 ))}
