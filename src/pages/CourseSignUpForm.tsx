@@ -772,7 +772,7 @@ const CourseSignUpForm: React.FC<CourseSignUpFormProps> = React.memo(({
 
         try {
             setIsSubmitting(true);
-            toast.loading("Creating account and preparing enrollment...", { id: "signup" });
+            toast.loading(" preparing enrollment...", { id: "signup" });
 
             // API call to the backend
             const response: any = await axiosInstance.post("auth/personal-info", formData);
@@ -784,7 +784,7 @@ const CourseSignUpForm: React.FC<CourseSignUpFormProps> = React.memo(({
                 if (existing) {
                     toast.success("Welcome back! Redirecting to course enrollment.", { id: "signup" });
                 } else {
-                    toast.success("Account created successfully! Redirecting to course enrollment.", { id: "signup" });
+                    toast.success(" Redirecting to course enrollment.", { id: "signup" });
                 }
 
                 onSuccess();
@@ -977,7 +977,7 @@ const CourseSignUpForm: React.FC<CourseSignUpFormProps> = React.memo(({
                                 {isSubmitting ? (
                                     <>
                                         <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                                        Creating Account...
+                                        Submiting...
                                     </>
                                 ) : (
                                     <>
