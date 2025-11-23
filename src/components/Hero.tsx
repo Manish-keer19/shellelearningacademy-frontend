@@ -121,9 +121,41 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, BookOpen, Play, CheckCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import hero_img from "../assets/hero_img.jpg"
+import img1 from "../assets/new_student/1.jpg"
+import img2 from "../assets/new_student/2.jpg"
+import img3 from "../assets/new_student/3.jpg"
+import img4 from "../assets/new_student/4.jpg"
+import img5 from "../assets/new_student/5.jpg"
+import img6 from "../assets/new_student/6.jpg"
 
 export const Hero = () => {
   const navigate = useNavigate();
+
+
+  const images = [
+
+    {
+      id: 2,
+
+      avatar: img2,
+    },
+    {
+      id: 3,
+
+      avatar: img3,
+    },
+
+    {
+      id: 6,
+
+      avatar: img5,
+    },
+    {
+      id: 4,
+
+      avatar: img6,
+    },
+  ];
 
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-background pt-20 pb-16 lg:pt-32 lg:pb-24">
@@ -147,11 +179,6 @@ export const Hero = () => {
         .animate-float-delay-2 { animation-delay: 3s; }
         */}
 
-        {/* 📚 Book 1 */}
-        <BookOpen
-          className="absolute top-1/4 left-1/4 h-8 w-8 text-primary/70 animate-float"
-          style={{ animationDuration: '10s', animationDelay: '0s' }} // Inline styles for quick demo
-        />
         {/* 💡 Idea/Lightbulb */}
         <svg
           className="absolute top-1/2 left-3/4 h-10 w-10 text-secondary/70 animate-float"
@@ -220,17 +247,17 @@ export const Hero = () => {
             <div className="pt-4 flex items-center justify-center lg:justify-start gap-8 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <div className="flex -space-x-2">
-                  {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="w-8 h-8 rounded-full border-2 border-background bg-muted flex items-center justify-center overflow-hidden">
-                      <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="User" className="w-full h-full object-cover" />
+                  {images.map((i) => (
+                    <div key={i.id} className="w-8 h-8 rounded-full border-2 border-background bg-muted flex items-center justify-center overflow-hidden">
+                      <img src={i.avatar} alt="User" className="w-full h-full object-cover" />
                     </div>
                   ))}
                 </div>
-                <span className="font-medium">10k+ Learners</span>
+                <span className="font-medium">2k+ Learners</span>
               </div>
               <div className="h-4 w-px bg-border" />
               <div className="flex items-center gap-1">
-                <BookOpen className="h-4 w-4 text-primary" />
+                <BookOpen className="h-4 w-4 text-primary hidden" />
                 <span className="font-medium">50+ Courses</span>
               </div>
             </div>
@@ -271,9 +298,9 @@ export const Hero = () => {
             {/* Decorative Dots (Unchanged) */}
             <div className="absolute -z-10 -bottom-6 -right-6 w-24 h-24 opacity-20">
               <div className="grid grid-cols-6 gap-2">
-                {[...Array(36)].map((_, i) => (
+                {/* {[...Array(36)].map((_, i) => (
                   <div key={i} className="w-1 h-1 rounded-full bg-foreground" />
-                ))}
+                ))} */}
               </div>
             </div>
           </div>
