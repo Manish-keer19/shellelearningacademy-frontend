@@ -67,10 +67,10 @@ const CourseEnrollment: React.FC<CourseEnrollmentProps> = React.memo(({
     // Optimize: Use useMemo for initial price calculation
     const initialPrice = useMemo(() => course.finalPrice || course.price || course.discountedPrice || 0, [course]);
     const [finalPrice, setFinalPrice] = useState(initialPrice);
-    
+
     // Optimize: Read token once and manage updates via a simple state.
     const [enrollmentToken, setenrollmentToken] = useState(localStorage.getItem("enrollmentToken"));
-    
+
     // Ref to track if the payment flow needs to resume after a successful signup/login
     const paymentAttemptRef = React.useRef(false);
 
@@ -242,6 +242,7 @@ const CourseEnrollment: React.FC<CourseEnrollmentProps> = React.memo(({
                 <img
                     src={course.thumbnail}
                     alt={course.title}
+                    loading="lazy"
                     className="w-full h-full object-cover"
                     onError={(e) => e.currentTarget.src = 'https://placehold.co/600x400?text=Course+Thumbnail'}
                 />
@@ -289,7 +290,7 @@ const CourseEnrollment: React.FC<CourseEnrollmentProps> = React.memo(({
                     ) : (
                         <>
                             <CreditCard className="w-5 h-5 mr-2" />
-                            {  `Buy Now - ₹${finalPrice.toLocaleString()}`}
+                            {`Buy Now - ₹${finalPrice.toLocaleString()}`}
                         </>
                     )}
                 </Button>
@@ -328,20 +329,20 @@ const CourseEnrollment: React.FC<CourseEnrollmentProps> = React.memo(({
 const CourseDetail = () => {
     const { courseId } = useParams();
     const [searchParams] = useSearchParams();
-    const actualUser  = useSelector((state:any) => state.auth.user);
+    const actualUser = useSelector((state: any) => state.auth.user);
     const userString = localStorage.getItem("enrolledUser");
     const user = userString ? JSON.parse(userString) : null;
-    console.log("enrolled user is ",user);
+    console.log("enrolled user is ", user);
     const [course, setCourse] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isEnrolled, setIsEnrolled] = useState(false);
-    
+
     const [expandedSections, setExpandedSections] = useState(new Set([0]));
     const { showToast } = useCustomToast();
-    
+
     // Optimize: Use useCallback for enrollment check
     const checkEnrollmentStatus = useCallback((courseData: any, userId: string) => {
-        console.log("Checking enrollment status for user:", userId,courseData)
+        console.log("Checking enrollment status for user:", userId, courseData)
         if (!userId) {
             setIsEnrolled(false);
             return;
@@ -349,7 +350,7 @@ const CourseDetail = () => {
         // NOTE: Adjusted to check if user.id is present in the studentsEnrolled array.
         // It looks like the API response populates the array with the full user object (or at least its _id).
         // The previous logic was correct, checking if the logged-in user's ID exists in the list of enrolled student IDs.
-        const isUserEnrolled = courseData.studentsEnrolled?.some((student: any) => 
+        const isUserEnrolled = courseData.studentsEnrolled?.some((student: any) =>
             // Check if the item is a string (ID) or an object (populated user)
             typeof student === 'string' ? student === userId : student._id === userId
         ) || false;
@@ -361,7 +362,7 @@ const CourseDetail = () => {
     const fetchCourseDetails = useCallback(async () => {
         const currentCourseId = courseId;
         if (!currentCourseId) return;
-        
+
         setIsLoading(true);
         try {
             const response = await courseService.getCourseDetails(currentCourseId);
@@ -386,13 +387,14 @@ const CourseDetail = () => {
                 level: apiData.courseLevel || "All Levels",
                 duration: apiData.courseDuration || "Variable",
                 category: apiData.category?.name || "General",
-                rating: parseFloat(apiData.ratingValue)||3.4, // Static for presentation
-             
-                enrolledCount: parseInt(apiData.studentCount),
-                // Premium Instructor Profile (can be fetched from instructor service later)
-                instructorName: "Industry Expert | Jane Doe",
-                instructorAvatar: "https://api.dicebear.com/7.x/adventurer/svg?seed=JaneDoe&backgroundColor=b6e3f4,c0aede,d1d4f9&hairColor=2c1b12,654522,54456f&glasses=variant01",
-                instructorBio: "Lead Software Engineer with 10+ years experience specializing in cloud-native Java and scalable React architectures.",
+                rating: parseFloat(apiData.ratingValue) || 3.4, // Static for presentation
+
+                enrolledCount: parseInt(apiData.studentCount) || 0,
+
+                // Instructor Profile Mapping
+                instructorName: apiData.instructor ? `${apiData.instructor.firstName} ${apiData.instructor.lastName}` : "Expert Instructor",
+                instructorAvatar: apiData.instructor?.image || "https://api.dicebear.com/7.x/avataaars/svg?seed=Instructor",
+                instructorBio: apiData.instructor?.additionalDetails?.about || "An experienced industry professional passionate about teaching and mentoring students to achieve their career goals.",
                 whatYouLearn: apiData.whatYouWillLearn
                     ? apiData.whatYouWillLearn.split(/\r\n|\n/).filter((t: string) => t.trim())
                     : [
@@ -400,7 +402,7 @@ const CourseDetail = () => {
                         "Build 3 hands-on projects from scratch.",
                         "Understand advanced industry best practices.",
                         "Prepare for relevant certification exams.",
-                      ],
+                    ],
                 curriculum: apiData.courseContent?.map((section: any, index: number) => ({
                     id: section._id || index,
                     title: section.sectionName,
@@ -419,7 +421,7 @@ const CourseDetail = () => {
             };
 
             setCourse(mappedCourse);
-            console.log("api data in fetchcourseDetail",apiData)
+            console.log("api data in fetchcourseDetail", apiData)
             // Pass the API data (which contains studentsEnrolled) and the logged-in user ID
             checkEnrollmentStatus(apiData, user?.id || user?._id);
 
@@ -448,7 +450,7 @@ const CourseDetail = () => {
                     toast.success('Auto-enrolling you in the course...');
                     enrollButton.click();
                 }
-            }, 100); 
+            }, 100);
         }
     }, [course, isEnrolled, searchParams]);
 
@@ -495,7 +497,7 @@ const CourseDetail = () => {
             <Navigation />
             <div className="text-center p-10 bg-card rounded-xl shadow-lg mt-20">
                 <AlertCircle className="w-12 h-12 text-destructive mx-auto mb-4" />
-                <h2 className="text-xl font-bold">Course Not Found</h2> 
+                <h2 className="text-xl font-bold">Course Not Found</h2>
                 <p className="text-muted-foreground">The requested course details could not be loaded or do not exist.</p>
                 <Button asChild className="mt-6" variant="outline">
                     <Link to="/all-courses">← Back to All Courses</Link>
@@ -516,13 +518,13 @@ const CourseDetail = () => {
                     <div className="space-y-4">
                         <div className="mb-4 text-sm text-muted-foreground flex items-center gap-2">
                             <Link to="/all-courses" className="hover:text-primary transition-colors flex items-center">
-                                <ArrowLeft className="w-4 h-4 mr-1"/> Courses
+                                <ArrowLeft className="w-4 h-4 mr-1" /> Courses
                             </Link>
                             <span>/</span>
                             <Badge variant="secondary" className="text-xs font-semibold">{course.category}</Badge>
                         </div>
-                        
-                        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground leading-tight">
+
+                        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground leading-tight break-words">
                             {course.title}
                         </h1>
                         <p className="text-sm md:text-base text-muted-foreground max-w-3xl pt-2">
@@ -553,7 +555,7 @@ const CourseDetail = () => {
 
                     {/* LEFT COLUMN - Main Content */}
                     <div className="lg:col-span-2 space-y-12">
-                        
+
                         {/* 1. What You'll Learn (Card emphasized) */}
                         {course.whatYouLearn.length > 0 && (
                             <Card className="border-primary/20 bg-card shadow-lg">
@@ -601,7 +603,7 @@ const CourseDetail = () => {
                                                 className="w-full flex items-center justify-between p-4 hover:bg-accent/50 transition-colors"
                                             >
                                                 <div className="flex items-center gap-3">
-                                                    <ChevronDown className={`w-5 h-5 transition-transform text-primary shrink-0 ${isOpen ? 'rotate-180' : ''}`}/>
+                                                    <ChevronDown className={`w-5 h-5 transition-transform text-primary shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
                                                     <span className="text-lg font-semibold text-foreground text-left">{section.title}</span>
                                                 </div>
                                                 <Badge variant="outline" className="text-sm font-medium bg-muted/70 px-3 py-1 ml-auto shrink-0">{totalLessons} Lectures</Badge>
@@ -632,7 +634,37 @@ const CourseDetail = () => {
                             </div>
                         </div>
 
-                        {/* 5. Instructor Card (Large) - Unchanged */}
+                        {/* 4. Instructor Section */}
+                        {/* <div>
+                            <h3 className="text-2xl font-bold mb-5 text-foreground border-l-4 border-primary pl-4">Meet Your Instructor</h3>
+                            <div className="bg-card border border-border/70 rounded-xl p-6 flex flex-col md:flex-row gap-6 items-center md:items-start shadow-sm hover:shadow-md transition-all">
+                                <div className="shrink-0">
+                                    <img
+                                        src={course.instructorAvatar}
+                                        alt={course.instructorName}
+                                        loading="lazy"
+                                        className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover border-4 border-primary/10 shadow-sm"
+                                    />
+                                </div>
+                                <div className="flex-1 text-center md:text-left space-y-3">
+                                    <div>
+                                        <h4 className="text-xl font-bold text-foreground">{course.instructorName}</h4>
+                                        <p className="text-sm text-primary font-medium">Course Instructor</p>
+                                    </div>
+                                    <p className="text-muted-foreground text-sm leading-relaxed">
+                                        {course.instructorBio}
+                                    </p>
+                                    <div className="flex items-center justify-center md:justify-start gap-4 pt-2">
+                                        <div className="flex items-center gap-1 text-xs font-medium text-muted-foreground bg-muted/50 px-2 py-1 rounded">
+                                            <Users className="w-3 h-3" /> 1,200+ Students
+                                        </div>
+                                        <div className="flex items-center gap-1 text-xs font-medium text-muted-foreground bg-muted/50 px-2 py-1 rounded">
+                                            <Play className="w-3 h-3" /> 15 Courses
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> */}
 
                     </div>
 
@@ -651,7 +683,7 @@ const CourseDetail = () => {
                             {/* Brochure Download Button */}
                             {course.brochure && (
                                 <Button onClick={handleDownloadBrochure} variant="outline" className="w-full gap-3 h-12 border-dashed border-2 border-primary/50 text-primary font-bold hover:bg-primary/5 shadow-md transition-all">
-                                    <Download className="w-5 h-5" /> Download Course Brochure 
+                                    <Download className="w-5 h-5" /> Download Course Brochure
                                 </Button>
                             )}
 

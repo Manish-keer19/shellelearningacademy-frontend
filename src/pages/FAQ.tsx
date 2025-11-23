@@ -1,6 +1,10 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export const FAQ = () => {
+  const navigate = useNavigate();
   const faqs = [
     {
       question: "How do I enroll in a course?",
@@ -27,8 +31,15 @@ export const FAQ = () => {
   return (
     <div className="min-h-screen bg-background pt-20">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <Button
+          variant="ghost"
+          onClick={() => navigate(-1)}
+          className="mb-6 hover:bg-primary/10 hover:text-primary transition-colors"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" /> Back
+        </Button>
         <h1 className="mb-8 text-4xl font-bold text-foreground text-center">Frequently Asked Questions</h1>
-        
+
         <Accordion type="single" collapsible className="w-full">
           {faqs.map((faq, index) => (
             <AccordionItem key={index} value={`item-${index}`}>

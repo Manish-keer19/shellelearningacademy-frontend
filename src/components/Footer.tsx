@@ -131,14 +131,14 @@ export const Footer = () => {
                         <p className="text-sm text-muted-foreground font-medium">
                             © {new Date().getFullYear()} Shell E-learning Academy. All rights reserved.
                         </p>
-                        <div className="flex gap-4">
+                        {/* <div className="flex gap-4">
                             <Link to="/sitemap" className="text-xs text-muted-foreground hover:text-primary transition-colors">
                                 Sitemap
                             </Link>
                             <Link to="/accessibility" className="text-xs text-muted-foreground hover:text-primary transition-colors">
                                 Accessibility
                             </Link>
-                        </div>
+                        </div> */}
                     </div>
 
                     {/* Social Links */}

@@ -1,57 +1,51 @@
 import { Navigation } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Target, Users, Award, Zap, Building2, Globe } from "lucide-react";
+import { Target, Users, Award, Zap, CheckCircle, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-// Assuming logo1 is accessible via this relative path
 import logo1 from "../assets/logo1.png";
-
-// --- Data Definitions (Unchanged) ---
-
-const values = [
-    {
-        icon: Target,
-        title: "Our Mission",
-        description: "To make industry-ready education accessible to everyone, everywhere, at any time.",
-    },
-    {
-        icon: Users,
-        title: "Community First",
-        description: "Building a global community of learners and professionals who support, inspire, and grow together.",
-    },
-    {
-        icon: Award,
-        title: "Excellence in Learning",
-        description: "Delivering top-quality, practical, and future-focused education through expert trainers and structured learning paths.",
-    },
-    {
-        icon: Zap,
-        title: "Innovation & Growth",
-        description: "Constantly upgrading our teaching methods and course content to ensure our learners stay ahead of industry trends.",
-    },
-];
-
-const stats = [
-    { value: "2K+", label: "Students Worldwide" },
-    { value: "20+", label: "Courses Available" },
-    { value: "60+", label: "Expert Instructors" },
-    { value: "98%", label: "Satisfaction Rate" },
-];
-
-// --- Sub-Components (Unchanged) ---
-
-const StatItem = ({ value, label }) => (
-    <div className="text-center p-4 bg-card rounded-xl shadow-md border border-border/70 hover:shadow-lg transition-all duration-300">
-        <div className="mb-2 font-display text-4xl font-bold text-primary sm:text-5xl">
-            {value}
-        </div>
-        <div className="text-muted-foreground font-medium text-sm sm:text-base">{label}</div>
-    </div>
-);
-
-// --- Main Component ---
+import about_img from "../assets/about_img.jpg"
 
 const About = () => {
+    const values = [
+        {
+            icon: Target,
+            title: "Our Mission",
+            description: "To make industry-ready education accessible to everyone, everywhere, at any time.",
+        },
+        {
+            icon: Users,
+            title: "Community First",
+            description: "Building a global community of learners and professionals who support, inspire, and grow together.",
+        },
+        {
+            icon: Award,
+            title: "Excellence in Learning",
+            description: "Delivering top-quality, practical, and future-focused education through expert trainers and structured learning paths.",
+        },
+        {
+            icon: Zap,
+            title: "Innovation & Growth",
+            description: "Constantly upgrading our teaching methods and course content to ensure our learners stay ahead of industry trends.",
+        },
+    ];
+
+    const stats = [
+        { value: "2K+", label: "Students Worldwide" },
+        { value: "20+", label: "Courses Available" },
+        { value: "60+", label: "Expert Instructors" },
+        { value: "98%", label: "Satisfaction Rate" },
+    ];
+
+    const StatItem = ({ value, label }: { value: string, label: string }) => (
+        <div className="text-center p-6 bg-card rounded-xl shadow-sm border border-border/50 hover:shadow-md transition-all duration-300">
+            <div className="mb-2 font-display text-4xl font-bold text-primary sm:text-5xl">
+                {value}
+            </div>
+            <div className="text-muted-foreground font-medium text-sm sm:text-base">{label}</div>
+        </div>
+    );
+
     return (
         <div className="flex min-h-screen flex-col bg-background text-foreground">
             <Navigation />
@@ -59,26 +53,75 @@ const About = () => {
             <main className="flex-1 pt-16">
 
                 {/* 1. Hero Section */}
-                <section className="bg-gradient-to-b from-primary/10 to-background py-20 lg:py-32">
+                <section className="bg-gradient-to-b from-primary/5 to-background py-20 lg:py-28">
                     <div className="container mx-auto px-4 max-w-7xl">
                         <div className="mx-auto max-w-4xl text-center">
-                            <h1 className="mb-6 font-display text-5xl font-extrabold tracking-tight sm:text-6xl lg:text-7xl leading-tight">
-                                About <span className="text-primary">Shell E-Learning Academy</span>
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-semibold mb-6">
+                                <Users className="w-4 h-4" /> About Us
+                            </div>
+                            <h1 className="mb-6 font-display text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl leading-tight">
+                                Empowering Careers Through <span className="text-primary">Practical Education</span>
                             </h1>
-                            <p className="text-lg text-muted-foreground sm:text-xl max-w-3xl mx-auto">
-                                At Shell, we're on a mission to make career-focused education accessible, engaging, and affordable for learners across the globe. We build skills, confidence, and real opportunities.
+                            <p className="text-lg text-muted-foreground sm:text-xl max-w-3xl mx-auto leading-relaxed">
+                                Shell E-Learning Academy is more than just an ed-tech platform. We are a community dedicated to bridging the gap between academic learning and industry demands.
                             </p>
-                            <Link to="/all-courses">
-                                <Button size="lg" className="mt-8 shadow-lg hover:shadow-xl transition-all duration-300 bg-primary hover:bg-primary/90 font-bold">
-                                    Explore Our Learning Paths
-                                </Button>
-                            </Link>
                         </div>
                     </div>
                 </section>
 
-                {/* 2. Stats Section */}
-                <section className="py-12 bg-card/50 border-y border-border/70">
+                {/* 2. Story & Mission Section */}
+                <section className="py-16 lg:py-24">
+                    <div className="container mx-auto px-4 max-w-7xl">
+                        <div className="grid lg:grid-cols-2 gap-16 items-center">
+                            {/* Left: Image */}
+                            <div className="relative h-[500px] rounded-3xl overflow-hidden shadow-2xl shadow-primary/10 order-2 lg:order-1">
+                                <img
+                                    src={about_img}
+                                    alt="Team collaborating"
+                                    loading="lazy"
+                                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-8">
+                                    <div className="text-white">
+                                        <p className="font-bold text-xl">Established 2025</p>
+                                        <p className="text-white/80 text-sm">Growing stronger every day</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Right: Content */}
+                            <div className="space-y-8 order-1 lg:order-2">
+                                <div>
+                                    <h2 className="text-3xl font-bold text-foreground mb-4">Our Story & Vision</h2>
+                                    <p className="text-muted-foreground leading-relaxed">
+                                        Shell E-Learning Academy was founded with a powerful vision — <strong>"Empowering learners through practical and industry-driven education."</strong>
+                                    </p>
+                                    <p className="text-muted-foreground leading-relaxed mt-4">
+                                        We observed that traditional education often fails to meet the evolving needs of modern careers. To bridge this gap, we created a platform combining live interactive sessions, intensive hands-on projects, and recognized certifications that give students real-world expertise.
+                                    </p>
+                                    <p className="text-muted-foreground leading-relaxed mt-4">
+                                        Today, we are proud to have empowered thousands of students across India with essential digital-age skills in fields like Digital Marketing, AI, Data Analytics, and UI/UX Design. Our commitment is to prepare students for success with internship support, placement guidance, and continuous mentorship.
+                                    </p>
+                                </div>
+
+                                <div className="bg-primary/5 p-6 rounded-2xl border border-primary/10">
+                                    <div className="flex items-start gap-4">
+                                        <Target className="w-8 h-8 text-primary shrink-0 mt-1" />
+                                        <div>
+                                            <h3 className="text-xl font-bold text-foreground mb-2">Our Mission</h3>
+                                            <p className="text-muted-foreground text-sm leading-relaxed">
+                                                To democratize access to high-quality, industry-relevant education and empower learners with practical skills that meet the evolving demands of modern careers. We are committed to bridging the gap between traditional education and industry requirements through innovative learning experiences.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* 3. Stats Section */}
+                <section className="py-12 bg-muted/30 border-y border-border/50">
                     <div className="container mx-auto px-4 max-w-7xl">
                         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                             {stats.map((stat, index) => (
@@ -88,142 +131,106 @@ const About = () => {
                     </div>
                 </section>
 
-                {/* 3. Story Section */}
-                <section className="py-20 lg:py-32">
+                {/* 4. Our Values */}
+                <section className="py-20 lg:py-28">
                     <div className="container mx-auto px-4 max-w-7xl">
-                        <div className="grid lg:grid-cols-2 gap-12 items-center">
-                            {/* Left: Content */}
-                            <div>
-                                <h2 className="mb-6 font-bold text-4xl text-foreground">Our Story & Vision</h2>
-                                <div className="space-y-6 text-base text-muted-foreground leading-relaxed">
-                                    <p className="font-semibold">
-                                        Shell E-Learning Academy was founded with a powerful vision — **“Empowering learners through practical and industry-driven education.”**
-                                    </p>
-                                    <p>
-                                        We observed that traditional education often fails to meet the evolving needs of modern careers. To bridge this gap, we created a platform combining live interactive sessions, intensive hands-on projects, and recognized certifications that give students real-world expertise.
-                                    </p>
-                                    <p>
-                                        Today, we are proud to have empowered thousands of students across India with essential digital-age skills in fields like Digital Marketing, AI, Data Analytics, and UI/UX Design. Our commitment is to prepare students for success with internship support, placement guidance, and continuous mentorship.
-                                    </p>
-                                    <p>
-                                        <Link to="/contact" className="text-primary font-bold hover:underline">Connect with us →</Link>
-                                    </p>
-                                </div>
-                            </div>
-                            {/* Right: Image Placeholder */}
-                            <div className="relative h-80 sm:h-96 rounded-3xl overflow-hidden shadow-2xl shadow-gray-400/30">
-                                {/* Background element: Use a large abstract image to fill the space */}
-                                <img
-                                    src="https://images.unsplash.com/photo-1542744095-fcf48d80b0fd?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                    alt="Abstract learning background"
-                                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                                />
-
-                                {/* Primary/Green Overlay for Theme Consistency */}
-                                <div className="absolute inset-0 bg-primary/80" />
-
-                                {/* Centered Logo with Best Style (Z-indexed above overlay) */}
-                                <div className="absolute inset-0 flex items-center justify-center z-10">
-                                    <div className="p-8 bg-card/80 rounded-full shadow-2xl border-4 border-primary/50 backdrop-blur-md transition-all duration-500 hover:scale-110">
-                                        <img
-                                            src={logo1} // Your Shell E-learning Academy logo
-                                            alt="Shell E-learning Academy Logo"
-                                            // Ensure logo is highly visible and constrained
-                                            className="w-28 h-28 sm:w-36 sm:h-36 object-contain"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* 4. Founders Section (LOGOS USED HERE) */}
-                <section className="bg-muted/30 py-20">
-                    <div className="container mx-auto px-4 max-w-7xl">
-                        <div className="mb-16 text-center">
-                            <h2 className="mb-4 font-bold text-4xl text-foreground">Meet Our Leadership</h2>
-                            <p className="text-lg text-muted-foreground">The visionaries steering Shell E-Learning Academy</p>
-                        </div>
-
-                        <div className="grid gap-8 md:grid-cols-2 max-w-4xl mx-auto">
-
-                            {/* Founder 1 - Kartik Gupta */}
-                            <div className="bg-card rounded-3xl p-8 text-center shadow-lg border border-border/70 transition-all duration-300 hover:shadow-xl hover:shadow-primary/20">
-                                <img
-                                    src={logo1} // Using the imported logo
-                                    alt="Kartik Gupta - Founder"
-                                    className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-primary/50 object-contain p-2 bg-primary/5"
-                                />
-                                <h3 className="mb-1 font-bold text-xl text-foreground">Kartik Gupta</h3>
-                                <p className="mb-4 text-primary font-semibold">Founder & Director</p>
-                                <p className="text-muted-foreground text-sm leading-relaxed">
-                                    A visionary entrepreneur focused on transforming education through digital learning. Kartik ensures every learner is empowered for professional success.
-                                </p>
-                            </div>
-
-                            {/* Founder 2 - Mayank Jain */}
-                            <div className="bg-card rounded-3xl p-8 text-center shadow-lg border border-border/70 transition-all duration-300 hover:shadow-xl hover:shadow-primary/20">
-                                <img
-                                    src={logo1} // Using the imported logo
-                                    alt="Mayank Jain - Associate Founder"
-                                    className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-primary/50 object-contain p-2 bg-primary/5"
-                                />
-                                <h3 className="mb-1 font-bold text-xl text-foreground">Mayank Jain</h3>
-                                <p className="mb-4 text-primary font-semibold">Associate Founder</p>
-                                <p className="text-muted-foreground text-sm leading-relaxed">
-                                    A strategic and creative leader who ensures that the curriculum aligns perfectly with evolving industry demands and student career goals.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* 5. Values Section */}
-                <section className="py-20 lg:py-24">
-                    <div className="container mx-auto px-4 max-w-7xl">
-                        <div className="mb-16 text-center">
-                            <h2 className="mb-4 font-bold text-4xl text-foreground">Our Core Values</h2>
-                            <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-                                These four principles guide every decision and every course we deliver
+                        <div className="text-center mb-16">
+                            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Our Values</h2>
+                            <p className="text-muted-foreground max-w-2xl mx-auto">
+                                The core principles that drive everything we do at Shell E-Learning Academy.
                             </p>
                         </div>
 
-                        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-                            {values.map((value, index) => (
-                                <div
-                                    key={index}
-                                    className="bg-card rounded-3xl p-6 text-center shadow-lg border border-border/70 transition-all duration-300 hover:shadow-xl hover:shadow-primary/20 hover:-translate-y-1 group"
-                                >
-                                    <div className="mx-auto mb-5 inline-flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 shadow-inner">
-                                        <value.icon className="h-8 w-8 text-primary transition-transform duration-300 group-hover:scale-110" />
+                        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                            {values.map((item, index) => {
+                                const IconComponent = item.icon;
+                                return (
+                                    <div key={index} className="bg-card p-6 rounded-2xl border border-border/50 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
+                                        <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+                                            <IconComponent className="w-6 h-6" />
+                                        </div>
+                                        <h3 className="text-xl font-bold text-foreground mb-3">{item.title}</h3>
+                                        <p className="text-muted-foreground text-sm leading-relaxed">
+                                            {item.description}
+                                        </p>
                                     </div>
-                                    <h3 className="mb-2 font-bold text-xl text-foreground">{value.title}</h3>
-                                    <p className="text-sm text-muted-foreground leading-relaxed">{value.description}</p>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </section>
+
+                {/* 5. Founders & Team Section */}
+                <section className="py-20 bg-muted/30">
+                    <div className="container mx-auto px-4 max-w-7xl">
+                        <div className="text-center mb-16">
+                            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Meet Our Leadership</h2>
+                            <p className="text-muted-foreground max-w-2xl mx-auto">
+                                The visionaries steering Shell E-Learning Academy towards excellence.
+                            </p>
+                        </div>
+
+                        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                            {/* Founder 1 */}
+                            <div className="bg-card rounded-3xl overflow-hidden shadow-lg border border-border/50 group hover:shadow-xl transition-all duration-300">
+                                <div className="h-48 bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+                                    <img
+                                        src={logo1}
+                                        alt="Kartik Gupta"
+                                        className="w-32 h-32 object-contain drop-shadow-lg group-hover:scale-110 transition-transform duration-300"
+                                    />
                                 </div>
-                            ))}
+                                <div className="p-8 text-center">
+                                    <h3 className="text-2xl font-bold text-foreground mb-1">Kartik Gupta</h3>
+                                    <p className="text-primary font-semibold mb-4">Founder & Director</p>
+                                    <p className="text-muted-foreground text-sm leading-relaxed">
+                                        "A visionary entrepreneur focused on transforming education through digital learning. Kartik ensures every learner is empowered for professional success."
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Founder 2 */}
+                            <div className="bg-card rounded-3xl overflow-hidden shadow-lg border border-border/50 group hover:shadow-xl transition-all duration-300">
+                                <div className="h-48 bg-gradient-to-br from-secondary/20 to-secondary/5 flex items-center justify-center">
+                                    <img
+                                        src={logo1}
+                                        alt="Mayank Jain"
+                                        className="w-32 h-32 object-contain drop-shadow-lg group-hover:scale-110 transition-transform duration-300"
+                                    />
+                                </div>
+                                <div className="p-8 text-center">
+                                    <h3 className="text-2xl font-bold text-foreground mb-1">Mayank Jain</h3>
+                                    <p className="text-primary font-semibold mb-4">Associate Founder</p>
+                                    <p className="text-muted-foreground text-sm leading-relaxed">
+                                        "A strategic and creative leader who ensures that the curriculum aligns perfectly with evolving industry demands and student career goals."
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>
 
                 {/* 6. CTA Section */}
-                <section className="bg-gradient-to-br from-primary/5 via-background to-primary/10 py-20 border-t border-border/70">
-                    <div className="container mx-auto px-4 text-center max-w-7xl">
-                        <h2 className="mb-4 font-bold text-4xl text-foreground">
-                            Ready to Transform Your Career?
-                        </h2>
-                        <p className="mx-auto mb-8 max-w-2xl text-lg text-muted-foreground">
-                            Join our community of future-ready learners and start building real-world skills today.
-                        </p>
-                        <Link to="/auth">
-                            <Button size="lg" className="h-12 px-8 shadow-xl shadow-primary/30 transition-all duration-300 bg-primary hover:bg-primary/90 font-bold text-lg hover:scale-105">
-                                Get Started Now
-                            </Button>
-                        </Link>
+                <section className="py-20">
+                    <div className="container mx-auto px-4 max-w-5xl text-center">
+                        <div className="bg-primary rounded-3xl p-12 shadow-2xl shadow-primary/30 text-primary-foreground relative overflow-hidden">
+                            <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+                            <div className="relative z-10">
+                                <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">Ready to Start Your Journey?</h2>
+                                <p className="text-primary-foreground/90 text-lg mb-8 max-w-2xl mx-auto">
+                                    Join our community of learners and take the first step towards a brighter future.
+                                </p>
+                                <Link to="/all-courses">
+                                    <Button size="lg" variant="secondary" className="h-12 px-8 font-bold text-primary hover:bg-white transition-colors">
+                                        Explore Courses <ArrowRight className="ml-2 w-5 h-5" />
+                                    </Button>
+                                </Link>
+                            </div>
+                        </div>
                     </div>
                 </section>
-            </main>
 
+            </main>
             <Footer />
         </div>
     );

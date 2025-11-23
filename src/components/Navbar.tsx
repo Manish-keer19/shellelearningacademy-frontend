@@ -55,7 +55,7 @@ export const Navigation = () => {
         if (query) {
             navigate(`/all-courses?search=${encodeURIComponent(query)}`);
             // Close mobile menu if search is performed from there
-            if (mobileMenuOpen) setMobileMenuOpen(false); 
+            if (mobileMenuOpen) setMobileMenuOpen(false);
         } else {
             navigate('/all-courses');
         }
@@ -65,24 +65,22 @@ export const Navigation = () => {
     const navItems = [
         { name: "Home", path: "/" },
         { name: "Courses", path: "/all-courses" },
-        { name: "About", path: "/about" },
+        { name: "About Us", path: "/about" },
         { name: "Services", path: "/services" },
         { name: "Contact", path: "/contact" },
     ];
 
     const UserAuthSection = () => {
         return (
-            <div className="flex items-center gap-2">
-        
-
+            <div className="flex items-center gap-3">
                 {isAuthenticated ? (
                     // Authenticated Dropdown
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-9 w-9 rounded-full p-0 border border-primary/20 hover:bg-primary/5">
-                                <Avatar className="h-8 w-8">
+                            <Button variant="ghost" className="h-10 w-10 rounded-full p-0 border border-primary/20 hover:bg-primary/5 transition-all duration-300">
+                                <Avatar className="h-9 w-9">
                                     <AvatarImage src={user?.image} alt={user?.firstName} />
-                                    <AvatarFallback className="bg-primary text-primary-foreground text-sm font-semibold">
+                                    <AvatarFallback className="bg-primary text-primary-foreground text-sm font-bold">
                                         {user?.firstName?.[0]}{user?.lastName?.[0]}
                                     </AvatarFallback>
                                 </Avatar>
@@ -116,13 +114,24 @@ export const Navigation = () => {
                     </DropdownMenu>
                 ) : (
                     // Unauthenticated CTA
-                    <Button 
-                        size="sm" 
-                        className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-5 font-semibold shadow-md shadow-primary/30 transition-all duration-300"
-                        onClick={() => navigate("/auth")}
-                    >
-                        Start Learning
-                    </Button>
+                    <div className="flex items-center gap-3">
+                        <Link to="/auth">
+                            <Button
+                                variant="ghost"
+                                className="text-foreground/80 hover:text-primary font-semibold hover:bg-primary/5"
+                            >
+                                Login
+                            </Button>
+                        </Link>
+                        <Link to="/all-courses">
+                            <Button
+                                size="sm"
+                                className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-6 py-2 font-bold shadow-lg shadow-primary/20 transition-all duration-300 hover:scale-105"
+                            >
+                                Start Learning
+                            </Button>
+                        </Link>
+                    </div>
                 )}
             </div>
         );
@@ -133,7 +142,7 @@ export const Navigation = () => {
             <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border/70 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
                     <div className="flex h-16 items-center justify-between">
-                        
+
                         {/* Logo */}
                         <Link to="/" className="flex items-center gap-2 transition-opacity duration-300 hover:opacity-90 group">
                             <img loading="lazy" src={logo} alt="Shell E-learning Academy Logo" className="h-10 w-10 sm:h-11 sm:w-11 object-contain" />
@@ -143,7 +152,7 @@ export const Navigation = () => {
                                 <span className="text-xs font-medium text-muted-foreground hidden sm:block">MSME Verified Academy</span>
                             </div>
                         </Link>
-                    
+
                         {/* Desktop Navigation, Search, and Auth/Theme Buttons */}
                         <div className="hidden items-center gap-8 xl:flex">
                             <div className="flex items-center gap-6">
@@ -152,11 +161,10 @@ export const Navigation = () => {
                                     <Link
                                         key={item.name}
                                         to={item.path}
-                                        className={`text-sm font-semibold transition-colors duration-300 ${
-                                            isActive(item.path)
-                                                ? "text-primary border-b-2 border-primary pb-1"
-                                                : "text-foreground/80 hover:text-primary"
-                                        }`}
+                                        className={`text-sm font-semibold transition-colors duration-300 ${isActive(item.path)
+                                            ? "text-primary border-b-2 border-primary pb-1"
+                                            : "text-foreground/80 hover:text-primary"
+                                            }`}
                                     >
                                         {item.name}
                                     </Link>
@@ -165,13 +173,13 @@ export const Navigation = () => {
 
                             {/* Desktop Search Input */}
                             <form onSubmit={handleSearch} className="relative w-64">
-                                <Input 
+                                <Input
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    placeholder="Search courses..." 
+                                    placeholder="Search courses..."
                                     className="h-10 bg-card border border-border rounded-xl pl-4 pr-10 text-sm focus-visible:ring-primary focus-visible:border-primary/50"
                                 />
-                                <Button 
+                                <Button
                                     type="submit"
                                     size="sm"
                                     variant="ghost"
@@ -185,7 +193,7 @@ export const Navigation = () => {
 
                         {/* Mobile/Tablet Controls */}
                         <div className="flex items-center gap-2 xl:hidden">
-                        
+
                             {/* User Avatar (Mobile - if logged in) */}
                             {isAuthenticated && (
                                 <Button
@@ -225,24 +233,24 @@ export const Navigation = () => {
             {mobileMenuOpen && (
                 <>
                     {/* Backdrop Overlay */}
-                    <div 
+                    <div
                         className="fixed inset-0 top-16 z-40 bg-black/50 xl:hidden animate-fade-in"
                         onClick={() => setMobileMenuOpen(false)}
                     />
-                    
+
                     {/* Slide-in Menu from Top */}
                     <div className="fixed top-16 left-0 right-0 z-50 bg-card border-b border-border xl:hidden animate-slide-down shadow-2xl">
                         <div className="container mx-auto px-4 py-6 space-y-3 max-h-[calc(100vh-4rem)] overflow-y-auto">
-                            
+
                             {/* Mobile Search Form */}
                             <form onSubmit={handleSearch} className="relative mb-4">
-                                <Input 
+                                <Input
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    placeholder="Search courses..." 
+                                    placeholder="Search courses..."
                                     className="h-12 bg-white border border-border rounded-xl pl-4 pr-12 text-base shadow-inner"
                                 />
-                                <Button 
+                                <Button
                                     type="submit"
                                     size="icon"
                                     variant="ghost"
@@ -251,29 +259,36 @@ export const Navigation = () => {
                                     <Search className="h-5 w-5 text-muted-foreground hover:text-primary" />
                                 </Button>
                             </form>
-                            
+
                             {/* Nav Items */}
                             {navItems.map((item) => (
                                 <Link
                                     key={item.name}
                                     to={item.path}
-                                    className={`block w-full rounded-xl px-4 py-3 text-base font-semibold transition-all duration-300 ease-in-out ${
-                                        isActive(item.path)
-                                            ? "text-primary bg-primary/10 shadow-sm border border-primary/20"
-                                            : "text-foreground/80 hover:bg-muted/50"
-                                    }`}
+                                    className={`block w-full rounded-xl px-4 py-4 text-base font-semibold transition-all duration-300 ease-in-out ${isActive(item.path)
+                                        ? "text-primary bg-primary/10 shadow-sm border border-primary/20"
+                                        : "text-foreground/80 hover:bg-muted/50"
+                                        }`}
                                     onClick={() => setMobileMenuOpen(false)}
                                 >
                                     {item.name}
                                 </Link>
                             ))}
-                            
+
                             {/* Auth Section in Mobile Menu */}
                             {!isAuthenticated ? (
                                 <div className="space-y-3 pt-6 border-t border-border">
                                     <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>
-                                        <Button 
-                                            variant="default" 
+                                        <Button
+                                            variant="ghost"
+                                            className="w-full justify-start h-12 rounded-xl text-base font-semibold hover:bg-muted/50"
+                                        >
+                                            Login
+                                        </Button>
+                                    </Link>
+                                    <Link to="/" onClick={() => setMobileMenuOpen(false)}>
+                                        <Button
+                                            variant="default"
                                             className="w-full rounded-xl h-12 bg-primary hover:bg-primary/90 text-primary-foreground text-base font-bold shadow-lg shadow-primary/30"
                                         >
                                             Start Learning Now
@@ -295,7 +310,7 @@ export const Navigation = () => {
                                             <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
                                         </div>
                                     </div>
-                                    
+
                                     {/* Profile Actions */}
                                     <Link to="/dashboard" onClick={() => setMobileMenuOpen(false)}>
                                         <Button variant="ghost" className="w-full justify-start h-12 rounded-xl text-base font-semibold">
@@ -303,21 +318,21 @@ export const Navigation = () => {
                                             Dashboard
                                         </Button>
                                     </Link>
-                                    
+
                                     <Link to="/profile" onClick={() => setMobileMenuOpen(false)}>
                                         <Button variant="ghost" className="w-full justify-start h-12 rounded-xl text-base font-semibold">
                                             <User className="w-5 h-5 mr-3 text-primary" />
                                             Profile Settings
                                         </Button>
                                     </Link>
-                                    
+
                                     <Link to="/all-courses" onClick={() => setMobileMenuOpen(false)}>
                                         <Button variant="ghost" className="w-full justify-start h-12 rounded-xl text-base font-semibold">
                                             <BookOpen className="w-5 h-5 mr-3 text-primary" />
                                             My Learning
                                         </Button>
                                     </Link>
-                                    
+
                                     <Button
                                         variant="destructive"
                                         onClick={() => {
@@ -335,7 +350,7 @@ export const Navigation = () => {
                     </div>
                 </>
             )}
-            
+
             {/* Logout Confirmation Dialog */}
             <AlertDialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
                 <AlertDialogContent>

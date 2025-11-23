@@ -8,53 +8,7 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Light Theme - Clean and Minimal like Unlox */
-    --background: 0 0% 100%;
-    --foreground: 220 15% 20%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 220 15% 20%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 220 15% 20%;
-
-    /* Vibrant Blue Primary */
-    --primary: 217 100% 50%;
-    --primary-foreground: 0 0% 100%;
-    --primary-hover: 217 100% 45%;
-
-    /* Light Gray Secondary */
-    --secondary: 210 20% 96%;
-    --secondary-foreground: 220 15% 20%;
-
-    --muted: 210 20% 96%;
-    --muted-foreground: 220 10% 50%;
-
-    /* Subtle Accent */
-    --accent: 210 20% 94%;
-    --accent-foreground: 220 15% 20%;
-
-    --destructive: 0 85% 60%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 220 15% 90%;
-    --input: 220 15% 90%;
-    --ring: 217 100% 50%;
-
-    --radius: 0.75rem;
-
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(217 100% 50%), hsl(200 100% 55%));
-    --gradient-hero: linear-gradient(180deg, hsl(0 0% 100%), hsl(210 20% 98%));
-    
-    /* Shadows */
-    --shadow-sm: 0 2px 8px hsl(217 100% 50% / 0.08);
-    --shadow-md: 0 4px 16px hsl(217 100% 50% / 0.12);
-    --shadow-lg: 0 8px 32px hsl(217 100% 50% / 0.16);
-  }
-
-  .green {
-    /* Custom Theme - #D2E0CF background, #38871E headings */
+    /* Restored Green Theme */
     --background: 95 25% 86%;
     --foreground: 95 15% 15%;
 
@@ -64,18 +18,19 @@ All colors MUST be HSL.
     --popover: 95 20% 90%;
     --popover-foreground: 95 15% 15%;
 
-    /* Primary using #38871E for buttons */
+    /* Primary Brand Color (Green) */
     --primary: 95 52% 31%;
     --primary-foreground: 0 0% 100%;
     --primary-hover: 95 52% 26%;
 
-    /* Light Secondary */
+    /* Secondary */
     --secondary: 95 15% 80%;
     --secondary-foreground: 95 15% 15%;
 
     --muted: 95 15% 80%;
     --muted-foreground: 95 10% 40%;
 
+    /* Accent */
     --accent: 95 20% 75%;
     --accent-foreground: 95 15% 15%;
 
@@ -86,11 +41,13 @@ All colors MUST be HSL.
     --input: 95 15% 70%;
     --ring: 95 52% 31%;
 
-    /* Custom Gradients */
+    --radius: 0.75rem;
+
+    /* Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(95 52% 31%), hsl(110 45% 35%));
     --gradient-hero: linear-gradient(180deg, hsl(95 25% 86%), hsl(95 20% 90%));
     
-    /* Custom Shadows */
+    /* Shadows */
     --shadow-sm: 0 2px 8px hsl(95 52% 20% / 0.1);
     --shadow-md: 0 4px 16px hsl(95 52% 20% / 0.15);
     --shadow-lg: 0 8px 32px hsl(95 52% 20% / 0.2);
@@ -109,21 +66,7 @@ All colors MUST be HSL.
 
   /* Heading Colors - Consistent across all pages */
   h1, h2, h3, h4, h5, h6 {
-    @apply font-bold tracking-tight;
-    color: #447C2A !important; /* Primary heading color */
-  }
-
-  /* Text Colors */
-  p, span, div, label, a, li, td, th, input, textarea, button {
-    color: black !important;
-  }
-
-  .text-muted-foreground {
-    color: #666666 !important;
-  }
-
-  .text-foreground {
-    color: black !important;
+    @apply font-bold tracking-tight text-primary;
   }
 }
 
@@ -133,18 +76,6 @@ All colors MUST be HSL.
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-  }
-
-  .text-heading {
-    color: #447C2A !important; /* Consistent heading color */
-  }
-
-  .text-heading-secondary {
-    color: #38871E !important; /* Alternative heading color */
-  }
-
-  .text-heading-accent {
-    color: #2D5A1F !important; /* Darker heading variant */
   }
 
   .hover-lift {
