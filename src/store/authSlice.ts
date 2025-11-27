@@ -40,6 +40,7 @@ const authSlice = createSlice({
       state.user = action.payload.user;
       state.accessToken = action.payload.accessToken;
       state.isAuthenticated = true;
+      localStorage.clear();
       localStorage.setItem('accessToken', action.payload.accessToken);
       localStorage.setItem('user', JSON.stringify(action.payload.user));
     },
@@ -49,13 +50,24 @@ const authSlice = createSlice({
       state.accessToken = null;
       state.isAuthenticated = false;
     },
+    // logout: (state) => {
+    //   state.user = null;
+    //   state.accessToken = null;
+    //   state.isAuthenticated = false;
+    //   localStorage.removeItem('accessToken');
+    //   localStorage.removeItem('user');
+
+    // },
+
+
     logout: (state) => {
       state.user = null;
       state.accessToken = null;
       state.isAuthenticated = false;
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('user');
+
+      localStorage.clear();
     },
+
     loadUserFromStorage: (state) => {
       const accessToken = localStorage.getItem('accessToken');
       const user = localStorage.getItem('user');

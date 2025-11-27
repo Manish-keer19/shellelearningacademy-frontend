@@ -10,10 +10,11 @@ import { CategoriesSection } from "./CategoriesSection"
 import Testimonials from "./Testimonials";
 import WhyChooseShell from "./WhyChooseShell";
 import NewsletterSection from "./NewsletterSection";
+import { CertificationsSection } from "@/components/CertificationsSection";
 
 // import { TrustedCompanies } from "@/components/TrustedCompanies";
 // import { InstructorsSection } from "@/components/InstructorsSection";
-// import { CertificationsSection } from "@/components/CertificationsSection";
+
 
 const Index = () => {
   // ... existing code ...
@@ -26,10 +27,10 @@ const Index = () => {
         {/* <TrustedCompanies /> */}
         <CategoriesSection />
         <FeaturedCourses />
-        {/* <CertificationsSection /> */}
         {/* <InstructorsSection /> */}
         <WhyChooseShell />
         <Testimonials />
+        <CertificationsSection />
         <NewsletterSection />
 
       </main>

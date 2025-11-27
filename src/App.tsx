@@ -41,6 +41,7 @@ import Demo from "./pages/Demo";
 import Register from "./pages/Register";
 import CourseSignUpForm from "./pages/CourseSignUpForm";
 import EnrollmentSuccess from "./pages/EnrollmentSuccess";
+import Popup from "./components/Popup";
 
 
 
@@ -53,6 +54,7 @@ const App = () => (
       <ThemeProvider defaultTheme="light">
         <TooltipProvider>
           <BrowserRouter>
+            <Popup />
             <ScrollToTop />
             <Toaster 
               position="top-center"

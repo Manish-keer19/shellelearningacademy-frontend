@@ -4,8 +4,8 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Award, Download, Share2 } from "lucide-react";
-import certificate1 from "@/assets/certificate1.png";
-import certificate2 from "@/assets/certificate2.png";
+import certificate1 from "@/assets/certificate12.png";
+import certificate2 from "@/assets/certificate13.png";
 
 const Certificate = () => {
   const { courseId } = useParams();
