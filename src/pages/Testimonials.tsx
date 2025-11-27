@@ -38,7 +38,7 @@ const Testimonials = () => {
         },
         {
             id: 4,
-            name: "Sargam Dhangar",
+            name: "Simran Jat",
             role: "UI/UX Designer",
             quote: "As a beginner in design, I found the UI/UX course very structured and beginner-friendly. The feedback on my assignments was detailed and helped me improve my design eye significantly.",
             rating: 5,
