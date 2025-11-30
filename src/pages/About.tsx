@@ -1,4 +1,4 @@
-import { Navigation } from "@/components/Navbar";
+import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Target, Users, Award, Zap, CheckCircle, ArrowRight } from "lucide-react";
@@ -48,7 +48,7 @@ const About = () => {
 
     return (
         <div className="flex min-h-screen flex-col bg-background text-foreground">
-            <Navigation />
+            <Navbar />
 
             <main className="flex-1 pt-16">
 

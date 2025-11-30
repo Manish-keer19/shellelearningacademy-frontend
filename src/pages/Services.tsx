@@ -1,4 +1,4 @@
-import { Navigation } from "@/components/Navbar";
+import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, BookOpen, Users, Briefcase, Zap, GraduationCap, Shield, Star, Target } from "lucide-react";
@@ -72,7 +72,7 @@ const Services = () => {
 
     return (
         <div className="min-h-screen bg-background text-foreground">
-            <Navigation />
+            <Navbar />
             <section className="relative min-h-screen flex items-center overflow-hidden pt-16">
                 
                 {/* Background using theme vars */}

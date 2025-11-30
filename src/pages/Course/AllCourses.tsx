@@ -1,7 +1,7 @@
 
 import React, { useState, useMemo, useEffect } from "react";
 import { Link, useSearchParams, useNavigate } from "react-router-dom";
-import { Navigation } from "@/components/Navbar";
+import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -395,7 +395,7 @@ const AllCourses = () => {
 
     return (
         <div className="min-h-screen bg-background">
-            <Navigation />
+            <Navbar />
             
             {/* Mobile Filter Drawer */}
             <MobileFilterDrawer

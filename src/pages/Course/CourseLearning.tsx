@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import { Navigation } from "@/components/Navbar";
+import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -192,7 +192,7 @@ const CourseLearning = () => {
     }
   };
 
-  // Navigation handlers
+  // Navbar handlers
   const goToPreviousLesson = () => {
     if (!currentSection || !currentLesson) return;
     
@@ -311,7 +311,7 @@ const CourseLearning = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background">
-        <Navigation />
+        <Navbar />
         <main className="container mx-auto px-2 sm:px-4 pt-8 sm:pt-32 pb-20">
           <div className="flex items-center justify-center py-8 sm:py-16">
             <div className="text-center">
@@ -328,7 +328,7 @@ const CourseLearning = () => {
   if (!course || !currentLesson) {
     return (
       <div className="min-h-screen bg-background">
-        <Navigation />
+        <Navbar />
         <main className="container mx-auto px-2 sm:px-4 pt-8 sm:pt-32 pb-20">
           <div className="text-center py-8">
             <h1 className="text-lg sm:text-2xl font-bold mb-4">Course not accessible</h1>
@@ -345,7 +345,7 @@ const CourseLearning = () => {
 
   return (
     <div className="min-h-screen bg-background mt-[10vh] md:mt-0 ">
-      <Navigation />
+      <Navbar />
 
       <main className="container mx-auto px-2 sm:px-4 pt-8 sm:pt-32 pb-8 sm:pb-20">
         <div className="w-full space-y-4 lg:space-y-6 mt-4">

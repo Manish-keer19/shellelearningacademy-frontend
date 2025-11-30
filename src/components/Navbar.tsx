@@ -27,7 +27,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import toast from "react-hot-toast";
 import logo from "../assets/logo2.png"
 
-export const Navigation = () => {
+export const Navbar = () => {
     const { theme, toggleTheme } = useTheme();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [showLogoutDialog, setShowLogoutDialog] = useState(false);
@@ -67,6 +67,9 @@ export const Navigation = () => {
         { name: "Courses", path: "/all-courses" },
         { name: "About Us", path: "/about" },
         { name: "Services", path: "/services" },
+        { name: "Careers", path: "/careers" },
+        { name: "Workshops", path: "/workshops" },
+        // { name: "Events", path: "/events" },
         { name: "Contact", path: "/contact" },
     ];
 
@@ -139,9 +142,9 @@ export const Navigation = () => {
 
     return (
         <>
-            <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border/70 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-                    <div className="flex h-16 items-center justify-between">
+            <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border/70 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 ">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 ">
+                    <div className="flex h-16 items-center justify-between ">
 
                         {/* Logo */}
                         <Link to="/" className="flex items-center gap-2 transition-opacity duration-300 hover:opacity-90 group">
@@ -154,7 +157,7 @@ export const Navigation = () => {
                         </Link>
 
                         {/* Desktop Navigation, Search, and Auth/Theme Buttons */}
-                        <div className="hidden items-center gap-8 xl:flex">
+                        <div className="hidden items-center gap-8 lg:flex">
                             <div className="flex items-center gap-6">
                                 {/* Nav Items */}
                                 {navItems.map((item) => (
@@ -192,7 +195,7 @@ export const Navigation = () => {
                         </div>
 
                         {/* Mobile/Tablet Controls */}
-                        <div className="flex items-center gap-2 xl:hidden">
+                        <div className="flex items-center gap-2 lg:hidden">
 
                             {/* User Avatar (Mobile - if logged in) */}
                             {isAuthenticated && (
@@ -234,12 +237,12 @@ export const Navigation = () => {
                 <>
                     {/* Backdrop Overlay */}
                     <div
-                        className="fixed inset-0 top-16 z-40 bg-black/50 xl:hidden animate-fade-in"
+                        className="fixed inset-0 top-16 z-40 bg-black/50 lg:hidden animate-fade-in"
                         onClick={() => setMobileMenuOpen(false)}
                     />
 
                     {/* Slide-in Menu from Top */}
-                    <div className="fixed top-16 left-0 right-0 z-50 bg-card border-b border-border xl:hidden animate-slide-down shadow-2xl">
+                    <div className="fixed top-16 left-0 right-0 z-50 bg-card border-b border-border lg:hidden animate-slide-down shadow-2xl">
                         <div className="container mx-auto px-4 py-6 space-y-3 max-h-[calc(100vh-4rem)] overflow-y-auto">
 
                             {/* Mobile Search Form */}

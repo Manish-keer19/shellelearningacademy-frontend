@@ -9,7 +9,7 @@
 
 // import { courseService } from '@/service/course.service';
 // import { useAppSelector } from '@/hooks/redux';
-// import { Navigation } from '@/components/Navbar';
+// import { Navbar } from '@/components/Navbar';
 
 // const ManageCourses = () => {
 //   const navigate = useNavigate();
@@ -64,7 +64,7 @@
 //   if (isLoading) {
 //     return (
 //       <div className="min-h-screen bg-gradient-to-br from-shell-darker via-shell-dark to-shell-dark  mt-20">
-//         <Navigation/>
+//         <Navbar/>
 //         <div className="container mx-auto px-4 py-12 flex items-center justify-center">
 //           <div className="text-center">
 //             <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
@@ -77,7 +77,7 @@
 
 //   return (
 //     <div className="min-h-screen bg-gradient-to-br from-shell-darker via-shell-dark to-shell-dark mt-20">
-//       <Navigation/>
+//       <Navbar/>
       
 //       <div className="container mx-auto px-4 py-12">
 //         <div className="max-w-7xl mx-auto">
@@ -282,7 +282,7 @@ import { Plus, Edit, Trash2, Eye, Users, DollarSign, BookOpen, Loader2 } from "l
 import { useToast } from "@/hooks/use-toast"; // Functional Hook
 import { courseService } from '@/service/course.service'; // Functional Mock Service
 import { useAppSelector } from '@/hooks/redux'; // Assumed Redux Hook
-import { Navigation } from '@/components/Navbar';
+import { Navbar } from '@/components/Navbar';
 
 // --- Helper Components for Styling ---
 
@@ -375,7 +375,7 @@ const ManageCourses = () => {
     if (isLoading) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5 text-foreground">
-                <Navigation/>
+                <Navbar/>
                 <div className="container mx-auto px-4 py-32 flex items-center justify-center">
                     <div className="text-center bg-card p-10 rounded-xl shadow-lg">
                         <Loader2 className="w-8 h-8 text-primary animate-spin mx-auto mb-4" />
@@ -389,7 +389,7 @@ const ManageCourses = () => {
     // --- Main Render ---
     return (
         <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5 text-foreground">
-            <Navigation/>
+            <Navbar/>
             
             <div className="container mx-auto px-4 py-12 pt-32">
                 <div className="max-w-7xl mx-auto">

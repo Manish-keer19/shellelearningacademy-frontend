@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { Navigation } from "@/components/Navbar";
+import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -12,7 +12,7 @@ const Certificate = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary/10">
-      <Navigation />
+      <Navbar />
 
       <main className="container mx-auto px-4 pt-32 pb-20">
         <div className="max-w-4xl mx-auto">

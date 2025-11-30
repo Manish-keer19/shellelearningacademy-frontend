@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Link, useParams, useNavigate, useSearchParams } from "react-router-dom";
 // NOTE: Adjust the paths below to match your project's component structure
-import { Navigation } from "@/components/Navbar";
+import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import {
     Star, Check, Play, Download,
@@ -477,7 +477,7 @@ const CourseDetail = () => {
     // --- Loading and Error States ---
     if (isLoading) return (
         <div className="min-h-screen bg-background">
-            <Navigation />
+            <Navbar />
             <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
                 <div className="relative">
                     <Loader2 className="w-12 h-12 animate-spin text-primary" />
@@ -494,7 +494,7 @@ const CourseDetail = () => {
 
     if (!course) return (
         <div className="min-h-screen flex flex-col items-center justify-center gap-4 ">
-            <Navigation />
+            <Navbar />
             <div className="text-center p-10 bg-card rounded-xl shadow-lg mt-20">
                 <AlertCircle className="w-12 h-12 text-destructive mx-auto mb-4" />
                 <h2 className="text-xl font-bold">Course Not Found</h2>
@@ -510,7 +510,7 @@ const CourseDetail = () => {
     // --- Main Render ---
     return (
         <div className="min-h-screen bg-background mt-16">
-            <Navigation />
+            <Navbar />
 
             {/* HERO SECTION - Visually impactful, spans full width */}
             <div className="bg-primary/5 dark:bg-card border-b border-border/70 py-10 lg:py-16">

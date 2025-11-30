@@ -1,4 +1,4 @@
-import { Navigation } from "@/components/Navbar";
+import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { CourseCard } from "@/components/CourseCard";
 import { Footer } from "@/components/Footer";
@@ -20,7 +20,7 @@ const Index = () => {
   // ... existing code ...
   return (
     <div className="flex min-h-screen flex-col">
-      <Navigation />
+      <Navbar />
 
       <main className="flex-1">
         <Hero />

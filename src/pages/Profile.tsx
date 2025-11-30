@@ -9,7 +9,7 @@ import { Progress } from "@/components/ui/progress";
 import { BookOpen, Plus, Settings, User, Loader2, Award, Zap, GraduationCap } from "lucide-react";
 import { courseService } from "@/service/course.service";
 import { useState, useEffect } from "react";
-import { Navigation } from "@/components/Navbar";
+import { Navbar } from "@/components/Navbar";
 import { Link } from "react-router-dom";
 
 // --- Reusable Component for Quick Actions ---
@@ -207,6 +207,24 @@ const Profile = () => {
                                 title="Add Category" 
                                 description="Organize courses by adding new categories"
                                 onClick={() => navigate('/add-category')} 
+                            />
+                        )}
+                        {/* --- NEW: Create Job Action --- */}
+                        {isAdmin && (
+                            <QuickActionCard 
+                                Icon={Zap} 
+                                title="Create Job" 
+                                description="Post new job opportunities for students"
+                                onClick={() => navigate('/create-job')} 
+                            />
+                        )}
+                        {/* --- NEW: Manage Jobs Action --- */}
+                        {isAdmin && (
+                            <QuickActionCard 
+                                Icon={Settings} 
+                                title="Manage Jobs" 
+                                description="Edit and manage existing job postings"
+                                onClick={() => navigate('/manage-jobs')} 
                             />
                         )}
                     </div>

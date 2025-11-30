@@ -12,7 +12,7 @@ import { Plus, Trash2, X, Image, Tag, FileText, Edit, Send, Loader2, CheckCircle
 import toast from "react-hot-toast";
 import { courseService } from '@/service/course.service';
 import { useAppSelector } from '@/hooks/redux';
-import { Navigation } from '@/components/Navbar';
+import { Navbar } from '@/components/Navbar';
 
 const CreateCourse = () => {
     const navigate = useNavigate();
@@ -365,7 +365,7 @@ const CreateCourse = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5 text-foreground">
-            <Navigation />
+            <Navbar />
             
             {/* Sticky Progress Header */}
             <div className="border-b border-border bg-card/90 backdrop-blur-lg sticky top-0 z-20 shadow-md pt-20">

@@ -1,5 +1,5 @@
 import React from "react";
-import { Navigation } from "@/components/Navbar";
+import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -59,7 +59,7 @@ const Contact = () => {
 
     return (
         <div className="flex min-h-screen flex-col bg-background text-foreground">
-            <Navigation />
+            <Navbar />
 
             <main className="flex-1 pt-16">
                 
@@ -168,7 +168,7 @@ const Contact = () => {
                                     loading="lazy"
                                     referrerPolicy="no-referrer-when-downgrade"
                                     title="Shell E-learning Academy Location"
-            z                    />
+                               />
                             </div>
                         </div>
                     </div>

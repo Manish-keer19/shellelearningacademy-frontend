@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Navigation } from "@/components/Navbar";
+import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, Award, Clock, TrendingUp, GraduationCap, Play, Settings, Users, CheckCircle, Search, Loader2, Zap } from "lucide-react";
+import { BookOpen, Award, Clock, TrendingUp, GraduationCap, Play, Settings, Users, CheckCircle, Search, Loader2, Zap, Calendar } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAppSelector } from "@/hooks/redux";
 import { courseService } from "@/service/course.service";
@@ -32,8 +32,8 @@ const DetailedStatCard = ({ icon: Icon, label, value, colorClass }) => (
 
 // 2. Quick Action Card
 const QuickActionCard = ({ icon: Icon, title, description, action, colorClass }) => (
-    <Card 
-        className="bg-card/90 backdrop-blur-sm border border-border/70 shadow-lg hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 hover:-translate-y-1 cursor-pointer" 
+    <Card
+        className="bg-card/90 backdrop-blur-sm border border-border/70 shadow-lg hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 hover:-translate-y-1 cursor-pointer"
         onClick={action}
     >
         <div className="p-6 text-center">
@@ -50,30 +50,30 @@ const QuickActionCard = ({ icon: Icon, title, description, action, colorClass })
 const ContinueLearningCard = ({ course, navigate }) => (
     <Card className="overflow-hidden bg-card/90 backdrop-blur-sm border border-border/70 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
         <div className="relative aspect-video overflow-hidden">
-            <img 
-                src={course.thumbnail || 'https://via.placeholder.com/600x337/4C7C33/FFFFFF?text=Course+Image'} 
+            <img
+                src={course.thumbnail || 'https://via.placeholder.com/600x337/4C7C33/FFFFFF?text=Course+Image'}
                 alt={course.courseName}
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
             <div className="absolute top-3 right-3">
-                <Badge 
+                <Badge
                     className={`font-semibold ${course.progress === 100 ? 'bg-green-500 hover:bg-green-600' : 'bg-orange-500 hover:bg-orange-600'}`}
                 >
                     {course.progress === 100 ? 'Completed' : 'In Progress'}
                 </Badge>
             </div>
         </div>
-        
+
         <div className="p-5">
             <h3 className="font-bold text-lg mb-2 line-clamp-2 transition-colors duration-300 group-hover:text-primary">{course.courseName}</h3>
-            
+
             <div className="space-y-3 mb-4">
                 <div className="flex items-center justify-between text-sm">
                     <span className="font-medium text-foreground">Progress</span>
                     <span className="font-bold text-primary">{course.progress}%</span>
                 </div>
-                <Progress value={course.progress} className="h-2 bg-muted" indicatorColor="bg-primary" />
-                
+                <Progress value={course.progress} className="h-2 bg-muted" />
+
                 <div className="flex items-center justify-between text-xs text-muted-foreground pt-1">
                     <div className="flex items-center space-x-1">
                         <CheckCircle className="w-3.5 h-3.5" />
@@ -85,8 +85,8 @@ const ContinueLearningCard = ({ course, navigate }) => (
                     </div>
                 </div>
             </div>
-            
-            <Button 
+
+            <Button
                 className="w-full h-10 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
                 onClick={() => navigate(`/course-learning/${course._id}`)}
             >
@@ -106,7 +106,7 @@ const Dashboard = () => {
     const [viewType, setViewType] = useState<'student' | 'admin'>('student');
     const [enrolledCourses, setEnrolledCourses] = useState([]);
     const [allCourses, setAllCourses] = useState([]);
-    
+
     // Detailed Student Stats
     const [studentStats, setStudentStats] = useState({
         totalEnrolled: 0,
@@ -114,7 +114,7 @@ const Dashboard = () => {
         totalProgress: 0,
         certificatesEarned: 0
     });
-    
+
     // Detailed Admin Stats
     const [adminStats, setAdminStats] = useState({
         totalCourses: 0,
@@ -145,17 +145,17 @@ const Dashboard = () => {
 
             setAllCourses(coursesRes.data || []);
             let userEnrolledCourses = enrolledRes.data?.courses || [];
-            
+
             // --- Progress Calculation ---
             const coursesWithProgress = await Promise.all(
                 userEnrolledCourses.map(async (course) => {
                     try {
                         const progressRes = await courseService.getFullCourseDetails(course._id, accessToken);
                         const completedVideos = progressRes.data?.completedVideos || [];
-                        const totalLectures = course.courseContent?.reduce((total, section) => 
+                        const totalLectures = course.courseContent?.reduce((total, section) =>
                             total + (section.subSection?.length || 0), 0) || 0;
                         const progress = totalLectures > 0 ? (completedVideos.length / totalLectures) * 100 : 0;
-                        
+
                         return {
                             ...course,
                             progress: Math.round(progress),
@@ -168,22 +168,22 @@ const Dashboard = () => {
                     }
                 })
             );
-            
+
             const validCourses = coursesWithProgress.filter(c => c && c._id);
             setEnrolledCourses(validCourses);
-            
+
             // Final Stats Calculation
             const totalEnrolled = validCourses.length;
             const completedCourses = validCourses.filter(c => c.progress === 100).length;
             const totalProgress = totalEnrolled > 0 ? validCourses.reduce((sum, c) => sum + (c.progress || 0), 0) / totalEnrolled : 0;
-            
+
             setStudentStats({
                 totalEnrolled,
                 completedCourses,
                 totalProgress: Math.round(totalProgress),
                 certificatesEarned: completedCourses
             });
-            
+
         } catch (error) {
             console.error('Error fetching student dashboard:', error);
             toast.error("Failed to fetch dashboard statistics.");
@@ -198,9 +198,9 @@ const Dashboard = () => {
         try {
             const coursesRes = await courseService.getAdminCourses(accessToken);
             const adminCourses = coursesRes.data || [];
-            
+
             const totalStudents = adminCourses.reduce((sum, course) => sum + (course.studentsEnrolled?.length || 0), 0);
-            
+
             setAdminStats({
                 totalCourses: adminCourses.length,
                 totalStudents: totalStudents,
@@ -222,8 +222,8 @@ const Dashboard = () => {
         }
         const accountType = user?.accountType === 'Admin' ? 'admin' : 'student';
         setViewType(accountType);
-        
-        if (accountType === 'Student') {
+
+        if (accountType === 'student') {
             fetchStudentStats();
         } else {
             fetchAdminStats();
@@ -231,7 +231,7 @@ const Dashboard = () => {
     }, [navigate, accessToken, user]);
 
     // --- Data Mappers for Rendering ---
-    
+
     const studentStatsData = [
         { icon: BookOpen, label: "Enrolled Courses", value: studentStats.totalEnrolled.toString(), colorClass: "text-primary" },
         { icon: CheckCircle, label: "Completed Courses", value: studentStats.completedCourses.toString(), colorClass: "text-green-500" },
@@ -245,7 +245,7 @@ const Dashboard = () => {
         { icon: Award, label: "Certificates Issued", value: adminStats.certificatesIssued.toString(), colorClass: "text-purple-500" },
         { icon: GraduationCap, label: "Course Completions", value: adminStats.courseCompletions.toString(), colorClass: "text-orange-500" },
     ];
-    
+
     const studentActions = [
         { title: "Browse Courses", description: "Explore new paths to expand your skills.", icon: BookOpen, action: () => navigate('/all-courses'), colorClass: "from-primary to-green-500" },
         { title: "My Certificates", description: "View and download your earned awards.", icon: Award, action: () => navigate('/certificates'), colorClass: "from-green-500 to-green-600" },
@@ -255,9 +255,11 @@ const Dashboard = () => {
 
     const adminActions = [
         { title: "Create Course", description: "Build and publish a new learning module.", icon: BookOpen, action: () => navigate('/create-course'), colorClass: "from-primary to-green-500" },
+        { title: "Create Workshop", description: "Schedule a new workshop or event.", icon: Calendar, action: () => navigate('/create-workshop'), colorClass: "from-pink-500 to-rose-500" },
         { title: "Manage Courses", description: "Edit, update, or delete content.", icon: Settings, action: () => navigate('/manage-courses'), colorClass: "from-blue-500 to-blue-600" },
         { title: "Add Category", description: "Organize content with new course categories.", icon: Zap, action: () => navigate('/add-category'), colorClass: "from-purple-500 to-purple-600" },
-        // { title: "View All Students", description: "Monitor all registered users.", icon: Users, action: () => navigate('/manage-users'), colorClass: "from-orange-500 to-orange-600" }
+        { title: "Create Job", description: "Post new job opportunities for students.", icon: Users, action: () => navigate('/create-job'), colorClass: "from-orange-500 to-orange-600" },
+        { title: "Manage Jobs", description: "Edit and manage existing job postings.", icon: Settings, action: () => navigate('/manage-jobs'), colorClass: "from-red-500 to-red-600" }
     ];
 
     // --- Render Sections ---
@@ -272,10 +274,10 @@ const Dashboard = () => {
             </p>
         </div>
     );
-    
+
     const StatsGrid = () => (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            {viewType === 'admin' 
+            {viewType === 'admin'
                 ? adminStatsData.map((stat, index) => <DetailedStatCard key={index} {...stat} />)
                 : studentStatsData.map((stat, index) => <DetailedStatCard key={index} {...stat} />)
             }
@@ -298,7 +300,7 @@ const Dashboard = () => {
             </div>
         </div>
     );
-    
+
     const StudentMainLearningSection = () => {
         // Only render the student-specific main blocks
         if (viewType !== 'student') return null;
@@ -312,7 +314,7 @@ const Dashboard = () => {
                         <h2 className="text-2xl font-bold text-foreground">Discover New Courses</h2>
                     </div>
                     {/* Assuming CourseSearch is an input component */}
-                    <CourseSearch placeholder="Search for new courses to enroll..." /> 
+                    <CourseSearch placeholder="Search for new courses to enroll..." />
                 </div>
 
                 {/* 2. Continue Learning */}
@@ -353,8 +355,8 @@ const Dashboard = () => {
                         {allCourses.slice(0, 4).map((course: any) => (
                             <Card key={course._id} className="bg-card/90 backdrop-blur-sm border-border/70 hover:shadow-lg transition-all duration-300 cursor-pointer" onClick={() => navigate(`/course-detail/${course._id}`)}>
                                 <div className="aspect-video relative overflow-hidden rounded-t-lg">
-                                    <img 
-                                        src={course.thumbnail || 'https://via.placeholder.com/600x337/4C7C33/FFFFFF?text=Recommended+Course'} 
+                                    <img
+                                        src={course.thumbnail || 'https://via.placeholder.com/600x337/4C7C33/FFFFFF?text=Recommended+Course'}
                                         alt={course.courseName}
                                         className="w-full h-full object-cover"
                                     />
@@ -412,7 +414,7 @@ const Dashboard = () => {
             { icon: Play, color: 'bg-blue-100 text-blue-600', text: 'Watched 3 new videos in "UI/UX Design"', time: '4 hours ago' },
             { icon: Award, color: 'bg-purple-100 text-purple-600', text: 'Earned certificate for "Digital Marketing Pro"', time: '1 day ago' },
         ];
-        
+
         return (
             <div className="mb-12">
                 <h2 className="text-3xl font-bold text-foreground mb-6">Recent Activity</h2>
@@ -442,7 +444,7 @@ const Dashboard = () => {
     if (isLoadingStats && accessToken) {
         return (
             <div className="min-h-screen bg-gradient-to-b from-background to-secondary/10 flex items-center justify-center">
-                <Navigation />
+                <Navbar />
                 <div className="container mx-auto px-4 py-32">
                     <div className="text-center">
                         <Loader2 className="w-10 h-10 text-primary animate-spin mx-auto mb-4" />
@@ -457,25 +459,25 @@ const Dashboard = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-background to-secondary/10">
-            <Navigation />
+            <Navbar />
 
             <main className="container mx-auto px-4 pt-32 pb-20 max-w-7xl">
-                
+
                 <WelcomeSection />
-                
+
                 <StatsGrid />
-                
+
                 <QuickActionsSection />
 
                 {viewType === 'student' && <StudentMainLearningSection />}
                 {viewType === 'admin' && <AdminMainOverview />}
-                
+
                 <RecentActivitySection />
 
             </main>
 
             <Footer />
-        
+
         </div>
     );
 };

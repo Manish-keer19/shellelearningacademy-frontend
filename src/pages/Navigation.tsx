@@ -37,7 +37,13 @@ const Navigation = () => {
         { path: "/courses-list", label: "Courses List" },
         { path: "/create-course", label: "Create Course" },
         { path: "/manage-courses", label: "Manage Courses" },
-        { path: "/add-category", label: "Add Category" },
+      ]
+    },
+    {
+      title: "Careers",
+      routes: [
+        { path: "/careers", label: "Careers" },
+        { path: "/create-job", label: "Create Job" },
       ]
     },
   ];

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navigation } from "@/components/Navbar";
+import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -11,7 +11,7 @@ const Demo = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary/10">
-      <Navigation />
+      <Navbar />
      
       <main className="container mx-auto px-4 pt-20 sm:pt-24 lg:pt-32 pb-12 sm:pb-16 lg:pb-20">
         <Button

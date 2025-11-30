@@ -15,7 +15,7 @@ import {
     GraduationCap,
     MapPin,
 } from "lucide-react";
-import { Navigation } from "@/components/Navbar";
+import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import logo from "../assets/logo2.png";
 import axiosInstance from "@/service/axiosInstance";
@@ -183,7 +183,7 @@ const CourseSignUpForm: React.FC<CourseSignUpFormProps> = React.memo(({
     const [stateSearch, setStateSearch] = useState("");
     const [batchSearch, setBatchSearch] = useState("");
 
-    // Get course data from navigation state
+    // Get course data from Navbar state
     const courseData = location.state || {};
     const actualCourseId = courseId || courseData.courseId;
     const actualCourseName = courseName || courseData.courseName || "Course";
@@ -253,7 +253,7 @@ const CourseSignUpForm: React.FC<CourseSignUpFormProps> = React.memo(({
 
     return (
         <>
-            <Navigation />
+            <Navbar />
             <div id="custom-toast-area" className="fixed top-4 right-4 z-[100]"></div>
 
             {/* Form Section */}

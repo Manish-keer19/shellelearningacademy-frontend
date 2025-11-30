@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Navigation } from "@/components/Navbar";
+import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -78,7 +78,7 @@ const CreateCategory = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-primary/5 to-background text-foreground">
-            <Navigation />
+            <Navbar />
 
             <main className="container mx-auto px-4 pt-32 pb-20 max-w-7xl">
                 <div className="max-w-2xl mx-auto">

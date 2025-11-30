@@ -1,6 +1,6 @@
 // import React, { useEffect, useState } from 'react';
 // import { useNavigate, useSearchParams } from 'react-router-dom';
-// import { Navigation } from '@/components/Navbar';
+// import { Navbar } from '@/components/Navbar';
 // import { Footer } from '@/components/Footer';
 // import { CheckCircle, ArrowLeft, Phone, Mail } from 'lucide-react';
 // import { Button } from '@/components/ui/button';
@@ -40,7 +40,7 @@
 
 //   return (
 //     <div className="min-h-screen bg-background">
-//       <Navigation />
+//       <Navbar />
       
 //       <main className="container mx-auto px-4 py-24 max-w-4xl">
 //         <motion.div
@@ -157,7 +157,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Navigation } from '@/components/Navbar';
+import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { CheckCircle, ArrowLeft, Phone, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -212,7 +212,7 @@ const EnrollmentSuccess: React.FC = () => {
     // Improved Loading State
     return (
       <div className="min-h-screen bg-background">
-        <Navigation />
+        <Navbar />
         <main className="container mx-auto px-4 py-24 max-w-4xl text-center">
           <div className="flex flex-col items-center justify-center h-48">
             <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-primary mb-4"></div>
@@ -224,7 +224,7 @@ const EnrollmentSuccess: React.FC = () => {
     );
   }
 
-  // Helper function for navigation to keep JSX clean
+  // Helper function for Navbar to keep JSX clean
   const navigateToCourse = () => {
       if (courseData.courseId) {
           navigate(`/course-detail/${courseData.courseId}`);
@@ -233,7 +233,7 @@ const EnrollmentSuccess: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
+      <Navbar />
       
       <main className="container mx-auto px-4 py-24 max-w-4xl">
         <motion.div

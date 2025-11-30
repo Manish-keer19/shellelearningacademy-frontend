@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Navigation } from "@/components/Navbar";
+import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -628,7 +628,7 @@ const EditCourse = () => {
   if (isLoadingCourse) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-background to-secondary/10">
-        <Navigation />
+        <Navbar />
         <main className="container mx-auto px-4 pt-32 pb-20 flex items-center justify-center">
           <div className="text-center">
             <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
@@ -642,7 +642,7 @@ const EditCourse = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary/10">
-      <Navigation />
+      <Navbar />
 
       {/* Progress Header */}
       <div className="border-b border-border bg-card/50 backdrop-blur-lg sticky top-0 z-10">

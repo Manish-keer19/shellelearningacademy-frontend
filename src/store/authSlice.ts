@@ -40,7 +40,8 @@ const authSlice = createSlice({
       state.user = action.payload.user;
       state.accessToken = action.payload.accessToken;
       state.isAuthenticated = true;
-      localStorage.clear();
+      localStorage.removeItem("enrollmentToken");
+      localStorage.removeItem("enrolledUser");
       localStorage.setItem('accessToken', action.payload.accessToken);
       localStorage.setItem('user', JSON.stringify(action.payload.user));
     },
