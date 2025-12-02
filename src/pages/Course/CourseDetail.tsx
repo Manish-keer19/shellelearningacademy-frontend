@@ -48,14 +48,17 @@ interface CourseEnrollmentProps {
     isEnrolled: boolean;
     onEnrollmentSuccess: () => void;
     setIsEnrolledLocally: (status: boolean) => void;
+    onDownloadBrochure: () => void;
 }
 
 const CourseEnrollment: React.FC<CourseEnrollmentProps> = React.memo(({
     course,
     isEnrolled,
     onEnrollmentSuccess,
-    setIsEnrolledLocally
+    setIsEnrolledLocally,
+    onDownloadBrochure
 }) => {
+    const { user } = useSelector((state: any) => state.auth);
     const { showToast } = useCustomToast();
     const navigate = useNavigate();
 
@@ -213,10 +216,26 @@ const CourseEnrollment: React.FC<CourseEnrollmentProps> = React.memo(({
         }
     }, [enrollmentToken, handlePayment]);
 
+    if (user && user.accountType === "Admin") {
+        return (
+            <Card className="bg-card shadow-2xl h-fit border border-border/70">
+                <CardContent className="p-6 text-center space-y-4">
+                    <h3 className="text-lg font-bold">Admin View</h3>
+                    <p className="text-sm text-muted-foreground">
+                        You are viewing this page as an admin.
+                    </p>
+                    <Button asChild className="w-full">
+                        <Link to="/dashboard">Admin Dashboard</Link>
+                    </Button>
+                </CardContent>
+            </Card>
+        )
+    }
+
     // --- MODIFIED: Already Enrolled State (Premium Look) ---
     if (isEnrolled) {
         return (
-            <Card className="bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-950 dark:to-indigo-900 border-indigo-500 sticky top-24 h-fit shadow-2xl shadow-indigo-500/30">
+            <Card className="bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-950 dark:to-indigo-900 border-indigo-500 h-fit shadow-2xl shadow-indigo-500/30">
                 <CardContent className="p-6">
                     <div className="text-center mb-6">
                         <div className="w-16 h-16 bg-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg animate-pulse">
@@ -230,13 +249,18 @@ const CourseEnrollment: React.FC<CourseEnrollmentProps> = React.memo(({
                             Our team will contact you shortly.
                         </p>
                     </div>
+                    {course.brochure && (
+                        <Button onClick={onDownloadBrochure} variant="outline" className="w-full mt-4 border-indigo-300 text-indigo-700 hover:bg-indigo-100 dark:text-indigo-200 dark:hover:bg-indigo-800">
+                            <Download className="w-4 h-4 mr-2" /> Download Brochure
+                        </Button>
+                    )}
                 </CardContent>
             </Card>
         );
     }
     // --- Enrollment Card State (Premium Look) ---
     return (
-        <Card className="bg-card shadow-2xl sticky top-24 h-fit border border-border/70">
+        <Card className="bg-card shadow-2xl h-fit border border-border/70">
             {/* Course Thumbnail */}
             <div className="aspect-video bg-muted relative rounded-t-xl overflow-hidden">
                 <img
@@ -299,6 +323,13 @@ const CourseEnrollment: React.FC<CourseEnrollmentProps> = React.memo(({
                     <ShieldCheck className="w-4 h-4 mr-1 text-green-500" />
                     Secure Checkout by Razorpay
                 </div>
+
+                {course.brochure && (
+                    <Button onClick={onDownloadBrochure} variant="ghost" className="w-full text-primary hover:bg-primary/10">
+                        <Download className="w-4 h-4 mr-2" />
+                        <span>Download Brochure</span>
+                    </Button>
+                )}
 
                 <Separator className="my-4" />
 
@@ -462,13 +493,41 @@ const CourseDetail = () => {
         });
     }, []);
 
-    const handleDownloadBrochure = useCallback(() => {
-        if (course?.brochure) {
-            window.open(course.brochure, '_blank');
-        } else {
+    const handleDownloadBrochure = useCallback(async () => {
+        if (!course?.brochure) {
             showToast('error', 'Error', "No brochure available for download.");
+            return;
         }
-    }, [course?.brochure, showToast]);
+
+        const toastId = toast.loading("Preparing download...");
+
+        try {
+            const response = await fetch(course.brochure);
+            if (!response.ok) {
+                throw new Error('Network response was not ok.');
+            }
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            const sanitizedTitle = (course.title || 'course').replace(/[^a-zA-Z0-9 _-]/g, '');
+            link.setAttribute('download', `${sanitizedTitle}_brochure.pdf`);
+            document.body.appendChild(link);
+            link.click();
+            
+            // Clean up
+            if(link.parentNode) {
+                link.parentNode.removeChild(link);
+            }
+            window.URL.revokeObjectURL(url);
+            
+            toast.success("Download started!", { id: toastId });
+
+        } catch (error) {
+            console.error("Brochure download failed:", error);
+            toast.error("Could not download the brochure.", { id: toastId });
+        }
+    }, [course?.brochure, course?.title, showToast]);
 
     const handleSuccessfulEnrollment = useCallback(() => {
         setIsEnrolled(true);
@@ -678,14 +737,8 @@ const CourseDetail = () => {
                                 isEnrolled={isEnrolled}
                                 onEnrollmentSuccess={handleSuccessfulEnrollment}
                                 setIsEnrolledLocally={setIsEnrolled}
+                                onDownloadBrochure={handleDownloadBrochure}
                             />
-
-                            {/* Brochure Download Button */}
-                            {course.brochure && (
-                                <Button onClick={handleDownloadBrochure} variant="outline" className="w-full gap-3 h-12 border-dashed border-2 border-primary/50 text-primary font-bold hover:bg-primary/5 shadow-md transition-all">
-                                    <Download className="w-5 h-5" /> Download Course Brochure
-                                </Button>
-                            )}
 
                         </div>
                     </div>
