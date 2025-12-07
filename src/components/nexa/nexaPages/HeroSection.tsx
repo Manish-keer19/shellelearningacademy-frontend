@@ -49,7 +49,7 @@ const HeroSection = () => {
               </div>
               <div className="w-px h-10 bg-border" />
               <div className="text-center">
-                <p className="text-2xl font-bold text-foreground">10K+</p>
+                <p className="text-2xl font-bold text-foreground">2K+</p>
                 <p className="text-sm text-muted-foreground">Students</p>
               </div>
               <div className="w-px h-10 bg-border" />
