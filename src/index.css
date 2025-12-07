@@ -95,4 +95,12 @@
   .smooth-transition {
     @apply transition-all duration-300 ease-in-out;
   }
+
+  .container-main {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-padding {
+    @apply py-16 lg:py-24;
+  }
 }

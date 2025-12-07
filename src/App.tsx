@@ -53,6 +53,9 @@ import EditJob from "./pages/EditJob";
 import ManageJobs from "./pages/ManageJobs";
 import Careers from "./pages/Careers";
 import Demo from "./pages/Demo";
+import FullPageAIChatbot from "./components/ChatBot/AiChatBot";
+import NexaHome from "./components/nexa/NexaHome";
+import FloatingNexaChat from "./components/nexa/FloatingNexaChat";
 
 
 
@@ -81,7 +84,9 @@ const App = () => (
 
               <Route path="/about" element={<About />} />
               <Route path="/demo" element={<Demo />} />
-        
+              <Route path="/nexa" element={<NexaHome />} />
+              <Route path="/nexa-bot" element={<FullPageAIChatbot />} />
+
               <Route path="/contact" element={<Contact />} />
               <Route path="/personal-info" element={<CourseSignUpForm onSuccess={() => { console.log("hello ") }} />} />
 
@@ -134,6 +139,7 @@ const App = () => (
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
+            <FloatingNexaChat />
           </AuthLoader>
         </BrowserRouter>
       </TooltipProvider>

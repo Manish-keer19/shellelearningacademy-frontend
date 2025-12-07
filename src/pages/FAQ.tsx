@@ -12,7 +12,7 @@ export const FAQ = () => {
     },
     {
       question: "Can I get a refund if I'm not satisfied?",
-      answer: "Yes, we offer a 30-day money-back guarantee for all our courses. If you're not satisfied within 30 days of purchase, contact our support team for a full refund."
+      answer: "Yes, we offer a 7-day money-back guarantee for all our courses. If you're not satisfied within 30 days of purchase, contact our support team for a full refund."
     },
     {
       question: "How do I access my certificates?",

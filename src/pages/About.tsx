@@ -1,12 +1,77 @@
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Target, Users, Award, Zap, CheckCircle, ArrowRight } from "lucide-react";
+import { Target, Users, Award, Zap, CheckCircle, ArrowRight, BookOpen, Briefcase, GraduationCap, Shield, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import logo1 from "../assets/logo1.png";
 import about_img from "../assets/about_img.jpg"
 
 const About = () => {
+    const services = [
+        {
+            icon: BookOpen,
+            title: "Professional E-Learning Courses",
+            description: "Gain job-ready skills through practical, industry-based learning programs designed for real-world success.",
+            features: [
+                "Digital Marketing",
+                "AI for Marketing",
+                "Stock Market & Financial Investment",
+                "Data Analytics with Power BI",
+                "UI/UX & Graphic Design"
+            ]
+        },
+        {
+            icon: Users,
+            title: "Live Mentorship & Career Guidance",
+            description: "Every learner receives personalized mentorship from industry professionals to build a confident career path.",
+            features: [
+                "One-on-one mentorship sessions",
+                "Career roadmap planning",
+                "Interview preparation guidance"
+            ]
+        },
+        {
+            icon: Briefcase,
+            title: "Internship & Placement Assistance",
+            description: "We connect students with real industry projects and internship opportunities to gain professional experience.",
+            features: [
+                "Internship programs with partner companies",
+                "Resume and portfolio support",
+                "Placement training and guidance"
+            ]
+        },
+        {
+            icon: Zap,
+            title: "Corporate Training Solutions",
+            description: "Customized digital skill training programs designed for companies and professionals to enhance team performance.",
+            features: [
+                "Corporate workshops and webinars",
+                "Skill development for employees",
+                "Project-based learning modules"
+            ]
+        },
+        {
+            icon: GraduationCap,
+            title: "College & Institutional Partnerships",
+            description: "We collaborate with colleges and educational institutions to make digital learning more accessible.",
+            features: [
+                "Campus certification programs",
+                "Student skill development initiatives",
+                "Expert-led seminars and lectures"
+            ]
+        },
+        {
+            icon: Shield,
+            title: "24×7 Support & Lifetime Access",
+            description: "All students receive lifetime access to learning materials and 24×7 academic support through our online portal.",
+            features: [
+                "Lifetime course access",
+                "24/7 technical support",
+                "Community forum access"
+            ]
+        }
+    ];
+
     const values = [
         {
             icon: Target,
@@ -160,7 +225,48 @@ const About = () => {
                     </div>
                 </section>
 
-                {/* 5. Founders & Team Section */}
+                {/* 5. Our Services */}
+                <section className="py-20 bg-background border-t border-border/50">
+                    <div className="container mx-auto px-4 max-w-7xl">
+                        <div className="text-center mb-16">
+                            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Our Services</h2>
+                            <p className="text-muted-foreground max-w-2xl mx-auto">
+                                Comprehensive solutions to help you thrive in the digital world with expert-led programs and lifetime support.
+                            </p>
+                        </div>
+
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {services.map((service, index) => {
+                                const Icon = service.icon;
+                                return (
+                                    <div
+                                        key={index}
+                                        className="bg-card rounded-3xl p-8 shadow-sm border border-border/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group"
+                                    >
+                                        <div className="p-3 bg-primary/10 rounded-xl w-fit mb-6 transition-colors group-hover:bg-primary group-hover:text-white">
+                                            <Icon className="h-8 w-8 text-primary group-hover:text-white transition-colors duration-300" />
+                                        </div>
+                                        <h3 className="font-bold text-xl mb-4 text-foreground">{service.title}</h3>
+                                        <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
+                                            {service.description}
+                                        </p>
+
+                                        <ul className="space-y-3">
+                                            {service.features.map((feature, i) => (
+                                                <li key={i} className="flex items-start text-sm text-foreground/90 font-medium">
+                                                    <Star className="h-4 w-4 text-primary fill-primary/30 mr-3 mt-0.5 flex-shrink-0" />
+                                                    {feature}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </section>
+
+                {/* 6. Founders & Team Section */}
                 <section className="py-20 bg-muted/30">
                     <div className="container mx-auto px-4 max-w-7xl">
                         <div className="text-center mb-16">

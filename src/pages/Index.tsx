@@ -17,7 +17,7 @@ import { CertificationsSection } from "@/components/CertificationsSection";
 
 
 const Index = () => {
-  // ... existing code ...
+ 
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />

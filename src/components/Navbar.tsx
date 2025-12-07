@@ -66,10 +66,9 @@ export const Navbar = () => {
         { name: "Home", path: "/" },
         { name: "Courses", path: "/all-courses" },
         { name: "About Us", path: "/about" },
-        { name: "Services", path: "/services" },
         { name: "Careers", path: "/careers" },
         { name: "Workshops", path: "/workshops" },
-        // { name: "Events", path: "/events" },
+        { name: "Nexa", path: "/nexa" },
         { name: "Contact", path: "/contact" },
     ];
 
