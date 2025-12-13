@@ -59,6 +59,7 @@ import FullPageAIChatbot from "./components/ChatBot/AiChatBot";
 import NexaHome from "./components/nexa/NexaHome";
 import FloatingNexaChat from "./components/nexa/FloatingNexaChat";
 import { NexaChatProvider } from "./context/NexaChatContext";
+import EnrolledCourseView from "./pages/Course/EnrolledCourseView";
 
 
 
@@ -104,9 +105,14 @@ const App = () => (
 
                 {/* Course Routes */}
                 <Route path="/all-courses" element={<AllCourses />} />
+                import EnrolledCourseView from "./pages/Course/EnrolledCourseView";
+
+                // ... existing imports
+
                 <Route path="/courses-list" element={<CoursesList />} />
                 <Route path="/course/:id" element={<ViewCourse />} />
                 <Route path="/course-detail/:courseId" element={<CourseDetail />} />
+                <Route path="/view-course/:courseId" element={<EnrolledCourseView />} />
 
 
                 <Route path="/course-learning/:id" element={<CourseLearning />} />

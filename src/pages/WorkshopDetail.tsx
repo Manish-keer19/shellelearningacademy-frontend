@@ -36,6 +36,7 @@ interface Workshop {
     certification: 'true' | 'false';
     status: 'Draft' | 'Published' | 'Closed';
     studentsEnrolled?: { _id: string }[];
+    studentCount?: string;
     instructor?: {
         _id: string;
         fullName: string;
@@ -147,8 +148,8 @@ const WorkshopEnrollmentCard: React.FC<WorkshopEnrollmentProps> = React.memo(({
 
                 <div className="flex justify-center items-center text-xs text-muted-foreground/70 pt-1">
                     <Users className="w-4 h-4 mr-1 text-primary" />
-                    {/* Placeholder for dynamic count */}
-                    <span>{workshop.studentsEnrolled?.length || 0} participants joined so far</span>
+                    {/* Display student count */}
+                    <span>{workshop.studentCount ? parseInt(workshop.studentCount).toLocaleString() : 0} participants joined so far</span>
                 </div>
 
                 <Separator className="my-4" />
@@ -174,12 +175,10 @@ const WorkshopEnrollmentCard: React.FC<WorkshopEnrollmentProps> = React.memo(({
                             <span className="font-medium text-foreground">Venue:</span>
                             <span className="ml-auto text-right">{locationInfo.text}</span>
                         </div>
-                        {workshop.certification === 'true' && (
-                            <div className="flex items-center gap-3 text-green-600 font-semibold">
-                                <CheckCircle className="w-4 h-4 shrink-0" />
-                                <span>Certificate Provided</span>
-                            </div>
-                        )}
+                        <div className="flex items-center gap-3 text-green-600 font-semibold">
+                            <CheckCircle className="w-4 h-4 shrink-0" />
+                            <span>Certificate</span>
+                        </div>
                     </div>
                 </div>
             </CardContent>
@@ -321,7 +320,7 @@ const WorkshopDetail = () => {
     // Process lists for display
     const whatYouWillLearnList = parseListField(workshop.whatYouWillLearn);
     const whoShouldAttendList = parseListField(workshop.whoShouldAttend);
-    const enrolledCount = workshop.studentsEnrolled?.length || 0;
+    const enrolledCount = workshop.studentCount ? parseInt(workshop.studentCount) : 0;
 
     return (
         <div className="min-h-screen bg-background mt-16">
@@ -363,8 +362,8 @@ const WorkshopDetail = () => {
                                 <span> {enrolledCount} Participants</span>
                             </div>
                             <div className="flex items-center gap-2 text-primary">
-                                {workshop.certification === 'true' && <CheckCircle className="w-5 h-5" />}
-                                <span>{workshop.certification === 'true' ? 'Certificate Provided' : 'No Certificate'}</span>
+                                <CheckCircle className="w-5 h-5" />
+                                <span>Certificate </span>
                             </div>
                         </div>
 
@@ -441,7 +440,7 @@ const WorkshopDetail = () => {
                         <Separator />
 
                         {/* 4. Practical Details */}
-                        <div>
+                        {/* <div>
                             <h3 className="text-2xl font-bold mb-5 text-foreground border-l-4 border-green-600 pl-4">Practical Information</h3>
                             <div className="space-y-4 text-muted-foreground text-lg">
                                 {workshop.mode === 'Online' && workshop.meetingLink && (
@@ -467,7 +466,9 @@ const WorkshopDetail = () => {
                                     </div>
                                 )}
                             </div>
-                        </div>
+                        </div> */}
+
+
 
                     </div>
 

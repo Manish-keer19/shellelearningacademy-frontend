@@ -503,7 +503,7 @@ const FeaturedCourses = () => {
                 {/* Header and Controls */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 gap-4">
                     <div>
-                        <h2 className="text-4xl font-extrabold text-foreground">🔥 Featured Courses</h2>
+                        <h2 className="text-4xl font-extrabold text-foreground">Featured Courses</h2>
                         <p className="text-lg text-muted-foreground mt-2">Handpicked courses to accelerate your learning journey</p>
                     </div>
                     <div className="flex items-center space-x-4">

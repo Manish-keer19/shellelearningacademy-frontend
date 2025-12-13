@@ -7,10 +7,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { 
-  Play, 
+import {
+  Play,
   Pause,
-  CheckCircle, 
+  CheckCircle,
   ChevronLeft,
   ChevronRight,
   Circle,
@@ -32,7 +32,7 @@ const CourseLearning = () => {
   const { token, user } = useAppSelector((state) => state.auth);
   const [searchParams, setSearchParams] = useSearchParams();
   const videoRef = useRef<HTMLVideoElement>(null);
-  
+
   const [course, setCourse] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [currentSection, setCurrentSection] = useState(null);
@@ -45,12 +45,12 @@ const CourseLearning = () => {
 
   const fetchCourseDetails = async () => {
     if (!courseId || !token) return;
-    
+
     try {
       setIsLoading(true);
       const res = await courseService.getFullCourseDetails(courseId, token);
       const courseData = res.data.courseDetails;
-      
+
       // Check if user is enrolled
       if (!courseData.studentsEnrolled?.includes(user?._id)) {
         toast({
@@ -61,7 +61,7 @@ const CourseLearning = () => {
         navigate(`/course-detail/${courseId}`);
         return;
       }
-      
+
       // Verify course has content
       if (!courseData.courseContent || courseData.courseContent.length === 0) {
         toast({
@@ -72,41 +72,41 @@ const CourseLearning = () => {
         navigate(`/course-detail/${courseId}`);
         return;
       }
-      
+
       setCourse(courseData);
       setCompletedLessons(res.data.completedVideos || []);
-      
+
       // Calculate progress
-      const totalLessons = courseData.courseContent?.reduce((total, section) => 
+      const totalLessons = courseData.courseContent?.reduce((total, section) =>
         total + (section.subSection?.length || 0), 0) || 0;
       const completed = res.data.completedVideos?.length || 0;
       setProgress(totalLessons > 0 ? (completed / totalLessons) * 100 : 0);
-      
+
       // Set initial section and lesson from URL params or first available
       const sectionParam = searchParams.get('section');
       const lessonParam = searchParams.get('lesson');
-      
+
       let initialSection = null;
       let initialLesson = null;
-      
+
       if (sectionParam && lessonParam) {
         initialSection = courseData.courseContent?.find(s => s._id === sectionParam);
         initialLesson = initialSection?.subSection?.find(l => l._id === lessonParam);
       }
-      
+
       if (!initialSection || !initialLesson) {
         initialSection = courseData.courseContent?.[0];
         initialLesson = initialSection?.subSection?.[0];
       }
-      
+
       setCurrentSection(initialSection);
       setCurrentLesson(initialLesson);
-      
+
       // Expand current section
       if (initialSection) {
         setExpandedSections({ [initialSection._id]: true });
       }
-      
+
     } catch (error) {
       toast({
         title: "Error",
@@ -121,17 +121,17 @@ const CourseLearning = () => {
 
   const markLessonComplete = async (lessonId) => {
     if (!token || completedLessons.includes(lessonId)) return;
-    
+
     try {
       await courseService.markLectureComplete(courseId, lessonId, token);
       setCompletedLessons(prev => [...prev, lessonId]);
-      
+
       // Update progress
-      const totalLessons = course.courseContent?.reduce((total, section) => 
+      const totalLessons = course.courseContent?.reduce((total, section) =>
         total + (section.subSection?.length || 0), 0) || 0;
       const newCompleted = completedLessons.length + 1;
       setProgress(totalLessons > 0 ? (newCompleted / totalLessons) * 100 : 0);
-      
+
       toast({
         title: "Progress Updated",
         description: "Lesson marked as complete!",
@@ -145,10 +145,10 @@ const CourseLearning = () => {
     setCurrentSection(section);
     setCurrentLesson(lesson);
     setVideoLoading(true);
-    
+
     // Update URL
     setSearchParams({ section: section._id, lesson: lesson._id });
-    
+
     // Expand the section
     setExpandedSections(prev => ({ ...prev, [section._id]: true }));
   };
@@ -176,7 +176,7 @@ const CourseLearning = () => {
   const toggleFullscreen = () => {
     const video = videoRef.current;
     if (!video) return;
-    
+
     if (!document.fullscreenElement) {
       // Enter fullscreen (try video first, fallback to document)
       if (video.requestFullscreen) {
@@ -195,10 +195,10 @@ const CourseLearning = () => {
   // Navbar handlers
   const goToPreviousLesson = () => {
     if (!currentSection || !currentLesson) return;
-    
+
     const sectionIndex = course.courseContent.findIndex(s => s._id === currentSection._id);
     const lessonIndex = currentSection.subSection.findIndex(l => l._id === currentLesson._id);
-    
+
     if (lessonIndex > 0) {
       // Previous lesson in same section
       selectLesson(currentSection, currentSection.subSection[lessonIndex - 1]);
@@ -211,10 +211,10 @@ const CourseLearning = () => {
 
   const goToNextLesson = () => {
     if (!currentSection || !currentLesson) return;
-    
+
     const sectionIndex = course.courseContent.findIndex(s => s._id === currentSection._id);
     const lessonIndex = currentSection.subSection.findIndex(l => l._id === currentLesson._id);
-    
+
     if (lessonIndex < currentSection.subSection.length - 1) {
       // Next lesson in same section
       selectLesson(currentSection, currentSection.subSection[lessonIndex + 1]);
@@ -266,8 +266,8 @@ const CourseLearning = () => {
   useEffect(() => {
     const detectDevTools = () => {
       const threshold = 160;
-      if (window.outerHeight - window.innerHeight > threshold || 
-          window.outerWidth - window.innerWidth > threshold) {
+      if (window.outerHeight - window.innerHeight > threshold ||
+        window.outerWidth - window.innerWidth > threshold) {
         // Developer tools might be open
         console.clear();
         console.log('%cVideo content is protected!', 'color: red; font-size: 20px; font-weight: bold;');
@@ -283,7 +283,7 @@ const CourseLearning = () => {
     document.addEventListener('contextmenu', handleContextMenu);
     document.addEventListener('dragstart', handleDragStart);
     document.addEventListener('selectstart', handleSelectStart);
-    
+
     // Disable print screen
     const handlePrintScreen = (e) => {
       if (e.key === 'PrintScreen') {
@@ -292,12 +292,12 @@ const CourseLearning = () => {
       }
     };
     document.addEventListener('keyup', handlePrintScreen);
-    
+
     // Clear console periodically
     const consoleClearInterval = setInterval(() => {
       console.clear();
     }, 3000);
-    
+
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('contextmenu', handleContextMenu);
@@ -351,10 +351,10 @@ const CourseLearning = () => {
         <div className="w-full space-y-4 lg:space-y-6 mt-4">
           {/* Video Player */}
           <div className="w-full mt-2">
-            <div className="aspect-video relative bg-black rounded-lg overflow-hidden video-container mx-auto w-full max-w-full" 
-                 onContextMenu={handleContextMenu}
-                 onDragStart={handleDragStart}
-                 onSelectStart={handleSelectStart}>
+            <div className="aspect-video relative bg-black rounded-lg overflow-hidden video-container mx-auto w-full max-w-full"
+              onContextMenu={handleContextMenu}
+              onDragStart={handleDragStart}
+              onSelectStart={handleSelectStart}>
               {videoLoading && (
                 <div className="absolute inset-0 flex items-center justify-center bg-black/50 z-10">
                   <Loader2 className="w-6 h-6 sm:w-8 sm:h-8 animate-spin text-white" />
@@ -380,23 +380,22 @@ const CourseLearning = () => {
               >
                 Your browser does not support the video tag.
               </video>
-              
+
               {/* Watermark overlay - smaller on mobile */}
               <div className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-black/50 text-white px-1 sm:px-2 py-0.5 sm:py-1 rounded text-xs pointer-events-none select-none">
                 {user?.fullName} - {course.courseName}
               </div>
-              
+
               {/* Custom playback rate controls - hidden on very small screens */}
               <div className="absolute bottom-12 sm:bottom-16 right-2 sm:right-4 bg-black/70 rounded-lg p-1 sm:p-2 flex space-x-0.5 sm:space-x-1 hidden xs:flex">
                 {[0.5, 0.75, 1, 1.25, 1.5, 2].map(rate => (
                   <button
                     key={rate}
                     onClick={() => changePlaybackRate(rate)}
-                    className={`px-1 sm:px-2 py-0.5 sm:py-1 text-xs rounded transition-colors ${
-                      playbackRate === rate 
-                        ? 'bg-white text-black' 
+                    className={`px-1 sm:px-2 py-0.5 sm:py-1 text-xs rounded transition-colors ${playbackRate === rate
+                        ? 'bg-white text-black'
                         : 'bg-transparent text-white hover:bg-white/20'
-                    }`}
+                      }`}
                   >
                     {rate}x
                   </button>
@@ -414,7 +413,7 @@ const CourseLearning = () => {
               </button>
             </div>
           </div>
-          
+
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
             {/* Lesson Content */}
             <div className="lg:col-span-2 order-1">
@@ -442,11 +441,11 @@ const CourseLearning = () => {
                     </Button>
                   </div>
                 </div>
-                
+
                 <p className="text-xs sm:text-base text-muted-foreground mb-4 line-clamp-3 sm:line-clamp-4 lg:line-clamp-none">
                   {currentLesson.description}
                 </p>
-                
+
                 <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-muted-foreground mb-4">
                   <span className="whitespace-nowrap">Section: {currentSection.sectionName}</span>
                   {currentLesson.timeDuration && (
@@ -456,7 +455,7 @@ const CourseLearning = () => {
                     </span>
                   )}
                 </div>
-                
+
                 <Button
                   onClick={() => markLessonComplete(currentLesson._id)}
                   disabled={completedLessons.includes(currentLesson._id)}
@@ -499,9 +498,8 @@ const CourseLearning = () => {
                           {section.subSection?.map((lesson, lessonIndex) => (
                             <Card
                               key={lesson._id}
-                              className={`p-2 sm:p-3 cursor-pointer hover-lift smooth-transition text-xs sm:text-sm border ${
-                                currentLesson._id === lesson._id ? 'border-primary bg-primary/5' : 'border-border'
-                              }`}
+                              className={`p-2 sm:p-3 cursor-pointer hover-lift smooth-transition text-xs sm:text-sm border ${currentLesson._id === lesson._id ? 'border-primary bg-primary/5' : 'border-border'
+                                }`}
                               onClick={() => selectLesson(section, lesson)}
                             >
                               <div className="flex items-start gap-2 sm:gap-3">

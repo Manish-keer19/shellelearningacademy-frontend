@@ -5,7 +5,7 @@ import { workshopService } from "@/service/workshop.service";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, MapPin, Monitor, Loader2, ArrowRight, Zap, TrendingUp, DollarSign } from "lucide-react";
+import { Calendar, Clock, MapPin, Monitor, Loader2, ArrowRight, Zap, TrendingUp, DollarSign, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 // Define a simple type structure for clarity
@@ -19,6 +19,7 @@ interface Workshop {
     type: 'Free' | 'Paid';
     price: number;
     thumbnail: string;
+    studentCount?: string;
     // Add other properties if needed
 }
 
@@ -32,6 +33,8 @@ const Workshops = () => {
             try {
                 // Assuming getAllWorkshops returns { data: Workshop[] }
                 const response = await workshopService.getAllWorkshops();
+                console.log("Workshops API Response:", response);
+                console.log("Workshops Data:", response.data);
                 setWorkshops(response.data);
             } catch (error) {
                 console.error("Failed to fetch workshops:", error);
@@ -61,7 +64,7 @@ const Workshops = () => {
                     </Badge>
                 );
             case "Hybrid":
-                 return (
+                return (
                     <Badge className={`${baseClass} bg-purple-100 text-purple-700 hover:bg-purple-100`}>
                         <TrendingUp className="w-3 h-3" /> Hybrid
                     </Badge>
@@ -86,12 +89,12 @@ const Workshops = () => {
                     </p>
                 </div>
             </div>
-            
+
             <div className="container mx-auto px-4 py-16 max-w-7xl">
                 <h2 className="text-3xl font-bold text-gray-800 mb-10 border-b pb-3 flex items-center gap-2">
                     <Zap className="w-6 h-6 text-green-600" /> Available Workshops ({workshops.length})
                 </h2>
-                
+
                 {/* Workshop Grid */}
                 {loading ? (
                     <div className="flex justify-center py-20">
@@ -100,20 +103,23 @@ const Workshops = () => {
                 ) : workshops.length > 0 ? (
                     <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
                         {workshops.map((workshop) => (
-                            <Card 
-                                key={workshop._id} 
+                            <Card
+                                key={workshop._id}
                                 // Added subtle border and strong hover effects
                                 className="flex flex-col overflow-hidden shadow-lg border-t-4 border-green-600 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
                             >
                                 {/* Thumbnail & Price Badge */}
-                                <div className="relative h-56 overflow-hidden bg-gray-100">
+                                <div className="relative aspect-video overflow-hidden bg-gray-100">
                                     <img
-                                        src={workshop.thumbnail}
+                                        src={workshop.thumbnail || 'https://via.placeholder.com/800x450/10b981/ffffff?text=Workshop+Image'}
                                         alt={workshop.title}
-                                        // Strong hover effect on image
                                         className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                                        onError={(e) => {
+                                            console.error(`Failed to load image for workshop: ${workshop.title}`, workshop.thumbnail);
+                                            e.currentTarget.src = 'https://via.placeholder.com/1280x720/10b981/ffffff?text=Workshop+Image';
+                                        }}
                                     />
-                                    <Badge 
+                                    <Badge
                                         className={`absolute bottom-0 left-0 m-3 px-4 py-1 text-sm font-bold shadow-md 
                                             ${workshop.type === 'Free' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}
                                     >
@@ -144,6 +150,12 @@ const Workshops = () => {
                                         <Clock className="w-4 h-4 mr-3 text-green-600 flex-shrink-0" />
                                         <span className="truncate">{workshop.time}</span>
                                     </div>
+                                    {workshop.studentCount && (
+                                        <div className="flex items-center text-sm font-medium text-green-700">
+                                            <Users className="w-4 h-4 mr-3 text-green-600 flex-shrink-0" />
+                                            <span className="truncate">{parseInt(workshop.studentCount).toLocaleString()} participants</span>
+                                        </div>
+                                    )}
                                 </CardContent>
 
                                 {/* Action Button */}

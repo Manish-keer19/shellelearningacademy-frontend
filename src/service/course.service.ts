@@ -154,6 +154,23 @@ class CourseService {
     }
   }
 
+  // Student: Mark class as complete
+  public async markClassComplete(courseId: string, classId: string, token: string) {
+    try {
+      const res = await axiosInstance.post(`/course-class/mark-complete`, {
+        courseId,
+        classId
+      }, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+      return res.data;
+    } catch (error: any) {
+      throw error;
+    }
+  }
+
   // Sections
   public async createSection(data: any, token: string) {
     try {

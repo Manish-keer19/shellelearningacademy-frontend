@@ -88,7 +88,7 @@ const ContinueLearningCard = ({ course, navigate }) => (
 
             <Button
                 className="w-full h-10 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
-                onClick={() => navigate(`/course-learning/${course._id}`)}
+                onClick={() => navigate(`/view-course/${course._id}`)}
             >
                 <Play className="w-4 h-4 mr-2" />
                 {course.progress === 0 ? 'Start Course' : 'Continue Learning'}

@@ -10,8 +10,6 @@ import img3 from "../assets/new_student/3.jpg"
 import img4 from "../assets/new_student/4.jpg"
 import img5 from "../assets/new_student/5.jpg"
 import img6 from "../assets/new_student/6.jpg"
-import img12 from "../assets/new_student/12.jpg"
-
 export const Hero = () => {
   const navigate = useNavigate();
 
@@ -21,23 +19,23 @@ export const Hero = () => {
     {
       id: 2,
 
-      avatar: img2,
+      avatar: img1,
     },
     {
       id: 3,
 
-      avatar: img3,
+      avatar: img2,
     },
 
     {
       id: 6,
 
-      avatar: img5,
+      avatar: img3,
     },
     {
       id: 4,
 
-      avatar: img5,
+      avatar: img4,
     },
   ];
 

@@ -448,7 +448,8 @@ const CourseDetail = () => {
                     "Official Certificate of Completion",
                     "Downloadable Project Files & Codebase",
                     "Priority Q&A Support",
-                ]
+                ],
+                upcomingClasses: apiData.upcomingClasses || [], // Add this line
             };
 
             setCourse(mappedCourse);
@@ -514,13 +515,13 @@ const CourseDetail = () => {
             link.setAttribute('download', `${sanitizedTitle}_brochure.pdf`);
             document.body.appendChild(link);
             link.click();
-            
+
             // Clean up
-            if(link.parentNode) {
+            if (link.parentNode) {
                 link.parentNode.removeChild(link);
             }
             window.URL.revokeObjectURL(url);
-            
+
             toast.success("Download started!", { id: toastId });
 
         } catch (error) {
@@ -647,6 +648,10 @@ const CourseDetail = () => {
                         </div>
 
                         <Separator />
+
+
+                        {/* NEW: Upcoming Classes Section */}
+
 
                         {/* 3. Curriculum / Content (Accordion Style) */}
                         <div>
