@@ -123,8 +123,7 @@ const CustomSelect = React.memo(({
                     </span>
                 </div>
                 <ChevronDown
-                    className={`h-4 w-4 text-muted-foreground transition-transform ${
-                        isOpen ? "rotate-180" : ""
+                    className={`h-4 w-4 text-muted-foreground transition-transform ${isOpen ? "rotate-180" : ""
                         }`}
                 />
             </button>
@@ -149,8 +148,7 @@ const CustomSelect = React.memo(({
                                 <div
                                     key={item}
                                     onClick={() => handleSelect(item)}
-                                    className={`px-4 py-2 text-sm cursor-pointer ${
-                                        field.value === item
+                                    className={`px-4 py-2 text-sm cursor-pointer ${field.value === item
                                             ? "bg-primary text-primary-foreground font-medium"
                                             : "hover:bg-muted text-foreground"
                                         }`}
@@ -199,7 +197,7 @@ const CourseSignUpForm: React.FC<CourseSignUpFormProps> = React.memo(({
     const filteredStates = useMemo(() => INDIAN_STATES.filter((s) =>
         s.toLowerCase().includes(stateSearch.toLowerCase())
     ), [stateSearch]);
-    
+
     const filteredBatches = useMemo(() => BATCHES.filter((b) =>
         b.toLowerCase().includes(batchSearch.toLowerCase())
     ), [batchSearch]);
@@ -209,12 +207,12 @@ const CourseSignUpForm: React.FC<CourseSignUpFormProps> = React.memo(({
         const formData = {
             ...data,
             // Ensure contactNumber is consistent for backend use
-            contactNumber: data.contactNo 
+            contactNumber: data.contactNo
         };
 
         if (!actualCourseId) {
-             toast.error("Enrollment failed: Course ID missing.", { id: "signup" });
-             return;
+            toast.error("Enrollment failed: Course ID missing.", { id: "signup" });
+            return;
         }
 
         try {
@@ -225,10 +223,15 @@ const CourseSignUpForm: React.FC<CourseSignUpFormProps> = React.memo(({
             const response: any = await axiosInstance.post("auth/personal-info", formData);
             const { enrollmentToken, user, existing } = response.data;
 
+            console.log("📝 API Response:", { enrollmentToken, user, existing });
+
             if (enrollmentToken && user) {
                 localStorage.setItem("enrollmentToken", enrollmentToken);
                 localStorage.setItem("enrolledUser", JSON.stringify(user));
-                
+
+                console.log("✅ Token stored in localStorage:", localStorage.getItem("enrollmentToken"));
+                console.log("✅ User stored in localStorage:", localStorage.getItem("enrolledUser"));
+
                 if (existing) {
                     toast.success("Welcome back! Redirecting to course enrollment.", { id: "signup" });
                 } else {
@@ -239,6 +242,9 @@ const CourseSignUpForm: React.FC<CourseSignUpFormProps> = React.memo(({
 
                 // Redirect immediately after setting enrollmentToken for the fastest transition
                 navigate(`/course-detail/${actualCourseId}?autoEnroll=true`);
+            } else {
+                console.error("❌ Missing enrollmentToken or user in response:", response.data);
+                toast.error("Enrollment failed: Invalid response from server", { id: "signup" });
             }
         } catch (error: any) {
             toast.error(error?.response?.data?.message || "Submission Failed. Please check your details.", { id: "signup" });
@@ -413,8 +419,7 @@ const CourseSignUpForm: React.FC<CourseSignUpFormProps> = React.memo(({
                                 type="submit"
                                 disabled={isSubmitting}
                                 className={`w-full h-12 flex items-center justify-center rounded-xl font-semibold text-primary-foreground text-base transition-all duration-300 shadow-lg relative overflow-hidden
-                                ${
-                                    isSubmitting
+                                ${isSubmitting
                                         ? "bg-primary/70 cursor-not-allowed"
                                         : "bg-primary hover:bg-primary/90 hover:shadow-primary/30"
                                     }`}
