@@ -1,11 +1,11 @@
 import axiosInstance from "./axiosInstance";
 
 class AdminService {
-  public async createCatagory(data:any,token:string) {
-    console.log("token is in adminservice",token)
+  public async createCatagory(data: any, token: string) {
+    console.log("token is in adminservice", token)
     try {
-      const res = await axiosInstance.post(`/course/createCategory`,data,
-         {
+      const res = await axiosInstance.post(`/course/createCategory`, data,
+        {
           headers: {
             "Authorization": `Bearer ${token}`
           }
@@ -17,10 +17,10 @@ class AdminService {
     }
   }
 
-  public async createCourse(data:any, token:string) {
+  public async createCourse(data: any, token: string) {
     try {
-      const res = await axiosInstance.post(`/course/createCourse`,data,
-         {
+      const res = await axiosInstance.post(`/course/createCourse`, data,
+        {
           headers: {
             "Authorization": `Bearer ${token}`,
             "Content-Type": "multipart/form-data"
@@ -33,10 +33,10 @@ class AdminService {
     }
   }
 
-  public async getAllCatagory(token:string) {
+  public async getAllCatagory(token: string) {
     try {
       const res = await axiosInstance.get(`/course/showAllCategories`,
-         {
+        {
           headers: {
             "Authorization": `Bearer ${token}`
           }
@@ -47,10 +47,10 @@ class AdminService {
       throw error;
     }
   }
-  public async createSection(data:any, token:string) {
+  public async createSection(data: any, token: string) {
     try {
       const res = await axiosInstance.post(`/course/addSection`, data,
-         {
+        {
           headers: {
             "Authorization": `Bearer ${token}`
           }
@@ -61,11 +61,11 @@ class AdminService {
       throw error;
     }
   }
-  
-  public async createSubSection(data:any, token:string) {
+
+  public async createSubSection(data: any, token: string) {
     try {
       const res = await axiosInstance.post(`/course/addSubSection`, data,
-         {
+        {
           headers: {
             "Authorization": `Bearer ${token}`,
             "Content-Type": "multipart/form-data"
@@ -78,10 +78,10 @@ class AdminService {
     }
   }
 
-  public async editCourse(data:any, token:string) {
+  public async editCourse(data: any, token: string) {
     try {
       const res = await axiosInstance.post(`/course/editCourse`, data,
-         {
+        {
           headers: {
             "Authorization": `Bearer ${token}`,
             "Content-Type": "multipart/form-data"
@@ -94,10 +94,10 @@ class AdminService {
     }
   }
 
-  public async getAdminCourses(token:string) {
+  public async getAdminCourses(token: string) {
     try {
       const res = await axiosInstance.get(`/course/getAdminCourses`,
-         {
+        {
           headers: {
             "Authorization": `Bearer ${token}`
           }
@@ -118,19 +118,19 @@ class AdminService {
     }
   }
 
-  public async getCourseDetails(courseId:string) {
+  public async getCourseDetails(courseId: string) {
     try {
-      const res = await axiosInstance.post(`/course/getCourseDetails`, {courseId})
+      const res = await axiosInstance.post(`/course/getCourseDetails`, { courseId })
       return res.data;
     } catch (error: any) {
       throw error;
     }
   }
 
-  public async getFullCourseDetails(courseId:string, token:string) {
+  public async getFullCourseDetails(courseId: string, token: string) {
     try {
-      const res = await axiosInstance.post(`/course/getFullCourseDetails`, {courseId},
-         {
+      const res = await axiosInstance.post(`/course/getFullCourseDetails`, { courseId },
+        {
           headers: {
             "Authorization": `Bearer ${token}`
           }
@@ -142,14 +142,14 @@ class AdminService {
     }
   }
 
-  public async deleteCourse(courseId:string, token:string) {
+  public async deleteCourse(courseId: string, token: string) {
     try {
-      const res = await axiosInstance.delete(`/course/deleteCourse`, 
-         {
+      const res = await axiosInstance.delete(`/course/deleteCourse`,
+        {
           headers: {
             "Authorization": `Bearer ${token}`
           },
-          data: {courseId}
+          data: { courseId }
         }
       )
       return res.data;
@@ -158,10 +158,10 @@ class AdminService {
     }
   }
 
-  public async updateSection(data:any, token:string) {
+  public async updateSection(data: any, token: string) {
     try {
       const res = await axiosInstance.post(`/course/updateSection`, data,
-         {
+        {
           headers: {
             "Authorization": `Bearer ${token}`
           }
@@ -173,10 +173,10 @@ class AdminService {
     }
   }
 
-  public async deleteSection(data:any, token:string) {
+  public async deleteSection(data: any, token: string) {
     try {
       const res = await axiosInstance.post(`/course/deleteSection`, data,
-         {
+        {
           headers: {
             "Authorization": `Bearer ${token}`
           }
@@ -188,10 +188,10 @@ class AdminService {
     }
   }
 
-  public async updateSubSection(data:any, token:string) {
+  public async updateSubSection(data: any, token: string) {
     try {
       const res = await axiosInstance.post(`/course/updateSubSection`, data,
-         {
+        {
           headers: {
             "Authorization": `Bearer ${token}`,
             "Content-Type": "multipart/form-data"
@@ -204,10 +204,10 @@ class AdminService {
     }
   }
 
-  public async deleteSubSection(data:any, token:string) {
+  public async deleteSubSection(data: any, token: string) {
     try {
       const res = await axiosInstance.post(`/course/deleteSubSection`, data,
-         {
+        {
           headers: {
             "Authorization": `Bearer ${token}`
           }
@@ -218,7 +218,68 @@ class AdminService {
       throw error;
     }
   }
- 
+
+  // New Admin Methods for User Creation and Enrollment
+  public async createUserAndEnroll(data: any, token: string) {
+    try {
+      const res = await axiosInstance.post(`/admin/create-user-and-enroll`, data,
+        {
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        }
+      )
+      return res.data;
+    } catch (error: any) {
+      throw error;
+    }
+  }
+
+  public async enrollUserInCourse(data: any, token: string) {
+    try {
+      const res = await axiosInstance.post(`/admin/enroll-user`, data,
+        {
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        }
+      )
+      return res.data;
+    } catch (error: any) {
+      throw error;
+    }
+  }
+
+  public async getAllUsers(token: string) {
+    try {
+      const res = await axiosInstance.get(`/admin/users`,
+        {
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        }
+      )
+      return res.data;
+    } catch (error: any) {
+      throw error;
+    }
+  }
+
+  public async getAllCoursesForEnrollment(token: string) {
+    try {
+      const res = await axiosInstance.get(`/admin/courses`,
+        {
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        }
+      )
+      return res.data;
+    } catch (error: any) {
+      throw error;
+    }
+  }
+
 }
 
 export const adminService = new AdminService();

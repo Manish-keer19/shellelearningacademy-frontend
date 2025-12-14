@@ -2,7 +2,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 
-const APP_VERSION = "2";    // <-- change this to "2", "3", "4"... whenever you want a reset
+const APP_VERSION = "19";    // <-- change this to "2", "3", "4"... whenever you want a reset
 
 if (localStorage.getItem("appVersion") !== APP_VERSION) {
 

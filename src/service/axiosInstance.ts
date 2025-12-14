@@ -45,19 +45,19 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use((config) => {
   const token = localStorage.getItem("accessToken");
   // console.log("access token in interceptor", token)
-   
-  
+
+
   if (token) {
     // console.log("we are in access token condition")
     config.headers.Authorization = `Bearer ${token}`;
   }
-  else{
+  else {
     // console.log("we are in enrollment token condition")
-    const enrollmentToken =localStorage.getItem("enrollmentToken");
+    const enrollmentToken = localStorage.getItem("enrollmentToken");
     // console.log("enrollment token in interceptor", enrollmentToken)
-    if(enrollmentToken){
+    if (enrollmentToken) {
       config.headers.Authorization = `Bearer ${enrollmentToken}`;
-    }else{
+    } else {
       // toast.error("enrolement token is'nt found")
     }
   }
@@ -91,6 +91,15 @@ axiosInstance.interceptors.response.use(
 
     // If error is NOT 401 → normal error
     if (error.response?.status !== 401) {
+      return Promise.reject(error);
+    }
+
+    // ✅ FIX: Don't try to refresh token for login/signup/auth endpoints
+    const authEndpoints = ['/auth/login', '/auth/signup', '/auth/sendotp', '/auth/enrollInCourse'];
+    const isAuthEndpoint = authEndpoints.some(endpoint => originalRequest.url?.includes(endpoint));
+
+    if (isAuthEndpoint) {
+      // This is a login/signup failure, not an expired token
       return Promise.reject(error);
     }
 
@@ -140,6 +149,8 @@ axiosInstance.interceptors.response.use(
 
       // Logout user automatically
       localStorage.removeItem("token");
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("user");
 
       return Promise.reject(err);
     }

@@ -60,6 +60,8 @@ import NexaHome from "./components/nexa/NexaHome";
 import FloatingNexaChat from "./components/nexa/FloatingNexaChat";
 import { NexaChatProvider } from "./context/NexaChatContext";
 import EnrolledCourseView from "./pages/Course/EnrolledCourseView";
+import AdminUserEnrollment from "./pages/AdminUserEnrollment";
+import Settings from "./pages/Settings";
 
 
 
@@ -101,6 +103,7 @@ const App = () => (
                 <Route path="/sign-up" element={<Register />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/settings" element={<Settings />} />
                 <Route path="/certificate/:courseId" element={<Certificate />} />
 
                 {/* Course Routes */}
@@ -147,6 +150,7 @@ const App = () => (
                 <Route path="/create-job" element={<CreateJob />} />
                 <Route path="/edit-job/:id" element={<EditJob />} />
                 <Route path="/manage-jobs" element={<ManageJobs />} />
+                <Route path="/admin/user-enrollment" element={<AdminUserEnrollment />} />
 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />

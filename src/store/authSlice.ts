@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface User {
   _id: string;
   fullNamme: string;
+  fullName?: string;
   firstName?: string;
   lastName?: string;
   email: string;
@@ -12,6 +13,12 @@ interface User {
   image: string;
   courses: any[];
   courseProgress: any[];
+  additionalDetails?: {
+    contactNumber?: string;
+    about?: string;
+    dateOfBirth?: string;
+    gender?: string;
+  };
 }
 
 interface AuthState {

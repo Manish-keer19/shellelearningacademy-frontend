@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 // --- Reusable Component for Quick Actions ---
 
 const QuickActionCard = ({ Icon, title, description, onClick }) => (
-    <Card 
+    <Card
         className="bg-card/90 backdrop-blur-sm border-border/70 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 hover:-translate-y-1 cursor-pointer"
         onClick={onClick}
     >
@@ -42,15 +42,15 @@ const Profile = () => {
             navigate('/auth');
             return;
         }
-        
+
         const fetchCoursesProgress = async () => {
             if (!user.courses || !token) return;
-            
+
             setIsLoading(true);
             try {
                 let coursesData = [];
                 const isUserAdmin = user.accountType === 'Admin';
-                
+
                 if (isUserAdmin) {
                     // Admin: courses are IDs, fetch details
                     coursesData = await Promise.all(
@@ -76,10 +76,10 @@ const Profile = () => {
                             try {
                                 const progressRes = await courseService.getFullCourseDetails(course._id, token);
                                 const completedVideos = progressRes.data?.completedVideos || [];
-                                const totalLectures = course.courseContent?.reduce((total, section) => 
+                                const totalLectures = course.courseContent?.reduce((total, section) =>
                                     total + (section.subSection?.length || 0), 0) || 0;
                                 const progress = totalLectures > 0 ? (completedVideos.length / totalLectures) * 100 : 0;
-                                
+
                                 return {
                                     ...course,
                                     progress: Math.round(progress),
@@ -132,9 +132,9 @@ const Profile = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5 text-foreground">
-            <Navbar/>
+            <Navbar />
             <div className="max-w-6xl mx-auto px-4 py-8 pt-32">
-                
+
                 {/* 1. Header & User Info */}
                 <div className="mb-12">
                     <Card className="bg-card/90 backdrop-blur-lg border-primary/20 shadow-xl">
@@ -146,11 +146,11 @@ const Profile = () => {
                                         {user.firstName?.[0]}{user.lastName?.[0]}
                                     </AvatarFallback>
                                 </Avatar>
-                                
+
                                 <div className="text-center sm:text-left">
                                     <h1 className="text-3xl sm:text-4xl font-extrabold text-foreground mb-1">{fullName}</h1>
                                     <p className="text-lg text-muted-foreground mb-3">{user.email}</p>
-                                    <Badge 
+                                    <Badge
                                         className={`mt-2 text-base font-semibold px-4 py-1.5 ${isAdmin ? 'bg-destructive hover:bg-destructive/90' : 'bg-primary hover:bg-primary/90'}`}
                                     >
                                         {user.accountType}
@@ -165,66 +165,66 @@ const Profile = () => {
                 <div className="mb-12">
                     <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-foreground">Quick Actions</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        
-                        <QuickActionCard 
-                            Icon={User} 
-                            title="Dashboard" 
+
+                        <QuickActionCard
+                            Icon={User}
+                            title="Dashboard"
                             description="View platform metrics & progress overview"
                             onClick={() => navigate('/dashboard')}
                         />
-                        {/* <QuickActionCard 
-                            Icon={Settings} 
-                            title="Account Settings" 
+                        <QuickActionCard
+                            Icon={Settings}
+                            title="Account Settings"
                             description="Update profile, password, and preferences"
                             onClick={() => navigate('/settings')}
-                        /> */}
-                        <QuickActionCard 
-                            Icon={BookOpen} 
-                            title="Browse Courses" 
+                        />
+                        <QuickActionCard
+                            Icon={BookOpen}
+                            title="Browse Courses"
                             description="Explore new topics and expand your knowledge"
                             onClick={() => navigate('/all-courses')}
                         />
                         {isAdmin && (
-                            <QuickActionCard 
-                                Icon={Plus} 
-                                title="Create Course" 
+                            <QuickActionCard
+                                Icon={Plus}
+                                title="Create Course"
                                 description="Publish a new course to the academy"
                                 onClick={() => navigate('/create-course')}
                             />
                         )}
                         {isAdmin && (
-                            <QuickActionCard 
-                                Icon={GraduationCap} 
-                                title="Manage Content" 
+                            <QuickActionCard
+                                Icon={GraduationCap}
+                                title="Manage Content"
                                 description="Edit or manage existing course materials"
                                 onClick={() => navigate('/manage-courses')}
                             />
                         )}
                         {/* --- NEW: Add Category Action --- */}
-                         {isAdmin && (
-                            <QuickActionCard 
+                        {isAdmin && (
+                            <QuickActionCard
                                 Icon={Award} // Using Award icon for category/certification management
-                                title="Add Category" 
+                                title="Add Category"
                                 description="Organize courses by adding new categories"
-                                onClick={() => navigate('/add-category')} 
+                                onClick={() => navigate('/add-category')}
                             />
                         )}
                         {/* --- NEW: Create Job Action --- */}
                         {isAdmin && (
-                            <QuickActionCard 
-                                Icon={Zap} 
-                                title="Create Job" 
+                            <QuickActionCard
+                                Icon={Zap}
+                                title="Create Job"
                                 description="Post new job opportunities for students"
-                                onClick={() => navigate('/create-job')} 
+                                onClick={() => navigate('/create-job')}
                             />
                         )}
                         {/* --- NEW: Manage Jobs Action --- */}
                         {isAdmin && (
-                            <QuickActionCard 
-                                Icon={Settings} 
-                                title="Manage Jobs" 
+                            <QuickActionCard
+                                Icon={Settings}
+                                title="Manage Jobs"
                                 description="Edit and manage existing job postings"
-                                onClick={() => navigate('/manage-jobs')} 
+                                onClick={() => navigate('/manage-jobs')}
                             />
                         )}
                     </div>
@@ -233,7 +233,7 @@ const Profile = () => {
                 {/* 3. My Courses / Created Courses */}
                 <div>
                     <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-foreground">{isAdmin ? 'Created Courses' : 'My Courses'}</h2>
-                    
+
                     {isLoading ? (
                         <div className="flex justify-center py-16">
                             <Loader2 className="w-8 h-8 text-primary animate-spin" />
@@ -241,14 +241,14 @@ const Profile = () => {
                     ) : (coursesWithProgress && coursesWithProgress.length > 0) ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {coursesWithProgress.map((course: any, index: number) => (
-                                <Card 
-                                    key={course._id || index} 
+                                <Card
+                                    key={course._id || index}
                                     className="overflow-hidden bg-card/90 backdrop-blur-lg border-border/70 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
                                 >
                                     {course.thumbnail && (
                                         <div className="aspect-video overflow-hidden rounded-t-lg">
-                                            <img 
-                                                src={course.thumbnail} 
+                                            <img
+                                                src={course.thumbnail}
                                                 alt={course.courseName || `Course ${index + 1}`}
                                                 className="w-full h-full object-cover"
                                             />
@@ -276,7 +276,7 @@ const Profile = () => {
                                                 <span className="font-semibold text-primary">Status: Published</span> | Students: {course.studentsEnrolled?.length || 0}
                                             </div>
                                         )}
-                                        <Button 
+                                        <Button
                                             className="w-full h-10 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
                                             onClick={() => navigate(isAdmin ? `/course/${course._id || course.id}` : `/course-learning/${course._id || course.id}`)}
                                         >
@@ -293,7 +293,7 @@ const Profile = () => {
                                 <BookOpen className="w-16 h-16 mx-auto mb-4 text-primary/50" />
                                 <h3 className="text-xl font-bold mb-2">{isAdmin ? 'No Courses Created' : 'No Courses Enrolled'}</h3>
                                 <p className="text-base text-muted-foreground mb-4">
-                                    {isAdmin 
+                                    {isAdmin
                                         ? 'Use the "Create Course" action to publish your first content.'
                                         : "You haven't enrolled in any courses yet. Browse our catalog to get started!"
                                     }
