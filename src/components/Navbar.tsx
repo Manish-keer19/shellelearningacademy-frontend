@@ -103,10 +103,6 @@ export const Navbar = () => {
                                 <User className="mr-2 h-4 w-4 text-primary" />
                                 Profile Settings
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => navigate('/all-courses')}>
-                                <BookOpen className="mr-2 h-4 w-4 text-primary" />
-                                My Learning
-                            </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem className="text-destructive font-semibold" onClick={() => setShowLogoutDialog(true)}>
                                 <LogOut className="mr-2 h-4 w-4" />
@@ -288,14 +284,6 @@ export const Navbar = () => {
                                             Login
                                         </Button>
                                     </Link>
-                                    <Link to="/" onClick={() => setMobileMenuOpen(false)}>
-                                        <Button
-                                            variant="default"
-                                            className="w-full rounded-xl h-12 bg-primary hover:bg-primary/90 text-primary-foreground text-base font-bold shadow-lg shadow-primary/30"
-                                        >
-                                            Start Learning Now
-                                        </Button>
-                                    </Link>
                                 </div>
                             ) : (
                                 <div className="space-y-3 pt-6 border-t border-border">
@@ -328,12 +316,14 @@ export const Navbar = () => {
                                         </Button>
                                     </Link>
 
-                                    <Link to="/all-courses" onClick={() => setMobileMenuOpen(false)}>
-                                        <Button variant="ghost" className="w-full justify-start h-12 rounded-xl text-base font-semibold">
-                                            <BookOpen className="w-5 h-5 mr-3 text-primary" />
-                                            My Learning
-                                        </Button>
-                                    </Link>
+                                    {user?.accountType === 'Student' && (
+                                        <Link to="/all-courses" onClick={() => setMobileMenuOpen(false)}>
+                                            <Button variant="ghost" className="w-full justify-start h-12 rounded-xl text-base font-semibold">
+                                                <BookOpen className="w-5 h-5 mr-3 text-primary" />
+                                                My Learning
+                                            </Button>
+                                        </Link>
+                                    )}
 
                                     <Button
                                         variant="destructive"

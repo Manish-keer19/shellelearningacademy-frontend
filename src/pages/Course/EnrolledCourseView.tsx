@@ -15,7 +15,8 @@ import {
     CheckCircle,
     BookOpen,
     Video,
-    ArrowRight
+    ArrowRight,
+    ArrowLeft
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { courseService } from "@/service/course.service";
@@ -31,6 +32,7 @@ const EnrolledCourseView = () => {
     const [expandedSections, setExpandedSections] = useState<Set<number>>(new Set([0]));
     const [completedLectures, setCompletedLectures] = useState<Set<string>>(new Set());
     const [completedClasses, setCompletedClasses] = useState<Set<string>>(new Set());
+    const [markingClassId, setMarkingClassId] = useState<string | null>(null);
     const [stats, setStats] = useState({
         totalLectures: 0,
         completedLectures: 0,
@@ -71,7 +73,7 @@ const EnrolledCourseView = () => {
                 completedLectures: completedVids.length,
                 totalClasses,
                 completedClasses: completedCls.length,
-                progress: totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0
+                progress: totalClasses > 0 ? Math.round((completedCls.length / totalClasses) * 100) : 0
             });
 
         } catch (error) {
@@ -94,41 +96,7 @@ const EnrolledCourseView = () => {
         });
     };
 
-    const handleLectureCompletion = async (subSectionId: string) => {
-        if (!accessToken) return;
 
-        // Optimistic update prevention/handling could be added, but for now we just check if it's already done
-        if (completedLectures.has(subSectionId)) {
-            // Optional: Handle un-marking if backend supports it (currently backend only supports marking as complete)
-            // For now, we only allow marking as complete
-            return;
-        }
-
-        try {
-            const res = await courseService.markLectureComplete(courseId!, subSectionId, accessToken);
-            if (res?.success) {
-                setCompletedLectures(prev => {
-                    const newSet = new Set(prev);
-                    newSet.add(subSectionId);
-                    return newSet;
-                });
-
-                // Re-calculate progress
-                setStats(prev => {
-                    const newCompletedCount = prev.completedLectures + 1;
-                    return {
-                        ...prev,
-                        completedLectures: newCompletedCount,
-                        progress: prev.totalLectures > 0 ? Math.round((newCompletedCount / prev.totalLectures) * 100) : 0
-                    };
-                });
-                toast.success("Lecture marked as completed");
-            }
-        } catch (error) {
-            console.error("Error marking lecture complete:", error);
-            toast.error("Failed to mark lecture as complete");
-        }
-    };
 
     const handleClassCompletion = async (classId: string) => {
         if (!accessToken) return;
@@ -136,6 +104,8 @@ const EnrolledCourseView = () => {
         if (completedClasses.has(classId)) {
             return; // Already completed
         }
+
+        setMarkingClassId(classId);
 
         try {
             const res = await courseService.markClassComplete(courseId!, classId, accessToken);
@@ -146,15 +116,13 @@ const EnrolledCourseView = () => {
                     return newSet;
                 });
 
-                // Re-calculate progress
+                // Re-calculate progress based on classes only
                 setStats(prev => {
                     const newCompletedClasses = prev.completedClasses + 1;
-                    const totalItems = prev.totalLectures + prev.totalClasses;
-                    const completedItems = prev.completedLectures + newCompletedClasses;
                     return {
                         ...prev,
                         completedClasses: newCompletedClasses,
-                        progress: totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0
+                        progress: prev.totalClasses > 0 ? Math.round((newCompletedClasses / prev.totalClasses) * 100) : 0
                     };
                 });
                 toast.success("Class marked as completed");
@@ -162,6 +130,8 @@ const EnrolledCourseView = () => {
         } catch (error) {
             console.error("Error marking class complete:", error);
             toast.error("Failed to mark class as complete");
+        } finally {
+            setMarkingClassId(null);
         }
     };
 
@@ -196,11 +166,21 @@ const EnrolledCourseView = () => {
 
             <main className="flex-1 container mx-auto px-4 py-8 pt-24 max-w-6xl">
 
+                {/* Back Button */}
+                <Button
+                    variant="ghost"
+                    className="mb-6 -ml-2 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
+                    onClick={() => navigate('/dashboard')}
+                >
+                    <ArrowLeft className="w-4 h-4 mr-2" />
+                    Back to Dashboard
+                </Button>
+
                 {/* Hero / Header Section */}
                 <div className="mb-8">
                     <p className="text-sm text-primary font-medium mb-2 uppercase tracking-wider">Enrolled Course</p>
                     <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">{course.courseName}</h1>
-                    <p className="text-muted-foreground text-lg mb-6 max-w-3xl">{course.courseDescription}</p>
+                    <p className="text-muted-foreground text-base md:text-lg mb-6 max-w-3xl leading-relaxed">{course.courseDescription}</p>
 
                     {/* Progress Bar */}
                     <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border border-primary/20 rounded-xl p-4 max-w-md">
@@ -230,55 +210,108 @@ const EnrolledCourseView = () => {
 
                         {/* Upcoming Classes Section */}
                         <div>
-                            <div className="flex items-center justify-between mb-4">
-                                <h2 className="text-2xl font-bold flex items-center gap-2">
-                                    <Calendar className="w-6 h-6 text-primary" />
-                                    Upcoming Live Classes
-                                </h2>
-                                {/* Optional: Link to see all past classes if implemented */}
+                            <div className="flex items-center justify-between mb-6">
+                                <div>
+                                    <h2 className="text-2xl font-bold flex items-center gap-2">
+                                        <div className="p-2 bg-primary/10 rounded-lg">
+                                            <Calendar className="w-5 h-5 text-primary" />
+                                        </div>
+                                        Upcoming Live Classes
+                                    </h2>
+                                    <p className="text-sm text-muted-foreground mt-1">Join your scheduled sessions</p>
+                                </div>
                             </div>
 
                             {course.upcomingClasses && course.upcomingClasses.length > 0 ? (
                                 <div className="space-y-4">
                                     {course.upcomingClasses
                                         .filter((cls: any) => new Date(cls.classDate) > new Date())
+                                        .sort((a: any, b: any) => new Date(b.classDate).getTime() - new Date(a.classDate).getTime())
                                         .map((cls: any) => {
                                             const isCompleted = completedClasses.has(cls._id);
                                             return (
-                                                <Card key={cls._id} className={`border-border/60 hover:border-primary/50 transition-colors ${isCompleted ? 'bg-green-500/5 border-green-500/30' : 'bg-card/50 backdrop-blur-sm'}`}>
-                                                    <CardContent className="p-5 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-                                                        <div className="space-y-1 flex-1">
-                                                            <div className="flex items-center gap-2 text-sm text-primary font-medium mb-1">
+                                                <Card key={cls._id} className={`group overflow-hidden border transition-all duration-300 hover:shadow-md ${isCompleted ? 'bg-gradient-to-br from-green-50/50 to-green-100/30 dark:from-green-950/20 dark:to-green-900/10 border-green-200 dark:border-green-800' : 'border-border hover:border-primary/40 bg-card'}`}>
+                                                    <CardContent className="p-0">
+                                                        {/* Color accent bar */}
+                                                        <div className={`h-1.5 ${isCompleted ? 'bg-gradient-to-r from-green-500 to-emerald-500' : 'bg-gradient-to-r from-primary to-primary/60'}`} />
+
+                                                        <div className="p-6">
+                                                            {/* Header with badge and date */}
+                                                            <div className="flex flex-wrap items-center gap-3 mb-4">
                                                                 {isCompleted ? (
-                                                                    <Badge variant="secondary" className="bg-green-500/10 text-green-600 border-0">✓ Completed</Badge>
+                                                                    <Badge className="bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20 font-semibold px-3 py-1">
+                                                                        <CheckCircle className="w-3.5 h-3.5 mr-1.5" />
+                                                                        Completed
+                                                                    </Badge>
                                                                 ) : (
-                                                                    <Badge variant="secondary" className="bg-primary/10 text-primary border-0">Live Session</Badge>
+                                                                    <Badge className="bg-primary/10 text-primary border-primary/20 font-semibold px-3 py-1">
+                                                                        <Play className="w-3.5 h-3.5 mr-1.5" />
+                                                                        Live Session
+                                                                    </Badge>
                                                                 )}
-                                                                <span>{new Date(cls.classDate).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
-                                                                <span>•</span>
-                                                                <span className="flex items-center"><Clock className="w-3 h-3 mr-1" /> {new Date(cls.classDate).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}</span>
+                                                                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                                                    <div className="flex items-center gap-1.5 font-medium">
+                                                                        <Calendar className="w-4 h-4" />
+                                                                        {new Date(cls.classDate).toLocaleDateString(undefined, {
+                                                                            weekday: 'short',
+                                                                            month: 'short',
+                                                                            day: 'numeric',
+                                                                            year: 'numeric'
+                                                                        })}
+                                                                    </div>
+                                                                    <div className="flex items-center gap-1.5 font-medium">
+                                                                        <Clock className="w-4 h-4" />
+                                                                        {new Date(cls.classDate).toLocaleTimeString(undefined, {
+                                                                            hour: '2-digit',
+                                                                            minute: '2-digit'
+                                                                        })}
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                            <h3 className="text-xl font-bold">{cls.className}</h3>
-                                                            <p className="text-muted-foreground text-sm">{cls.classDescription}</p>
-                                                        </div>
-                                                        <div className="flex flex-col sm:flex-row gap-2 shrink-0 w-full md:w-auto">
-                                                            {new Date(cls.classDate) > new Date() && (
-                                                                <Button className="w-full sm:w-auto" asChild>
-                                                                    <a href={cls.classUrl} target="_blank" rel="noopener noreferrer">
-                                                                        Start Class <ArrowRight className="w-4 h-4 ml-2" />
-                                                                    </a>
-                                                                </Button>
-                                                            )}
-                                                            {!isCompleted && (
-                                                                <Button
-                                                                    variant="outline"
-                                                                    className="w-full sm:w-auto border-green-500/30 hover:bg-green-500/10"
-                                                                    onClick={() => handleClassCompletion(cls._id)}
-                                                                >
-                                                                    <CheckCircle className="w-4 h-4 mr-2" />
-                                                                    Mark as Done
-                                                                </Button>
-                                                            )}
+
+                                                            {/* Class title and description */}
+                                                            <div className="mb-5">
+                                                                <h3 className="text-xl font-bold text-foreground mb-2 leading-tight group-hover:text-primary transition-colors">
+                                                                    {cls.className}
+                                                                </h3>
+                                                                {cls.classDescription && (
+                                                                    <p className="text-muted-foreground text-sm leading-relaxed">
+                                                                        {cls.classDescription}
+                                                                    </p>
+                                                                )}
+                                                            </div>
+
+                                                            {/* Action buttons */}
+                                                            <div className="flex flex-wrap gap-3">
+                                                                {new Date(cls.classDate) > new Date() && (
+                                                                    <Button className="bg-primary hover:bg-primary/90 shadow-sm" asChild>
+                                                                        <a href={cls.classUrl} target="_blank" rel="noopener noreferrer">
+                                                                            <Play className="w-4 h-4 mr-2" />
+                                                                            Join Class
+                                                                        </a>
+                                                                    </Button>
+                                                                )}
+                                                                {!isCompleted && (
+                                                                    <Button
+                                                                        variant="outline"
+                                                                        className="border-green-500/30 hover:bg-green-500/10 hover:border-green-500/50"
+                                                                        onClick={() => handleClassCompletion(cls._id)}
+                                                                        disabled={markingClassId === cls._id}
+                                                                    >
+                                                                        {markingClassId === cls._id ? (
+                                                                            <>
+                                                                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                                                                Marking...
+                                                                            </>
+                                                                        ) : (
+                                                                            <>
+                                                                                <CheckCircle className="w-4 h-4 mr-2" />
+                                                                                Mark as Done
+                                                                            </>
+                                                                        )}
+                                                                    </Button>
+                                                                )}
+                                                            </div>
                                                         </div>
                                                     </CardContent>
                                                 </Card>
@@ -286,11 +319,17 @@ const EnrolledCourseView = () => {
                                         })}
                                 </div>
                             ) : (
-                                <Card className="bg-muted/30 border-dashed border-2">
-                                    <CardContent className="p-8 text-center text-muted-foreground">
-                                        <Calendar className="w-12 h-12 mx-auto mb-3 opacity-20" />
-                                        <p>No upcoming live classes scheduled at the moment.</p>
-                                        <p className="text-sm">Check back later for updates!</p>
+                                <Card className="bg-gradient-to-br from-muted/30 to-muted/10 border-dashed border-2">
+                                    <CardContent className="p-12 text-center">
+                                        <div className="max-w-sm mx-auto">
+                                            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                <Calendar className="w-8 h-8 text-primary/40" />
+                                            </div>
+                                            <h3 className="text-lg font-semibold text-foreground mb-2">No Upcoming Classes</h3>
+                                            <p className="text-muted-foreground text-sm">
+                                                No live classes scheduled at the moment. Check back later for updates!
+                                            </p>
+                                        </div>
                                     </CardContent>
                                 </Card>
                             )}
@@ -298,11 +337,16 @@ const EnrolledCourseView = () => {
 
                         {/* Previous Classes Section */}
                         <div>
-                            <div className="flex items-center justify-between mb-4">
-                                <h2 className="text-2xl font-bold flex items-center gap-2">
-                                    <Calendar className="w-6 h-6 text-muted-foreground" />
-                                    Previous Classes
-                                </h2>
+                            <div className="flex items-center justify-between mb-6">
+                                <div>
+                                    <h2 className="text-2xl font-bold flex items-center gap-2">
+                                        <div className="p-2 bg-muted/50 rounded-lg">
+                                            <Calendar className="w-5 h-5 text-muted-foreground" />
+                                        </div>
+                                        Previous Classes
+                                    </h2>
+                                    <p className="text-sm text-muted-foreground mt-1">Review your past sessions</p>
+                                </div>
                             </div>
 
                             {course.upcomingClasses && course.upcomingClasses.filter((cls: any) => new Date(cls.classDate) <= new Date()).length > 0 ? (
@@ -313,43 +357,95 @@ const EnrolledCourseView = () => {
                                         .map((cls: any) => {
                                             const isCompleted = completedClasses.has(cls._id);
                                             return (
-                                                <Card key={cls._id} className={`border-border/60 ${isCompleted ? 'bg-green-500/5 border-green-500/30' : 'bg-muted/30'} opacity-80`}>
-                                                    <CardContent className="p-5 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-                                                        <div className="space-y-1 flex-1">
-                                                            <div className="flex items-center gap-2 text-sm text-muted-foreground font-medium mb-1">
+                                                <Card key={cls._id} className={`group overflow-hidden border transition-all duration-300 hover:shadow-md ${isCompleted ? 'bg-gradient-to-br from-green-50/30 to-green-100/20 dark:from-green-950/10 dark:to-green-900/5 border-green-200/60 dark:border-green-800/60' : 'bg-muted/20 border-border/50 hover:border-border'}`}>
+                                                    <CardContent className="p-0">
+                                                        {/* Color accent bar */}
+                                                        <div className={`h-1.5 ${isCompleted ? 'bg-gradient-to-r from-green-500/70 to-emerald-500/70' : 'bg-gradient-to-r from-muted-foreground/30 to-muted-foreground/10'}`} />
+
+                                                        <div className="p-6">
+                                                            {/* Header with badge and date */}
+                                                            <div className="flex flex-wrap items-center gap-3 mb-4">
                                                                 {isCompleted ? (
-                                                                    <Badge variant="secondary" className="bg-green-500/10 text-green-600 border-0">✓ Attended</Badge>
+                                                                    <Badge className="bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20 font-semibold px-3 py-1">
+                                                                        <CheckCircle className="w-3.5 h-3.5 mr-1.5" />
+                                                                        Attended
+                                                                    </Badge>
                                                                 ) : (
-                                                                    <Badge variant="secondary" className="bg-muted text-muted-foreground border-0">Past Class</Badge>
+                                                                    <Badge variant="secondary" className="bg-muted/50 text-muted-foreground border-muted-foreground/20 font-semibold px-3 py-1">
+                                                                        Past Class
+                                                                    </Badge>
                                                                 )}
-                                                                <span>{new Date(cls.classDate).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
-                                                                <span>•</span>
-                                                                <span className="flex items-center"><Clock className="w-3 h-3 mr-1" /> {new Date(cls.classDate).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}</span>
+                                                                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                                                    <div className="flex items-center gap-1.5 font-medium">
+                                                                        <Calendar className="w-4 h-4" />
+                                                                        {new Date(cls.classDate).toLocaleDateString(undefined, {
+                                                                            weekday: 'short',
+                                                                            month: 'short',
+                                                                            day: 'numeric',
+                                                                            year: 'numeric'
+                                                                        })}
+                                                                    </div>
+                                                                    <div className="flex items-center gap-1.5 font-medium">
+                                                                        <Clock className="w-4 h-4" />
+                                                                        {new Date(cls.classDate).toLocaleTimeString(undefined, {
+                                                                            hour: '2-digit',
+                                                                            minute: '2-digit'
+                                                                        })}
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                            <h3 className="text-xl font-bold text-foreground">{cls.className}</h3>
-                                                            <p className="text-muted-foreground text-sm">{cls.classDescription}</p>
+
+                                                            {/* Class title and description */}
+                                                            <div className="mb-5">
+                                                                <h3 className="text-xl font-bold text-foreground mb-2 leading-tight">
+                                                                    {cls.className}
+                                                                </h3>
+                                                                {cls.classDescription && (
+                                                                    <p className="text-muted-foreground text-sm leading-relaxed">
+                                                                        {cls.classDescription}
+                                                                    </p>
+                                                                )}
+                                                            </div>
+
+                                                            {/* Action button */}
+                                                            {!isCompleted && (
+                                                                <Button
+                                                                    variant="outline"
+                                                                    className="border-green-500/30 hover:bg-green-500/10 hover:border-green-500/50"
+                                                                    onClick={() => handleClassCompletion(cls._id)}
+                                                                    disabled={markingClassId === cls._id}
+                                                                >
+                                                                    {markingClassId === cls._id ? (
+                                                                        <>
+                                                                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                                                            Marking...
+                                                                        </>
+                                                                    ) : (
+                                                                        <>
+                                                                            <CheckCircle className="w-4 h-4 mr-2" />
+                                                                            Mark as Done
+                                                                        </>
+                                                                    )}
+                                                                </Button>
+                                                            )}
                                                         </div>
-                                                        {!isCompleted && (
-                                                            <Button
-                                                                variant="outline"
-                                                                size="sm"
-                                                                className="shrink-0 border-green-500/30 hover:bg-green-500/10"
-                                                                onClick={() => handleClassCompletion(cls._id)}
-                                                            >
-                                                                <CheckCircle className="w-4 h-4 mr-2" />
-                                                                Mark as Done
-                                                            </Button>
-                                                        )}
                                                     </CardContent>
                                                 </Card>
                                             );
                                         })}
                                 </div>
                             ) : (
-                                <Card className="bg-muted/30 border-dashed border-2">
-                                    <CardContent className="p-8 text-center text-muted-foreground">
-                                        <Calendar className="w-12 h-12 mx-auto mb-3 opacity-20" />
-                                        <p>No previous classes yet.</p>
+                                <Card className="bg-gradient-to-br from-muted/20 to-muted/5 border-dashed border-2">
+                                    <CardContent className="p-12 text-center">
+                                        <div className="max-w-sm mx-auto">
+                                            <div className="w-16 h-16 bg-muted/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                <Calendar className="w-8 h-8 text-muted-foreground/40" />
+                                            </div>
+                                            <h3 className="text-lg font-semibold text-foreground mb-2">No Previous Classes</h3>
+                                            <p className="text-muted-foreground text-sm">
+                                                You haven't attended any classes yet. Check your upcoming classes above!
+                                            </p>
+                                        </div>
                                     </CardContent>
                                 </Card>
                             )}
@@ -388,14 +484,12 @@ const EnrolledCourseView = () => {
                                                     {section.subSection?.map((lesson: any) => {
                                                         const isCompleted = completedLectures.has(lesson._id);
                                                         return (
-                                                            <div key={lesson._id} className="p-3 pl-14 flex items-center gap-3 hover:bg-muted/20 transition-colors group cursor-pointer"
-                                                                onClick={(e) => {
-                                                                    // Prevent triggering if clicking something else if needed, but row click is fine
-                                                                    e.stopPropagation();
-                                                                    handleLectureCompletion(lesson._id);
-                                                                }}>
+                                                            <div
+                                                                key={lesson._id}
+                                                                className="p-3 pl-14 flex items-center gap-3"
+                                                            >
                                                                 <CheckCircle
-                                                                    className={`w-5 h-5 transition-all ${isCompleted ? 'text-green-500 fill-green-500/10' : 'text-muted-foreground hover:text-primary'}`}
+                                                                    className={`w-5 h-5 transition-all ${isCompleted ? 'text-green-500 fill-green-500/10' : 'text-muted-foreground'}`}
                                                                 />
                                                                 <div className="flex-1">
                                                                     <p className="text-sm font-medium text-foreground">{lesson.title}</p>
@@ -403,7 +497,6 @@ const EnrolledCourseView = () => {
                                                                         <p className="text-xs text-muted-foreground">{lesson.timeDuration} min</p>
                                                                     )}
                                                                 </div>
-                                                                {/* Could show completion status here if available in lesson data */}
                                                             </div>
                                                         );
                                                     })}

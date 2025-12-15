@@ -30,7 +30,7 @@ interface Lead {
 
 const Leads = () => {
     const navigate = useNavigate();
-    const { user, accessToken } = useAppSelector((state) => state.auth);
+    const { user, accessToken, isLoading } = useAppSelector((state) => state.auth);
     const [leads, setLeads] = useState<Lead[]>([]);
     const [filteredLeads, setFilteredLeads] = useState<Lead[]>([]);
     const [loading, setLoading] = useState(true);
@@ -38,13 +38,16 @@ const Leads = () => {
     const [stats, setStats] = useState({ total: 0, today: 0 });
 
     useEffect(() => {
+        // Don't redirect while still loading auth state from localStorage
+        if (isLoading) return;
+
         if (!accessToken || user?.accountType !== 'Admin') {
             navigate('/auth');
             return;
         }
         fetchLeads();
         fetchStats();
-    }, [accessToken, user, navigate]);
+    }, [accessToken, user, navigate, isLoading]);
 
     useEffect(() => {
         filterLeads();

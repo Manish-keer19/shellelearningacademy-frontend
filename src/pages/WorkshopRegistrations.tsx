@@ -38,19 +38,22 @@ interface Registration {
 
 const WorkshopRegistrations = () => {
     const navigate = useNavigate();
-    const { user, accessToken } = useAppSelector((state) => state.auth);
+    const { user, accessToken, isLoading } = useAppSelector((state) => state.auth);
     const [registrations, setRegistrations] = useState<Registration[]>([]);
     const [filteredRegistrations, setFilteredRegistrations] = useState<Registration[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
+        // Don't redirect while still loading auth state from localStorage
+        if (isLoading) return;
+
         if (!accessToken || user?.accountType !== 'Admin') {
             navigate('/auth');
             return;
         }
         fetchRegistrations();
-    }, [accessToken, user, navigate]);
+    }, [accessToken, user, navigate, isLoading]);
 
     useEffect(() => {
         filterRegistrations();

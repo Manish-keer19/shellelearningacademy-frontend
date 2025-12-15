@@ -98,12 +98,12 @@ const Auth = () => {
 
                     {/* Password Input */}
                     <div className="space-y-2">
-                        <div className="flex justify-between items-center">
+                        {/* <div className="flex justify-between items-center">
                              <Label htmlFor="password" className="text-sm font-semibold">Password</Label>
                              <Link to="/forgot-password" className="text-xs text-primary hover:text-primary/80 transition-colors hover:underline">
                                 Forgot password?
                             </Link>
-                        </div>
+                        </div> */}
                         <div className="relative">
                             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                             <Input
@@ -155,12 +155,12 @@ const Auth = () => {
                 </form>
                 
                 {/* Registration Link */}
-                <p className="mt-6 text-center text-sm text-muted-foreground">
+                {/* <p className="mt-6 text-center text-sm text-muted-foreground">
                     Don't have an account?{" "}
                     <Link to="/sign-up" className="font-semibold text-primary hover:text-primary/80 transition-colors underline">
                         Sign up here
                     </Link>
-                </p>
+                </p> */}
             </Card>
         </div>
     );

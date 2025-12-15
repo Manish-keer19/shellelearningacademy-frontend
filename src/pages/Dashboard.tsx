@@ -77,7 +77,7 @@ const ContinueLearningCard = ({ course, navigate }) => (
                 <div className="flex items-center justify-between text-xs text-muted-foreground pt-1">
                     <div className="flex items-center space-x-1">
                         <CheckCircle className="w-3.5 h-3.5" />
-                        <span>{course.completedLectures}/{course.totalLectures} lectures</span>
+                        <span>{course.completedClasses}/{course.totalClasses} Classes</span>
                     </div>
                     <div className="flex items-center space-x-1">
                         <Clock className="w-3.5 h-3.5" />
@@ -101,7 +101,7 @@ const ContinueLearningCard = ({ course, navigate }) => (
 
 const Dashboard = () => {
     const navigate = useNavigate();
-    const { user, accessToken } = useAppSelector((state) => state.auth);
+    const { user, accessToken, isLoading } = useAppSelector((state) => state.auth);
     const [isLoadingStats, setIsLoadingStats] = useState(false);
     const [viewType, setViewType] = useState<'student' | 'admin'>('student');
     const [enrolledCourses, setEnrolledCourses] = useState([]);
@@ -152,19 +152,38 @@ const Dashboard = () => {
                     try {
                         const progressRes = await courseService.getFullCourseDetails(course._id, accessToken);
                         const completedVideos = progressRes.data?.completedVideos || [];
+                        const completedClasses = progressRes.data?.completedClasses || [];
+
                         const totalLectures = course.courseContent?.reduce((total, section) =>
                             total + (section.subSection?.length || 0), 0) || 0;
-                        const progress = totalLectures > 0 ? (completedVideos.length / totalLectures) * 100 : 0;
+
+                        // Get course details to access upcomingClasses
+                        const courseDetails = progressRes.data?.courseDetails || (Array.isArray(progressRes.data) ? progressRes.data[0] : progressRes.data);
+                        const totalClasses = courseDetails?.upcomingClasses?.length || 0;
+
+                        // Calculate progress based on classes only (matching EnrolledCourseView)
+                        const progress = totalClasses > 0 ? (completedClasses.length / totalClasses) * 100 : 0;
 
                         return {
                             ...course,
                             progress: Math.round(progress),
                             completedLectures: completedVideos.length,
                             totalLectures,
+                            completedClasses: completedClasses.length,
+                            totalClasses,
                             lastAccessed: new Date().toISOString()
                         };
                     } catch (error) {
-                        return { ...course, progress: 0, completedLectures: 0, totalLectures: course.courseContent?.reduce((total, section) => total + (section.subSection?.length || 0), 0) || 0, lastAccessed: new Date().toISOString() };
+                        const totalLectures = course.courseContent?.reduce((total, section) => total + (section.subSection?.length || 0), 0) || 0;
+                        return {
+                            ...course,
+                            progress: 0,
+                            completedLectures: 0,
+                            totalLectures,
+                            completedClasses: 0,
+                            totalClasses: 0,
+                            lastAccessed: new Date().toISOString()
+                        };
                     }
                 })
             );
@@ -216,6 +235,9 @@ const Dashboard = () => {
     };
 
     useEffect(() => {
+        // Don't redirect while still loading auth state from localStorage
+        if (isLoading) return;
+
         if (!accessToken) {
             navigate("/auth");
             return;
@@ -228,7 +250,7 @@ const Dashboard = () => {
         } else {
             fetchAdminStats();
         }
-    }, [navigate, accessToken, user]);
+    }, [navigate, accessToken, user, isLoading]);
 
     // --- Data Mappers for Rendering ---
 
@@ -290,16 +312,20 @@ const Dashboard = () => {
     const QuickActionsSection = () => (
         <div className="mb-12">
             <div className="flex items-center justify-between mb-6">
-                <h2 className="text-3xl font-bold text-foreground">Quick Actions</h2>
+                {viewType === 'admin' && <h2 className="text-3xl font-bold text-foreground">Quick Actions</h2>}
                 {/* <Button variant="outline" className="text-primary border-primary hover:bg-primary/10" onClick={() => navigate(viewType === 'admin' ? '/manage-courses' : '/all-courses')}>
                     {viewType === 'admin' ? 'Go to Manager' : 'Browse All'}
                 </Button> */}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {viewType === 'admin'
+                    && adminActions.map((action, index) => <QuickActionCard key={index} {...action} />)
+
+                }
+                {/* {viewType === 'admin'
                     ? adminActions.map((action, index) => <QuickActionCard key={index} {...action} />)
                     : studentActions.map((action, index) => <QuickActionCard key={index} {...action} />)
-                }
+                } */}
             </div>
         </div>
     );
@@ -407,41 +433,6 @@ const Dashboard = () => {
         );
     };
 
-    const RecentActivitySection = () => {
-        const activities = viewType === 'admin' ? [
-            { icon: BookOpen, color: 'bg-green-100 text-primary', text: `New course "${allCourses[0]?.courseName || 'React Fundamentals'}" published`, time: '2 hours ago' },
-            { icon: Users, color: 'bg-blue-100 text-blue-600', text: '15 new student enrollments today', time: '4 hours ago' },
-            { icon: Award, color: 'bg-purple-100 text-purple-600', text: '8 certificates issued this week', time: '1 day ago' },
-        ] : [
-            { icon: BookOpen, color: 'bg-green-100 text-primary', text: 'Completed lesson in "Web Development Bootcamp"', time: '2 hours ago' },
-            { icon: Play, color: 'bg-blue-100 text-blue-600', text: 'Watched 3 new videos in "UI/UX Design"', time: '4 hours ago' },
-            { icon: Award, color: 'bg-purple-100 text-purple-600', text: 'Earned certificate for "Digital Marketing Pro"', time: '1 day ago' },
-        ];
-
-        return (
-            <div className="mb-12">
-                <h2 className="text-3xl font-bold text-foreground mb-6">Recent Activity</h2>
-                <Card className="bg-card/90 backdrop-blur-sm border-border/70 shadow-lg">
-                    <div className="p-6">
-                        <div className="space-y-4">
-                            {activities.map((activity, index) => (
-                                <div key={index} className="flex items-center space-x-4 p-3 bg-muted/50 dark:bg-muted/30 rounded-xl transition-colors hover:bg-muted/70">
-                                    <div className={`w-10 h-10 ${activity.color} rounded-full flex items-center justify-center flex-shrink-0`}>
-                                        <activity.icon className="w-5 h-5" />
-                                    </div>
-                                    <div className="flex-1">
-                                        <p className="font-medium text-foreground">{activity.text}</p>
-                                        <p className="text-sm text-muted-foreground">{activity.time}</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </Card>
-            </div>
-        );
-    };
-
     // --- Final Render ---
 
     if (isLoadingStats && accessToken) {
@@ -475,7 +466,7 @@ const Dashboard = () => {
                 {viewType === 'student' && <StudentMainLearningSection />}
                 {viewType === 'admin' && <AdminMainOverview />}
 
-                <RecentActivitySection />
+
 
             </main>
 
