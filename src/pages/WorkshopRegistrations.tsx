@@ -172,8 +172,8 @@ const WorkshopRegistrations = () => {
                                                     <div className="flex items-start gap-2">
                                                         <Calendar className="w-4 h-4 text-primary mt-1 flex-shrink-0" />
                                                         <div>
-                                                            <div className="font-semibold line-clamp-1">{registration.workshop.title}</div>
-                                                            <div className="text-xs text-muted-foreground">{registration.workshop.date}</div>
+                                                            <div className="font-semibold line-clamp-1">{registration.workshop?.title || 'Deleted Workshop'}</div>
+                                                            <div className="text-xs text-muted-foreground">{registration.workshop?.date || 'N/A'}</div>
                                                         </div>
                                                     </div>
                                                 </TableCell>
