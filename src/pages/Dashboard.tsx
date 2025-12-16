@@ -283,6 +283,7 @@ const Dashboard = () => {
         { title: "Workshop Applications", description: "View and manage workshop registrations.", icon: Users, action: () => navigate('/workshop-registrations'), colorClass: "from-blue-500 to-blue-600" },
         { title: "Nexa Leads", description: "View all leads captured from Nexa AI.", icon: Sparkles, action: () => navigate('/leads'), colorClass: "from-indigo-500 to-purple-600" },
         { title: "Manage Courses", description: "Edit, update, or delete content.", icon: Settings, action: () => navigate('/manage-courses'), colorClass: "from-purple-500 to-purple-600" },
+        { title: "Manage Classes", description: "Schedule and manage classes for all courses.", icon: Calendar, action: () => navigate('/manage-all-classes'), colorClass: "from-teal-500 to-cyan-600" },
         { title: "Add Category", description: "Organize content with new course categories.", icon: Zap, action: () => navigate('/add-category'), colorClass: "from-orange-500 to-orange-600" },
         { title: "Create Job", description: "Post new job opportunities for students.", icon: GraduationCap, action: () => navigate('/create-job'), colorClass: "from-teal-500 to-teal-600" },
         { title: "Manage Jobs", description: "Edit and manage existing job postings.", icon: Settings, action: () => navigate('/manage-jobs'), colorClass: "from-red-500 to-red-600" }

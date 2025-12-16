@@ -11,6 +11,16 @@ class CourseService {
     }
   }
 
+  // Get basic course info (ID, name, thumbnail, description) - Lightweight
+  public async getCoursesBasicInfo() {
+    try {
+      const res = await axiosInstance.get(`/course/getCoursesBasicInfo`);
+      return res.data;
+    } catch (error: any) {
+      throw error;
+    }
+  }
+
   // Get course details (public)
   public async getCourseDetails(courseId: string) {
     try {

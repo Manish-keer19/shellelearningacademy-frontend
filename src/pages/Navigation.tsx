@@ -37,6 +37,7 @@ const Navigation = () => {
         { path: "/courses-list", label: "Courses List" },
         { path: "/create-course", label: "Create Course" },
         { path: "/manage-courses", label: "Manage Courses" },
+        { path: "/manage-all-classes", label: "Manage Classes" },
       ]
     },
     {
