@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Facebook, Twitter, Instagram, Linkedin, Youtube, Mail, Phone, MapPin, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 // Ensure logo path is correct
-import logo from "../assets/logo1.png"; 
+import logo from "../assets/logo1.png";
 
 export const Footer = () => {
     // --- Data Definitions (Optimized for cleanliness) ---
@@ -31,11 +31,11 @@ export const Footer = () => {
     };
 
     const socialLinks = [
-        { icon: Facebook, href: "https://www.facebook.com/profile.php?id=61583112636861&mibextid=wwXIfr&rdid=XJJPGaN0Ttkd5y2I", label: "Facebook" },
-        { icon: Twitter, href: "https://x.com/shellelearning", label: "Twitter" },
-        { icon: Instagram, href: "https://www.instagram.com/shellelearningacademy", label: "Instagram" },
-        { icon: Linkedin, href: "https://www.linkedin.com/in/shell-e-learning-academy-1180a538a/", label: "LinkedIn" },
-        { icon: Youtube, href: "https://www.youtube.com/@shellelearningacademy", label: "YouTube" },
+        { icon: Facebook, href: "https://www.facebook.com/profile.php?id=61583112636861&mibextid=wwXIfr&rdid=XJJPGaN0Ttkd5y2I", label: "Facebook", hoverClass: "hover:bg-[#1877F2] hover:text-white" },
+        { icon: Twitter, href: "https://x.com/shellelearning", label: "Twitter", hoverClass: "hover:bg-black hover:text-white" },
+        { icon: Instagram, href: "https://www.instagram.com/shellelearningacademy", label: "Instagram", hoverClass: "hover:bg-gradient-to-br hover:from-[#833AB4] hover:via-[#FD1D1D] hover:to-[#F77737] hover:text-white" },
+        { icon: Linkedin, href: "https://www.linkedin.com/in/shell-e-learning-academy-1180a538a/", label: "LinkedIn", hoverClass: "hover:bg-[#0A66C2] hover:text-white" },
+        { icon: Youtube, href: "https://www.youtube.com/@shellelearningacademy", label: "YouTube", hoverClass: "hover:bg-[#FF0000] hover:text-white" },
     ];
 
     const contactInfo = [
@@ -66,15 +66,15 @@ export const Footer = () => {
             </ul>
         </div>
     );
-    
+
     // --- Main Component Render ---
     return (
         <footer className="border-t border-border bg-[#166D37] dark:bg-black/20">
             <div className="container mx-auto px-4 py-12 sm:py-16 lg:py-20 max-w-7xl">
-                
+
                 {/* Top Section: Brand + Links Grid */}
                 <div className="grid gap-10 md:gap-12 lg:grid-cols-5 xl:grid-cols-6">
-                    
+
                     {/* 1. Brand & Contact Section (2 columns wide) */}
                     <div className="lg:col-span-2 space-y-6">
                         <Link to="/" className="flex items-center gap-3">
@@ -84,7 +84,7 @@ export const Footer = () => {
                                 <span className="text-xs font-medium text-white">MSME Verified | Learn Today</span>
                             </div>
                         </Link>
-                        
+
                         <p className="text-sm text-white leading-relaxed">
                             Empowering learners worldwide with cutting-edge education, recognized certifications, and clear career pathways.
                         </p>
@@ -125,7 +125,7 @@ export const Footer = () => {
 
                 {/* Bottom Bar: Copyright & Socials */}
                 <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
-                    
+
                     {/* Copyright and Links */}
                     <div className="flex flex-col items-center gap-2 sm:flex-row sm:gap-4 text-center sm:text-left">
                         <p className="text-sm text-white font-medium">
@@ -149,7 +149,7 @@ export const Footer = () => {
                                 href={social.href}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex h-9 w-9 items-center justify-center rounded-full bg-muted text-black transition-all duration-300   shadow-md"
+                                className={`flex h-9 w-9 items-center justify-center rounded-full bg-muted text-black transition-all duration-300 shadow-md hover:scale-110 hover:shadow-lg ${social.hoverClass}`}
                                 aria-label={`Follow us on ${social.label}`}
                             >
                                 <social.icon className="h-4 w-4" />

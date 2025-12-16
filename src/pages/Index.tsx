@@ -11,20 +11,22 @@ import Testimonials from "./Testimonials";
 import WhyChooseShell from "./WhyChooseShell";
 import NewsletterSection from "./NewsletterSection";
 import { CertificationsSection } from "@/components/CertificationsSection";
+import { SponsorsSection } from "@/components/SponsorsSection";
 
 // import { TrustedCompanies } from "@/components/TrustedCompanies";
 // import { InstructorsSection } from "@/components/InstructorsSection";
 
 
 const Index = () => {
- 
+
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
 
       <main className="flex-1">
         <Hero />
-        {/* <TrustedCompanies /> */}
+
+        <SponsorsSection/>
         <CategoriesSection />
         <FeaturedCourses />
         {/* <InstructorsSection /> */}
