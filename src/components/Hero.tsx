@@ -4,12 +4,12 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, BookOpen, Play, CheckCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import hero_img from "../assets/hero_img.jpg"
-import img1 from "../assets/new_student/1.jpg"
-import img2 from "../assets/new_student/2.jpg"
-import img3 from "../assets/new_student/3.jpg"
-import img4 from "../assets/new_student/4.jpg"
-import img5 from "../assets/new_student/5.jpg"
-import img6 from "../assets/new_student/6.jpg"
+import img1 from "../assets/new_student/1.jpeg"
+import img2 from "../assets/new_student/2.jpeg"
+import img3 from "../assets/new_student/3.jpeg"
+import img4 from "../assets/new_student/4.jpeg"
+import img5 from "../assets/new_student/5.jpeg"
+import img6 from "../assets/new_student/6.jpeg"
 export const Hero = () => {
   const navigate = useNavigate();
 

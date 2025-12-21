@@ -133,7 +133,7 @@ const FloatingNexaChat = () => {
                                     <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-primary rounded-full animate-pulse is-online"></span>
                                 </div>
                                 <div>
-                                    <h3 className="font-bold text-sm tracking-wide">Nexa Assistant</h3>
+                                    <h3 className="font-bold text-sm tracking-wide text-white">Nexa Assistant</h3>
                                     <p className="text-[10px] text-white/80 font-medium">Always here to help</p>
                                 </div>
                             </div>

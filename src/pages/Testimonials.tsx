@@ -2,13 +2,13 @@ import React from "react";
 import { Star, Quote } from "lucide-react";
 
 // Images
-import img1 from "../assets/new_student/1.jpg"
-import img2 from "../assets/new_student/2.jpg"
-import img3 from "../assets/new_student/3.jpg"
-import img4 from "../assets/new_student/4.jpg"
-import img5 from "../assets/new_student/5.jpg"
+import img1 from "../assets/new_student/1.jpeg"
+import img2 from "../assets/new_student/2.jpeg"
+import img3 from "../assets/new_student/3.jpeg"
+import img4 from "../assets/new_student/4.jpeg"
+import img5 from "../assets/new_student/5.jpeg"
 import dummy from "../assets/students/dummy.png"
-import img6 from "../assets/new_student/6.jpg"
+import img6 from "../assets/new_student/6.jpeg"
 
 const Testimonials = () => {
     const testimonials = [
@@ -17,12 +17,12 @@ const Testimonials = () => {
             name: "Arif Khan",
             role: "Student",
             quote: "The teaching style at Shell E-Learning Academy is very simple and clear. Even difficult topics feel easy because they explain everything step-by-step. I really enjoy learning here.",
-            rating: 5,
+            rating: 4,
             avatar: img1,
         },
         {
             id: 2,
-            name: "Amit Kumar",
+            name: "Sargam Dhangar",
             role: "Student",
             quote: "Their doubt support is amazing. Whenever I asked something, the team replied quickly and solved my problem. It feels like there is always someone to help me.",
             rating: 5,
@@ -30,10 +30,10 @@ const Testimonials = () => {
         },
         {
             id: 3,
-            name: "Vikash Gupta",
+            name: "Saloni Bairagi",
             role: "Student",
             quote: "The course quality is very good. The videos are clean, the audio is clear, and the examples are practical. You actually understand how to use the knowledge in real life.",
-            rating: 5,
+            rating: 4,
             avatar: img3,
         },
         {
@@ -57,7 +57,7 @@ const Testimonials = () => {
             name: "Rajesh Singh",
             role: "Student",
             quote: "The platform is very easy to use. Everything is well-organized—modules, videos, notes, quizzes. I never got confused. Very smooth learning experience.",
-            rating: 5,
+            rating: 4,
             avatar: img6,
         }
     ];
