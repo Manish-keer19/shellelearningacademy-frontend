@@ -28,6 +28,11 @@ interface CertificateData {
         url: string;
         fileType: string;
     };
+    secondaryCertificateFile?: {
+        url: string;
+        fileType: string;
+    };
+    certificateCount: number;
     verificationUrl: string;
 }
 
@@ -259,32 +264,76 @@ const CertificateVerification = () => {
                         {certificate.status === "VERIFIED" && (
                             <>
                                 <h3 className="text-lg sm:text-xl font-bold text-foreground mb-4 sm:mb-6">
-                                    Certificate Preview
+                                    Certificate Preview{certificate.certificateCount === 2 ? 's' : ''}
                                 </h3>
-                                <div className="bg-secondary/30 rounded-xl p-4 mb-4 sm:mb-6 border-2 border-border">
-                                    {certificate.certificateFile.fileType === "pdf" ? (
-                                        <div className="aspect-[1.414/1] bg-card rounded-lg flex items-center justify-center">
-                                            <div className="text-center">
-                                                <FileText className="w-16 h-16 sm:w-20 sm:h-20 text-muted-foreground mx-auto mb-4" />
-                                                <p className="text-muted-foreground text-sm sm:text-base mb-4">PDF Certificate</p>
-                                                <button
-                                                    onClick={downloadCertificate}
-                                                    className="px-4 sm:px-6 py-2.5 sm:py-3 bg-primary hover:bg-primary-hover text-primary-foreground rounded-lg transition-all shadow-md hover:shadow-lg inline-flex items-center gap-2 text-sm font-semibold"
-                                                >
-                                                    <Download className="w-4 h-4 sm:w-5 sm:h-5" />
-                                                    Download Certificate
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <img
-                                            src={certificate.certificateFile.url}
-                                            alt="Certificate"
-                                            className="w-full max-w-3xl mx-auto h-auto rounded-lg shadow-lg object-contain"
-                                            style={{ maxHeight: '600px' }}
-                                        />
+
+                                {/* Primary Certificate */}
+                                <div className="mb-6">
+                                    {certificate.certificateCount === 2 && (
+                                        <h4 className="text-base sm:text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
+                                            <Award className="w-5 h-5 text-primary" />
+                                            Primary Certificate
+                                        </h4>
                                     )}
+                                    <div className="bg-secondary/30 rounded-xl p-4 mb-4 sm:mb-6 border-2 border-border">
+                                        {certificate.certificateFile.fileType === "pdf" ? (
+                                            <div className="aspect-[1.414/1] bg-card rounded-lg flex items-center justify-center">
+                                                <div className="text-center">
+                                                    <FileText className="w-16 h-16 sm:w-20 sm:h-20 text-muted-foreground mx-auto mb-4" />
+                                                    <p className="text-muted-foreground text-sm sm:text-base mb-4">PDF Certificate</p>
+                                                    <button
+                                                        onClick={() => window.open(certificate.certificateFile.url, "_blank")}
+                                                        className="px-4 sm:px-6 py-2.5 sm:py-3 bg-primary hover:bg-primary-hover text-primary-foreground rounded-lg transition-all shadow-md hover:shadow-lg inline-flex items-center gap-2 text-sm font-semibold"
+                                                    >
+                                                        <Download className="w-4 h-4 sm:w-5 sm:h-5" />
+                                                        Download Certificate
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <img
+                                                src={certificate.certificateFile.url}
+                                                alt="Primary Certificate"
+                                                className="w-full max-w-3xl mx-auto h-auto rounded-lg shadow-lg object-contain"
+                                                style={{ maxHeight: '600px' }}
+                                            />
+                                        )}
+                                    </div>
                                 </div>
+
+                                {/* Secondary Certificate */}
+                                {certificate.certificateCount === 2 && certificate.secondaryCertificateFile && (
+                                    <div className="mb-6">
+                                        <h4 className="text-base sm:text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
+                                            <Award className="w-5 h-5 text-primary" />
+                                            Secondary Certificate
+                                        </h4>
+                                        <div className="bg-secondary/30 rounded-xl p-4 mb-4 sm:mb-6 border-2 border-border">
+                                            {certificate.secondaryCertificateFile.fileType === "pdf" ? (
+                                                <div className="aspect-[1.414/1] bg-card rounded-lg flex items-center justify-center">
+                                                    <div className="text-center">
+                                                        <FileText className="w-16 h-16 sm:w-20 sm:h-20 text-muted-foreground mx-auto mb-4" />
+                                                        <p className="text-muted-foreground text-sm sm:text-base mb-4">PDF Certificate</p>
+                                                        <button
+                                                            onClick={() => window.open(certificate.secondaryCertificateFile!.url, "_blank")}
+                                                            className="px-4 sm:px-6 py-2.5 sm:py-3 bg-primary hover:bg-primary-hover text-primary-foreground rounded-lg transition-all shadow-md hover:shadow-lg inline-flex items-center gap-2 text-sm font-semibold"
+                                                        >
+                                                            <Download className="w-4 h-4 sm:w-5 sm:h-5" />
+                                                            Download Certificate
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <img
+                                                    src={certificate.secondaryCertificateFile.url}
+                                                    alt="Secondary Certificate"
+                                                    className="w-full max-w-3xl mx-auto h-auto rounded-lg shadow-lg object-contain"
+                                                    style={{ maxHeight: '600px' }}
+                                                />
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
 
                                 {/* Download Button */}
                                 <button
@@ -292,7 +341,7 @@ const CertificateVerification = () => {
                                     className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-primary hover:bg-primary-hover text-primary-foreground rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 sm:gap-3 text-base sm:text-lg font-semibold"
                                 >
                                     <Download className="w-5 h-5 sm:w-6 sm:h-6" />
-                                    Download Certificate
+                                    Download {certificate.certificateCount === 2 ? 'Primary ' : ''}Certificate
                                 </button>
                             </>
                         )}

@@ -40,6 +40,11 @@ interface Certificate {
         url: string;
         fileType: string;
     };
+    secondaryCertificateFile?: {
+        url: string;
+        fileType: string;
+    };
+    certificateCount: number;
     createdAt: string;
 }
 
@@ -72,6 +77,8 @@ const CertificateManagement = () => {
         remarks: "",
     });
     const [certificateFile, setCertificateFile] = useState<File | null>(null);
+    const [secondaryCertificateFile, setSecondaryCertificateFile] = useState<File | null>(null);
+    const [certificateCount, setCertificateCount] = useState<number>(1);
     const [uploading, setUploading] = useState(false);
 
     // Fetch certificates
@@ -121,7 +128,12 @@ const CertificateManagement = () => {
         e.preventDefault();
 
         if (!certificateFile) {
-            toast.error("Please upload a certificate file");
+            toast.error("Please upload a primary certificate file");
+            return;
+        }
+
+        if (certificateCount === 2 && !secondaryCertificateFile) {
+            toast.error("Please upload a secondary certificate file");
             return;
         }
 
@@ -136,11 +148,16 @@ const CertificateManagement = () => {
             formDataToSend.append("courseDuration", formData.courseDuration);
             formDataToSend.append("issueDate", formData.issueDate);
             formDataToSend.append("remarks", formData.remarks);
+            formDataToSend.append("certificateCount", certificateCount.toString());
             formDataToSend.append("certificateFile", certificateFile);
+
+            if (certificateCount === 2 && secondaryCertificateFile) {
+                formDataToSend.append("secondaryCertificateFile", secondaryCertificateFile);
+            }
 
             const response = await createCertificate(formDataToSend);
 
-            toast.success("Certificate created successfully!", { id: toastId });
+            toast.success(`Certificate${certificateCount === 2 ? 's' : ''} created successfully!`, { id: toastId });
             setShowCreateModal(false);
             resetForm();
             fetchCertificates();
@@ -170,6 +187,8 @@ const CertificateManagement = () => {
             remarks: "",
         });
         setCertificateFile(null);
+        setSecondaryCertificateFile(null);
+        setCertificateCount(1);
     };
 
     // Handle status update
@@ -650,10 +669,28 @@ const CertificateManagement = () => {
                                 />
                             </div>
 
-                            {/* Certificate File */}
+                            {/* Certificate Count */}
                             <div>
                                 <label className="block text-sm font-medium text-foreground mb-2">
-                                    Certificate File (PDF or Image) *
+                                    Number of Certificates *
+                                </label>
+                                <select
+                                    value={certificateCount}
+                                    onChange={(e) => setCertificateCount(parseInt(e.target.value))}
+                                    className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-sm"
+                                >
+                                    <option value={1}>1 Certificate</option>
+                                    <option value={2}>2 Certificates</option>
+                                </select>
+                                <p className="text-xs text-muted-foreground mt-1">
+                                    Select how many certificates to assign to this student
+                                </p>
+                            </div>
+
+                            {/* Primary Certificate File */}
+                            <div>
+                                <label className="block text-sm font-medium text-foreground mb-2">
+                                    {certificateCount === 2 ? 'Primary Certificate File *' : 'Certificate File (PDF or Image) *'}
                                 </label>
                                 <input
                                     type="file"
@@ -668,6 +705,27 @@ const CertificateManagement = () => {
                                     Accepted formats: PDF, JPG, PNG (Max 5MB)
                                 </p>
                             </div>
+
+                            {/* Secondary Certificate File (Conditional) */}
+                            {certificateCount === 2 && (
+                                <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
+                                    <label className="block text-sm font-medium text-foreground mb-2">
+                                        Secondary Certificate File *
+                                    </label>
+                                    <input
+                                        type="file"
+                                        required={certificateCount === 2}
+                                        accept=".pdf,.jpg,.jpeg,.png"
+                                        onChange={(e) =>
+                                            setSecondaryCertificateFile(e.target.files?.[0] || null)
+                                        }
+                                        className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-sm"
+                                    />
+                                    <p className="text-xs text-muted-foreground mt-1">
+                                        Upload the second certificate for this student
+                                    </p>
+                                </div>
+                            )}
 
                             {/* Remarks */}
                             <div>
