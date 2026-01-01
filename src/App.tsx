@@ -67,6 +67,17 @@ import Settings from "./pages/Settings";
 import CertificateManagement from "./pages/CertificateManagement";
 import CertificateVerification from "./pages/CertificateVerification";
 
+// EMS Module Imports
+import EmsDashboard from "./ems/pages/Index";
+import EmsEmployees from "./ems/pages/Employees";
+import EmsAttendance from "./ems/pages/Attendance";
+import EmsTasks from "./ems/pages/Tasks";
+import EmsLeads from "./ems/pages/Leads";
+import EmsTargets from "./ems/pages/Targets";
+import EmsPayroll from "./ems/pages/Payroll";
+import EmsLeaves from "./ems/pages/Leaves";
+import EmsSettings from "./ems/pages/Settings";
+
 
 
 const App = () => (
@@ -115,9 +126,6 @@ const App = () => (
 
                 {/* Course Routes */}
                 <Route path="/all-courses" element={<AllCourses />} />
-                import EnrolledCourseView from "./pages/Course/EnrolledCourseView";
-
-                // ... existing imports
 
                 <Route path="/courses-list" element={<CoursesList />} />
                 <Route path="/course/:id" element={<ViewCourse />} />
@@ -156,6 +164,21 @@ const App = () => (
                 <Route path="/edit-job/:id" element={<EditJob />} />
                 <Route path="/manage-jobs" element={<ManageJobs />} />
                 <Route path="/admin/user-enrollment" element={<AdminUserEnrollment />} />
+
+                {/* EMS Module Routes */}
+                <Route path="/ems" element={<EmsDashboard />} />
+                <Route path="/ems/employees" element={<EmsEmployees />} />
+                <Route path="/ems/attendance" element={<EmsAttendance />} />
+                <Route path="/ems/tasks" element={<EmsTasks />} />
+                <Route path="/ems/reports" element={<EmsDashboard />} />
+                <Route path="/ems/leads" element={<EmsLeads />} />
+                <Route path="/ems/targets" element={<EmsTargets />} />
+                <Route path="/ems/payroll" element={<EmsPayroll />} />
+                <Route path="/ems/leaves" element={<EmsLeaves />} />
+                <Route path="/ems/performance" element={<EmsDashboard />} />
+                <Route path="/ems/achievements" element={<EmsDashboard />} />
+                <Route path="/ems/notifications" element={<EmsDashboard />} />
+                <Route path="/ems/settings" element={<EmsSettings />} />
 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />

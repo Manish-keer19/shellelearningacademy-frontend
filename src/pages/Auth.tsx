@@ -22,7 +22,7 @@ interface LoginForm {
 const Auth = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    
+
     const {
         register,
         handleSubmit,
@@ -32,19 +32,28 @@ const Auth = () => {
     const onSubmit = async (data: LoginForm) => {
         try {
             dispatch(loginStart());
-            const response = await authService.login({ 
-                email: data.email, 
-                password: data.password 
+            const response = await authService.login({
+                email: data.email,
+                password: data.password
             });
             const { accessToken, user } = response;
-            
+
             // Note: If data.rememberMe is true, you might store the accessToken/user data in localStorage
             // Otherwise, typically sessionStorage is used for session-based login.
-            
+
             dispatch(loginSuccess({ accessToken, user }));
-            
+
             toast.success("Signed in successfully! Welcome back. 👋");
-            navigate("/");
+
+            // Role-based redirection
+            if (user.accountType === "Employee") {
+                navigate("/ems/leads");
+            } else if (user.accountType === "Manager" || user.accountType === "Super Admin") {
+                navigate("/ems");
+            } else {
+                navigate("/");
+            }
+
         } catch (error: any) {
             dispatch(loginFailure());
             const message = error?.response?.data?.message || "Login failed. Please check your email and password.";
@@ -55,10 +64,10 @@ const Auth = () => {
     return (
         <div className="min-h-screen bg-gradient-to-br from-primary/10 via-background to-secondary/10 flex items-center justify-center p-4">
             {/* Subtle background pattern/overlay */}
-            <div className="absolute inset-0 opacity-10" 
-                 style={{ backgroundImage: 'radial-gradient(#4C7C33 1px, transparent 1px)', backgroundSize: '40px 40px' }}
+            <div className="absolute inset-0 opacity-10"
+                style={{ backgroundImage: 'radial-gradient(#4C7C33 1px, transparent 1px)', backgroundSize: '40px 40px' }}
             />
-            
+
             <Card className="w-full max-w-md p-6 sm:p-8 backdrop-blur-sm bg-card/90 border border-border/70 shadow-2xl shadow-primary/10 relative z-10">
                 <div className="text-center mb-8">
                     <Link to="/" className="flex items-center justify-center gap-3 mb-4">
@@ -128,9 +137,9 @@ const Auth = () => {
                     {/* Remember Me Checkbox */}
                     <div className="flex items-center justify-between text-sm">
                         <label className="flex items-center cursor-pointer text-muted-foreground hover:text-foreground transition-colors">
-                            <input 
-                                type="checkbox" 
-                                className="mr-2 h-4 w-4 rounded border-border text-primary focus:ring-primary/50 checked:bg-primary/90" 
+                            <input
+                                type="checkbox"
+                                className="mr-2 h-4 w-4 rounded border-border text-primary focus:ring-primary/50 checked:bg-primary/90"
                                 {...register("rememberMe")}
                             />
                             Remember me
@@ -138,9 +147,9 @@ const Auth = () => {
                     </div>
 
                     {/* Submit Button */}
-                    <Button 
-                        type="submit" 
-                        className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-base shadow-lg shadow-primary/30 transition-all duration-300" 
+                    <Button
+                        type="submit"
+                        className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-base shadow-lg shadow-primary/30 transition-all duration-300"
                         disabled={isSubmitting}
                     >
                         {isSubmitting ? (
@@ -153,7 +162,7 @@ const Auth = () => {
                         )}
                     </Button>
                 </form>
-                
+
                 {/* Registration Link */}
                 {/* <p className="mt-6 text-center text-sm text-muted-foreground">
                     Don't have an account?{" "}
