@@ -273,6 +273,15 @@ const Employees = () => {
                 Phone
               </TableHead>
               <TableHead className="font-semibold text-foreground">
+                Target (₹)
+              </TableHead>
+              <TableHead className="font-semibold text-foreground">
+                Achieved (₹)
+              </TableHead>
+              <TableHead className="font-semibold text-foreground">
+                Commission (₹)
+              </TableHead>
+              <TableHead className="font-semibold text-foreground">
                 Status
               </TableHead>
               <TableHead className="font-semibold text-foreground text-right">
@@ -331,6 +340,15 @@ const Employees = () => {
                   </TableCell>
                   <TableCell className="text-muted-foreground">
                     {employee.contactNo || "N/A"}
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">
+                    {employee.employeePerformance?.monthlyTarget || 0}
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">
+                    {employee.employeePerformance?.achievedTarget || 0}
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">
+                    {employee.employeePerformance?.totalCommissionEarned || 0}
                   </TableCell>
                   <TableCell>
                     <span

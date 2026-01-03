@@ -1,62 +1,99 @@
+import { useState, useEffect } from "react";
 import { DashboardLayout } from "@/ems/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
-import { Target, TrendingUp, Award, IndianRupee } from "lucide-react";
+import { Target, TrendingUp, Award, IndianRupee, Loader2 } from "lucide-react";
 import { cn } from "@/ems/lib/utils";
-
-const targets = [
-  {
-    id: 1,
-    employee: {
-      name: "Priya Sharma",
-      role: "Sales Manager",
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=priya",
-    },
-    target: 500000,
-    achieved: 420000,
-    commission: 21000,
-  },
-  {
-    id: 2,
-    employee: {
-      name: "Rahul Kumar",
-      role: "Sales Executive",
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=rahul",
-    },
-    target: 300000,
-    achieved: 285000,
-    commission: 14250,
-  },
-  {
-    id: 3,
-    employee: {
-      name: "Anita Patel",
-      role: "Sales Executive",
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=anita",
-    },
-    target: 300000,
-    achieved: 198000,
-    commission: 9900,
-  },
-  {
-    id: 4,
-    employee: {
-      name: "Vikram Singh",
-      role: "Senior Sales",
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=vikram",
-    },
-    target: 400000,
-    achieved: 380000,
-    commission: 19000,
-  },
-];
+import emsService from "@/service/ems.service";
+import { useSelector } from "react-redux";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
 
 const Targets = () => {
-  const totalTarget = targets.reduce((sum, t) => sum + t.target, 0);
-  const totalAchieved = targets.reduce((sum, t) => sum + t.achieved, 0);
-  const totalCommission = targets.reduce((sum, t) => sum + t.commission, 0);
-  const overallProgress = (totalAchieved / totalTarget) * 100;
+  const [staff, setStaff] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isTargetOpen, setIsTargetOpen] = useState(false);
+  const [targetData, setTargetData] = useState({ employeeId: "", amount: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // @ts-ignore
+  const { user } = useSelector((state: any) => state.auth);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    fetchStaff();
+  }, [user]);
+
+  const fetchStaff = async () => {
+    setIsLoading(true);
+    try {
+      // If employee, maybe backend filters it? Or we filter here.
+      // Admin/Manager gets all. Employee gets self?
+      // existing endpoint /admin-ems/staff does filtering based on role?
+      // Let's assume it returns relevant users.
+      const response = await emsService.getAllStaff();
+      if (response.success) {
+        let users = response.users;
+        // Filter out non-employees if necessary or just show everyone with performance stats
+        if (user?.accountType === "Employee") {
+          users = users.filter((u: any) => u._id === user._id);
+        } else {
+          // For manager, show employees
+          users = users.filter((u: any) => u.accountType === "Employee");
+        }
+        setStaff(users);
+      }
+    } catch (error) {
+      console.error("Error fetching staff:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleAssignTarget = async () => {
+    if (!targetData.employeeId || !targetData.amount) {
+      toast({ title: "Error", description: "All fields required", variant: "destructive" });
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      await emsService.assignTarget({
+        employeeId: targetData.employeeId,
+        targetAmount: parseFloat(targetData.amount)
+      });
+      toast({ title: "Success", description: "Target assigned successfully" });
+      setIsTargetOpen(false);
+      fetchStaff();
+    } catch (error: any) {
+      toast({ title: "Error", description: error.message || "Failed", variant: "destructive" });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Calculate totals
+  const totalTarget = staff.reduce((sum, s) => sum + (s.employeePerformance?.monthlyTarget || 0), 0);
+  const totalAchieved = staff.reduce((sum, s) => sum + (s.employeePerformance?.achievedTarget || 0), 0);
+  const totalCommission = staff.reduce((sum, s) => sum + (s.employeePerformance?.totalCommissionEarned || 0), 0);
+  const overallProgress = totalTarget > 0 ? (totalAchieved / totalTarget) * 100 : 0;
 
   return (
     <DashboardLayout>
@@ -70,10 +107,46 @@ const Targets = () => {
             Track sales targets and commission payouts
           </p>
         </div>
-        <Button className="gap-2">
-          <Target className="w-4 h-4" />
-          Set Targets
-        </Button>
+        {(user?.accountType === "Manager" || user?.accountType === "Super Admin") && (
+          <Dialog open={isTargetOpen} onOpenChange={setIsTargetOpen}>
+            <DialogTrigger asChild>
+              <Button className="gap-2">
+                <Target className="w-4 h-4" />
+                Set Targets
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Set Monthly Target</DialogTitle>
+                <DialogDescription>Assign sales target to an employee.</DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div>
+                  <Label>Employee</Label>
+                  <Select value={targetData.employeeId} onValueChange={(val) => setTargetData({ ...targetData, employeeId: val })}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Employee" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {staff.map(s => (
+                        <SelectItem key={s._id} value={s._id}>{s.fullName}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label>Target Amount</Label>
+                  <Input type="number" value={targetData.amount} onChange={(e) => setTargetData({ ...targetData, amount: e.target.value })} />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button onClick={handleAssignTarget} disabled={isSubmitting}>
+                  {isSubmitting ? <Loader2 className="animate-spin" /> : "Assign Target"}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
 
       {/* Summary Cards */}
@@ -93,10 +166,10 @@ const Targets = () => {
           <Progress value={overallProgress} className="h-3" />
           <div className="flex justify-between mt-3 text-sm">
             <span className="text-muted-foreground">
-              Achieved: ₹{(totalAchieved / 100000).toFixed(1)}L
+              Achieved: ₹{(totalAchieved / 100000).toFixed(2)}L
             </span>
             <span className="text-muted-foreground">
-              Target: ₹{(totalTarget / 100000).toFixed(1)}L
+              Target: ₹{(totalTarget / 100000).toFixed(2)}L
             </span>
           </div>
         </div>
@@ -122,7 +195,11 @@ const Targets = () => {
             </div>
           </div>
           <p className="text-2xl font-bold text-foreground">
-            {targets.filter((t) => t.achieved / t.target >= 0.9).length}
+            {staff.filter((s) => {
+              const t = s.employeePerformance?.monthlyTarget || 0;
+              const a = s.employeePerformance?.achievedTarget || 0;
+              return t > 0 && (a / t) >= 0.9;
+            }).length}
           </p>
           <p className="text-sm text-muted-foreground mt-1">On Target (90%+)</p>
         </div>
@@ -134,73 +211,78 @@ const Targets = () => {
           <h3 className="section-header">Individual Performance</h3>
         </div>
         <div className="divide-y divide-border">
-          {targets.map((item, index) => {
-            const progress = (item.achieved / item.target) * 100;
-            const remaining = item.target - item.achieved;
+          {isLoading ? (
+            <div className="p-8 text-center text-muted-foreground">Loading...</div>
+          ) : staff.length === 0 ? (
+            <div className="p-8 text-center text-muted-foreground">No employees found.</div>
+          ) : (
+            staff.map((employee, index) => {
+              const target = employee.employeePerformance?.monthlyTarget || 0;
+              const achieved = employee.employeePerformance?.achievedTarget || 0;
+              const commission = employee.employeePerformance?.totalCommissionEarned || 0;
+              const progress = target > 0 ? (achieved / target) * 100 : 0;
+              const remaining = Math.max(0, target - achieved);
 
-            return (
-              <div
-                key={item.id}
-                className="p-6 hover:bg-muted/30 transition-colors animate-fade-in"
-                style={{ animationDelay: `${index * 50}ms` }}
-              >
-                <div className="flex items-center gap-4 mb-4">
-                  <Avatar className="w-12 h-12">
-                    <AvatarImage src={item.employee.avatar} />
-                    <AvatarFallback className="bg-primary/10 text-primary">
-                      {item.employee.name
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-foreground">
-                      {item.employee.name}
-                    </h4>
-                    <p className="text-sm text-muted-foreground">
-                      {item.employee.role}
-                    </p>
+              return (
+                <div
+                  key={employee._id}
+                  className="p-6 hover:bg-muted/30 transition-colors animate-fade-in"
+                  style={{ animationDelay: `${index * 50}ms` }}
+                >
+                  <div className="flex items-center gap-4 mb-4">
+                    <Avatar className="w-12 h-12">
+                      <AvatarImage src={employee.image} />
+                      <AvatarFallback className="bg-primary/10 text-primary">
+                        {employee.fullName ? employee.fullName[0] : "U"}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-foreground">
+                        {employee.fullName}
+                      </h4>
+                      <p className="text-sm text-muted-foreground">
+                        {employee.accountType}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold text-primary">
+                        ₹{(commission).toFixed(0)}
+                      </p>
+                      <p className="text-xs text-muted-foreground">Commission</p>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="font-semibold text-primary">
-                      ₹{(item.commission / 1000).toFixed(1)}K
-                    </p>
-                    <p className="text-xs text-muted-foreground">Commission</p>
-                  </div>
-                </div>
 
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">
-                      Achieved: ₹{(item.achieved / 1000).toFixed(0)}K
-                    </span>
-                    <span
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">
+                        Achieved: ₹{(achieved).toFixed(0)}
+                      </span>
+                      <span
+                        className={cn(
+                          "font-medium",
+                          progress >= 90 ? "text-success" : progress >= 70 ? "text-warning" : "text-destructive"
+                        )}
+                      >
+                        {progress.toFixed(0)}%
+                      </span>
+                    </div>
+                    <Progress
+                      value={progress}
                       className={cn(
-                        "font-medium",
-                        progress >= 90 ? "text-success" : progress >= 70 ? "text-warning" : "text-destructive"
+                        "h-2",
+                        progress >= 90 && "[&>div]:bg-success",
+                        progress >= 70 && progress < 90 && "[&>div]:bg-warning",
+                        progress < 70 && "[&>div]:bg-destructive"
                       )}
-                    >
-                      {progress.toFixed(0)}%
-                    </span>
-                  </div>
-                  <Progress
-                    value={progress}
-                    className={cn(
-                      "h-2",
-                      progress >= 90 && "[&>div]:bg-success",
-                      progress >= 70 && progress < 90 && "[&>div]:bg-warning",
-                      progress < 70 && "[&>div]:bg-destructive"
-                    )}
-                  />
-                  <div className="flex justify-between text-xs text-muted-foreground">
-                    <span>Remaining: ₹{(remaining / 1000).toFixed(0)}K</span>
-                    <span>Target: ₹{(item.target / 1000).toFixed(0)}K</span>
+                    />
+                    <div className="flex justify-between text-xs text-muted-foreground">
+                      <span>Remaining: ₹{(remaining).toFixed(0)}</span>
+                      <span>Target: ₹{(target).toFixed(0)}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            }))}
         </div>
       </div>
     </DashboardLayout>

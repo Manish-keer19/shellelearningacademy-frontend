@@ -66,6 +66,33 @@ class EmsService {
             throw error;
         }
     }
+
+    async assignTarget(targetData: { employeeId: string; targetAmount: number }) {
+        try {
+            const { data } = await axiosInstance.post("/admin-ems/assign-target", targetData);
+            return data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async requestEnrollment(enrollData: { leadId: string; courseId: string; amount: number }) {
+        try {
+            const { data } = await axiosInstance.post("/admin-ems/leads/enroll", enrollData);
+            return data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async verifyEnrollment(verifyData: { leadId: string; commissionAmount: number; isApproved: boolean }) {
+        try {
+            const { data } = await axiosInstance.post("/admin-ems/leads/verify-enrollment", verifyData);
+            return data;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 export default new EmsService();

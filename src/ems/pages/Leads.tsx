@@ -36,6 +36,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/ems/lib/utils";
 import emsService from "@/service/ems.service";
+import { courseService } from "@/service/course.service";
 import { useToast } from "@/hooks/use-toast";
 import { useSelector } from "react-redux";
 
@@ -63,14 +64,30 @@ const Leads = () => {
     assignedTo: "",
   });
 
+  const [performance, setPerformance] = useState({
+    target: 0,
+    achieved: 0,
+    commission: 0
+  });
+
   const [assigneeId, setAssigneeId] = useState("");
   const [newStatus, setNewStatus] = useState("");
 
+  const [courses, setCourses] = useState<any[]>([]);
+  const [isEnrollOpen, setIsEnrollOpen] = useState(false);
+  const [isVerifyOpen, setIsVerifyOpen] = useState(false);
+  const [enrollData, setEnrollData] = useState({ courseId: "", amount: "" });
+  const [verifyData, setVerifyData] = useState({ commission: "", isApproved: true });
+
   useEffect(() => {
     fetchLeads();
+    fetchCourses();
     // Only fetch staff if user is Admin or Manager
     if (user?.accountType === "Super Admin" || user?.accountType === "Manager") {
       fetchStaff();
+    }
+    if (user?.accountType === "Employee") {
+      fetchMyPerformance();
     }
   }, [user]);
 
@@ -96,6 +113,37 @@ const Leads = () => {
       }
     } catch (error) {
       console.error("Error fetching staff:", error);
+    }
+  };
+
+  const fetchCourses = async () => {
+    try {
+      const response = await courseService.getAllCourses();
+      if (response.success) {
+        setCourses(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching courses:", error);
+    }
+  };
+
+  const fetchMyPerformance = async () => {
+    try {
+      // We can reuse getAllStaff but filtering for self, or get user by id
+      // Let's use getAllStaff for simplicity as we implemented it to return all details
+      const response = await emsService.getAllStaff({ accountType: "Employee" });
+      if (response.success) {
+        const me = response.users.find((u: any) => u._id === user._id);
+        if (me?.employeePerformance) {
+          setPerformance({
+            target: me.employeePerformance.monthlyTarget || 0,
+            achieved: me.employeePerformance.achievedTarget || 0,
+            commission: me.employeePerformance.totalCommissionEarned || 0,
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching performance", error);
     }
   };
 
@@ -166,6 +214,12 @@ const Leads = () => {
   const handleStatusUpdate = async () => {
     if (!newStatus || !selectedLead) return;
 
+    if (newStatus === "Enrolled") {
+      setIsStatusOpen(false);
+      setIsEnrollOpen(true);
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       const response = await emsService.updateLead(selectedLead._id, { status: newStatus });
@@ -197,15 +251,72 @@ const Leads = () => {
   const openStatusModal = (lead: any) => {
     setSelectedLead(lead);
     setNewStatus(lead.status);
+    setNewStatus(lead.status);
     setIsStatusOpen(true);
   }
+
+  const handleEnrollSubmit = async () => {
+    if (!enrollData.courseId || !enrollData.amount) {
+      toast({ title: "Error", description: "Please fill all fields", variant: "destructive" });
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      await emsService.requestEnrollment({
+        leadId: selectedLead._id,
+        courseId: enrollData.courseId,
+        amount: parseFloat(enrollData.amount),
+      });
+      toast({ title: "Success", description: "Enrollment requested" });
+      setIsEnrollOpen(false);
+      fetchLeads();
+    } catch (error: any) {
+      toast({ title: "Error", description: error.message || "Failed to enrol", variant: "destructive" });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleVerifySubmit = async () => {
+    setIsSubmitting(true);
+    try {
+      await emsService.verifyEnrollment({
+        leadId: selectedLead._id,
+        commissionAmount: parseFloat(verifyData.commission),
+        isApproved: verifyData.isApproved
+      });
+      toast({ title: "Success", description: "Enrollment verified" });
+      setIsVerifyOpen(false);
+      fetchLeads();
+    } catch (error: any) {
+      toast({ title: "Error", description: error.message || "Failed to verify", variant: "destructive" });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const openVerifyModal = (lead: any) => {
+    setSelectedLead(lead);
+    const calculatedCommission = (lead.enrollmentAmount || 0) * 0.10;
+    setVerifyData({ commission: calculatedCommission.toString(), isApproved: true });
+    setIsVerifyOpen(true);
+  };
 
   const kpis = [
     { label: "Total Leads", value: leads.length.toString(), icon: Users, change: "Total" },
     { label: "New Leads", value: leads.filter(l => l.status === "New").length.toString(), icon: TrendingUp, change: "Needs Action" },
-    { label: "Won", value: leads.filter(l => l.status === "Converted").length.toString(), icon: CheckCircle, change: "Success" },
+    { label: "Won", value: leads.filter(l => l.status === "Converted" || l.status === "Enrolled").length.toString(), icon: CheckCircle, change: "Success" },
     { label: "Lost", value: leads.filter(l => l.status === "Lost").length.toString(), icon: Target, change: "Terminated" },
   ];
+
+  if (user?.accountType === "Employee") {
+    // Prepend or Append performance KPIs
+    kpis.push(
+      { label: "My Target", value: `₹${performance.target}`, icon: Target, change: "Monthly" },
+      { label: "Achieved", value: `₹${performance.achieved}`, icon: TrendingUp, change: `${performance.target > 0 ? ((performance.achieved / performance.target) * 100).toFixed(0) : 0}%` },
+      { label: "Commission", value: `₹${performance.commission}`, icon: CheckCircle, change: "Earned" }
+    );
+  }
 
   return (
     <DashboardLayout>
@@ -294,6 +405,9 @@ const Leads = () => {
                       </SelectContent>
                     </Select>
                   </div>
+
+
+
                 )}
               </div>
               <DialogFooter>
@@ -354,6 +468,7 @@ const Leads = () => {
                   <SelectItem value="Contacted">Contacted</SelectItem>
                   <SelectItem value="Interested">Interested</SelectItem>
                   <SelectItem value="Converted">Converted</SelectItem>
+                  <SelectItem value="Enrolled">Enrolled</SelectItem>
                   <SelectItem value="Lost">Lost</SelectItem>
                 </SelectContent>
               </Select>
@@ -415,10 +530,15 @@ const Leads = () => {
                       lead.status === "Contacted" && "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
                       lead.status === "Interested" && "status-warning",
                       lead.status === "Converted" && "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300",
+                      lead.status === "Enrolled" && "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300",
                       lead.status === "Lost" && "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300",
+                      (user?.accountType === "Employee" && lead.isStatusUpdated && lead.status !== "New") && "opacity-50 cursor-not-allowed hover:opacity-50"
                     )}
-                    onClick={() => openStatusModal(lead)}
-                    title="Click to update status"
+                    onClick={() => {
+                      if (user?.accountType === "Employee" && lead.isStatusUpdated && lead.status !== "New") return;
+                      openStatusModal(lead);
+                    }}
+                    title={user?.accountType === "Employee" && lead.isStatusUpdated && lead.status !== "New" ? "Status already updated" : "Click to update status"}
                   >
                     {lead.status}
                   </span>
@@ -455,7 +575,13 @@ const Leads = () => {
                   )}
                 </div>
                 <div className="flex gap-1">
-                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openStatusModal(lead)}>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={() => openStatusModal(lead)}
+                    disabled={user?.accountType === "Employee" && lead.isStatusUpdated && lead.status !== "New"}
+                  >
                     <ArrowRightLeft className="w-3.5 h-3.5" />
                   </Button>
                   {(user?.accountType === "Super Admin" || user?.accountType === "Manager") && (
@@ -467,13 +593,106 @@ const Leads = () => {
               </div>
 
               <div className="flex gap-2 mt-4">
-                <Button size="sm" variant="outline" className="flex-1 w-full" onClick={() => openStatusModal(lead)}>
-                  Update Progress
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="flex-1 w-full"
+                  onClick={() => openStatusModal(lead)}
+                  disabled={user?.accountType === "Employee" && lead.isStatusUpdated && lead.status !== "New"}
+                >
+                  {user?.accountType === "Employee" && lead.isStatusUpdated && lead.status !== "New" ? "Updated" : "Update Progress"}
                 </Button>
+                {lead.status === "Enrolled" && !lead.isEnrollmentVerified && (user?.accountType === "Manager" || user?.accountType === "Super Admin") && (
+                  <Button size="sm" className="flex-1 w-full bg-green-600 hover:bg-green-700" onClick={() => openVerifyModal(lead)}>
+                    Verify
+                  </Button>
+                )}
               </div>
             </div>
           )))}
       </div>
+
+      {/* Enroll Modal */}
+      <Dialog open={isEnrollOpen} onOpenChange={setIsEnrollOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Enroll Lead</DialogTitle>
+            <DialogDescription>Select course and enter amount to enroll.</DialogDescription>
+          </DialogHeader>
+          <div className="py-4 space-y-4">
+            <div>
+              <Label className="mb-2 block">Course</Label>
+              <Select value={enrollData.courseId} onValueChange={(val) => {
+                const selectedCourse = courses.find((c: any) => c._id === val);
+                setEnrollData({
+                  ...enrollData,
+                  courseId: val,
+                  amount: selectedCourse?.finalPrice ? selectedCourse.finalPrice.toString() : ""
+                });
+              }}>
+                <SelectTrigger><SelectValue placeholder="Select Course" /></SelectTrigger>
+                <SelectContent>
+                  {courses.map((c: any) => (
+                    <SelectItem key={c._id} value={c._id}>
+                      {c.courseName} - ₹{c.finalPrice}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="mb-2 block">Amount</Label>
+              <Input type="number" value={enrollData.amount} onChange={(e) => setEnrollData({ ...enrollData, amount: e.target.value })} />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button onClick={handleEnrollSubmit} disabled={isSubmitting}>
+              {isSubmitting ? "Enrolling..." : "Confirm Enrollment"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Verify Modal */}
+      <Dialog open={isVerifyOpen} onOpenChange={setIsVerifyOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Verify Enrollment</DialogTitle>
+            <DialogDescription>Approve enrollment and assign commission.</DialogDescription>
+          </DialogHeader>
+          <div className="py-4 space-y-4">
+            <div className="bg-muted p-4 rounded-lg space-y-2">
+              <div className="flex justify-between">
+                <span className="text-sm text-muted-foreground">Lead:</span>
+                <span className="text-sm font-medium">{selectedLead?.name}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-sm text-muted-foreground">Course:</span>
+                <span className="text-sm font-medium">{selectedLead?.enrolledCourse?.courseName || "Unknown Course"}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-sm text-muted-foreground">Price:</span>
+                <span className="text-sm font-medium">₹{selectedLead?.enrollmentAmount}</span>
+              </div>
+            </div>
+            <div>
+              <Label className="mb-2 block">Commission Amount (10% Auto-calculated)</Label>
+              <Input type="number" value={verifyData.commission} disabled />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => {
+              setVerifyData({ ...verifyData, isApproved: false });
+              handleVerifySubmit();
+            }}>Reject</Button>
+            <Button onClick={() => {
+              setVerifyData({ ...verifyData, isApproved: true });
+              handleVerifySubmit();
+            }}>Approve</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
     </DashboardLayout>
   );
 };
