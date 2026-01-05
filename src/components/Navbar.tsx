@@ -1,4 +1,4 @@
-import { Moon, Sun, Menu, X, User, LogOut, BookOpen, Search } from "lucide-react";
+import { Moon, Sun, Menu, X, User, LogOut, BookOpen, Search, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useTheme } from "@/components/ThemeProvider";
@@ -99,6 +99,13 @@ export const Navbar = () => {
                                 <User className="mr-2 h-4 w-4 text-primary" />
                                 Dashboard
                             </DropdownMenuItem>
+                            {/* EMS Link in Dropdown */}
+                            {["Employee", "Manager", "Super Admin"].includes(user?.accountType) && (
+                                <DropdownMenuItem onClick={() => navigate('/ems')}>
+                                    <Briefcase className="mr-2 h-4 w-4 text-primary" />
+                                    EMS Portal
+                                </DropdownMenuItem>
+                            )}
                             <DropdownMenuItem onClick={() => navigate('/profile')}>
                                 <User className="mr-2 h-4 w-4 text-primary" />
                                 Profile Settings
@@ -178,6 +185,19 @@ export const Navbar = () => {
                                             }`}
                                     >
                                         LMS
+                                    </Link>
+                                )}
+
+                                {/* EMS Dashboard Link - Only show for Employee, Manager, Super Admin */}
+                                {isAuthenticated && ["Employee", "Manager", "Super Admin"].includes(user?.accountType) && (
+                                    <Link
+                                        to="/ems"
+                                        className={`text-sm font-semibold transition-colors duration-300 ${isActive('/ems')
+                                            ? "text-primary border-b-2 border-primary pb-1"
+                                            : "text-foreground/80 hover:text-primary"
+                                            }`}
+                                    >
+                                        EMS
                                     </Link>
                                 )}
                             </div>
@@ -300,6 +320,20 @@ export const Navbar = () => {
                                 </Link>
                             )}
 
+                            {/* EMS Dashboard Link - Mobile View - Only show for Employee, Manager, Super Admin */}
+                            {isAuthenticated && ["Employee", "Manager", "Super Admin"].includes(user?.accountType) && (
+                                <Link
+                                    to="/ems"
+                                    className={`block w-full rounded-xl px-4 py-4 text-base font-semibold transition-all duration-300 ease-in-out ${isActive('/ems')
+                                        ? "text-primary bg-primary/10 shadow-sm border border-primary/20"
+                                        : "text-foreground/80 hover:bg-muted/50"
+                                        }`}
+                                    onClick={() => setMobileMenuOpen(false)}
+                                >
+                                    EMS
+                                </Link>
+                            )}
+
                             {/* Auth Section in Mobile Menu */}
                             {!isAuthenticated ? (
                                 <div className="space-y-3 pt-6 border-t border-border">
@@ -335,6 +369,16 @@ export const Navbar = () => {
                                             Dashboard
                                         </Button>
                                     </Link>
+
+                                    {/* EMS Link in Mobile Profile Menu Section */}
+                                    {["Employee", "Manager", "Super Admin"].includes(user?.accountType) && (
+                                        <Link to="/ems" onClick={() => setMobileMenuOpen(false)}>
+                                            <Button variant="ghost" className="w-full justify-start h-12 rounded-xl text-base font-semibold">
+                                                <Briefcase className="w-5 h-5 mr-3 text-primary" />
+                                                EMS Portal
+                                            </Button>
+                                        </Link>
+                                    )}
 
                                     <Link to="/profile" onClick={() => setMobileMenuOpen(false)}>
                                         <Button variant="ghost" className="w-full justify-start h-12 rounded-xl text-base font-semibold">
