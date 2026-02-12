@@ -138,6 +138,32 @@ const EnrolledCourseView = () => {
         }
     };
 
+    const handleDownloadFile = async (url: string, fileName: string) => {
+        const toastId = toast.loading("Preparing download...");
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error("Network response was not ok");
+
+            const blob = await response.blob();
+            const blobUrl = window.URL.createObjectURL(blob);
+
+            const link = document.createElement('a');
+            link.href = blobUrl;
+            const sanitizedFileName = fileName.replace(/[^a-zA-Z0-9 _-]/g, ' ').trim() || 'document';
+            link.setAttribute('download', `${sanitizedFileName}.pdf`);
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(blobUrl);
+
+            toast.success("Download started", { id: toastId });
+        } catch (error) {
+            console.error("Download failed:", error);
+            toast.error("Failed to download file", { id: toastId });
+        }
+    };
+
     if (isLoading) {
         return (
             <div className="min-h-screen bg-background flex flex-col">
@@ -427,33 +453,25 @@ const EnrolledCourseView = () => {
                                                                 {cls.documentFile?.secure_url && (
                                                                     <>
                                                                         {/* Open in New Tab */}
-                                                                        <Button
+                                                                        {/* <Button
                                                                             variant="outline"
                                                                             className="border-blue-500/30 hover:bg-blue-500/10 hover:border-blue-500/50"
                                                                             asChild
                                                                         >
-                                                                            <a href={`${cls.documentFile.secure_url}.pdf`} target="_blank" rel="noopener noreferrer">
+                                                                            <a href={cls.documentFile.secure_url} target="_blank" rel="noopener noreferrer">
                                                                                 <ExternalLink className="w-4 h-4 mr-2" />
                                                                                 Open Docs
                                                                             </a>
-                                                                        </Button>
+                                                                        </Button> */}
 
 
-                                                                        {/* Download */}
                                                                         <Button
                                                                             variant="outline"
                                                                             className="border-purple-500/30 hover:bg-purple-500/10 hover:border-purple-500/50"
-                                                                            asChild
+                                                                            onClick={() => handleDownloadFile(cls.documentFile.secure_url, cls.className)}
                                                                         >
-                                                                            <a
-                                                                                href={`${cls.documentFile.secure_url}.pdf`}
-                                                                                download={`${cls.className}_document.pdf`}
-                                                                                target="_blank"
-                                                                                rel="noopener noreferrer"
-                                                                            >
-                                                                                <Download className="w-4 h-4 mr-2" />
-                                                                                Download Docs
-                                                                            </a>
+                                                                            <Download className="w-4 h-4 mr-2" />
+                                                                            Download Docs
                                                                         </Button>
                                                                     </>
                                                                 )}

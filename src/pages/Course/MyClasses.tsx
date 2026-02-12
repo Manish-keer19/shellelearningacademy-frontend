@@ -91,6 +91,32 @@ const MyClasses: React.FC = () => {
         return { status: 'missed', color: 'bg-red-500', text: 'Missed' };
     };
 
+    const handleDownloadFile = async (url: string, fileName: string) => {
+        toast({ title: "Preparing download...", description: "Please wait while we prepare your file." });
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error("Network response was not ok");
+
+            const blob = await response.blob();
+            const blobUrl = window.URL.createObjectURL(blob);
+
+            const link = document.createElement('a');
+            link.href = blobUrl;
+            const sanitizedFileName = fileName.replace(/[^a-zA-Z0-9 _-]/g, ' ').trim() || 'document';
+            link.setAttribute('download', `${sanitizedFileName}.pdf`);
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(blobUrl);
+
+            toast({ title: "Download started" });
+        } catch (error) {
+            console.error("Download failed:", error);
+            toast({ title: "Download failed", description: "Failed to download the document.", variant: "destructive" });
+        }
+    };
+
     const renderClassCard = (cls: CourseClass, course: Course) => {
         const classStatus = getClassStatus(cls.classDate);
         const isMissed = classStatus.status === 'missed';
@@ -167,7 +193,7 @@ const MyClasses: React.FC = () => {
                                     <>
                                         {/* Open in New Tab */}
                                         <a
-                                            href={`${cls.documentFile.secure_url}.pdf`}
+                                            href={cls.documentFile.secure_url}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
@@ -176,17 +202,13 @@ const MyClasses: React.FC = () => {
                                             Open Docs
                                         </a>
 
-                                        {/* Download */}
-                                        <a
-                                            href={`${cls.documentFile.secure_url}.pdf`}
-                                            download={`${cls.className}_document.pdf`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors text-sm font-medium"
+                                        <Button
+                                            onClick={() => handleDownloadFile(cls.documentFile.secure_url, cls.className)}
+                                            className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors text-sm font-medium border-0 h-auto"
                                         >
                                             <Download className="w-4 h-4" />
                                             Download Docs
-                                        </a>
+                                        </Button>
                                     </>
                                 )}
 

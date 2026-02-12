@@ -66,7 +66,7 @@ export const SponsorsSection = () => {
                                         <img
                                             src={sponsor}
                                             alt={`Partner ${index + 1}`}
-                                            className="relative z-10 max-w-full max-h-full object-contain grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500 group-hover:scale-110"
+                                            className="relative z-10 max-w-full max-h-full object-contain transition-all duration-500 group-hover:scale-110"
                                             loading="lazy"
                                             onError={(e) => {
                                                 console.error(`Failed to load sponsor image ${index + 1}`);
@@ -90,7 +90,7 @@ export const SponsorsSection = () => {
                                         <img
                                             src={sponsor}
                                             alt={`Partner ${index + 1}`}
-                                            className="relative z-10 max-w-full max-h-full object-contain grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500 group-hover:scale-110"
+                                            className="relative z-10 max-w-full max-h-full object-contain transition-all duration-500 group-hover:scale-110"
                                             loading="lazy"
                                             onError={(e) => {
                                                 console.error(`Failed to load sponsor image ${index + 1}`);

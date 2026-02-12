@@ -113,6 +113,32 @@ const ManageAllClasses: React.FC = () => {
         }
     };
 
+    const handleDownloadFile = async (url: string, fileName: string) => {
+        toast({ title: "Preparing download...", description: "Please wait while we prepare your file." });
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error("Network response was not ok");
+
+            const blob = await response.blob();
+            const blobUrl = window.URL.createObjectURL(blob);
+
+            const link = document.createElement('a');
+            link.href = blobUrl;
+            const sanitizedFileName = fileName.replace(/[^a-zA-Z0-9 _-]/g, ' ').trim() || 'document';
+            link.setAttribute('download', `${sanitizedFileName}.pdf`);
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(blobUrl);
+
+            toast({ title: "Download started" });
+        } catch (error) {
+            console.error("Download failed:", error);
+            toast({ title: "Download failed", description: "Failed to download the document.", variant: "destructive" });
+        }
+    };
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
@@ -490,23 +516,19 @@ const ManageAllClasses: React.FC = () => {
                                                                         {cls.documentFile?.secure_url ? (
                                                                             <div className="flex items-center gap-2">
                                                                                 <a
-                                                                                    href={`${cls.documentFile.secure_url}.pdf`}
+                                                                                    href={cls.documentFile.secure_url}
                                                                                     target="_blank"
                                                                                     rel="noopener noreferrer"
                                                                                     className="inline-flex items-center gap-1 text-blue-600 hover:underline text-sm"
                                                                                 >
                                                                                     Open <ExternalLink className="w-3 h-3" />
                                                                                 </a>
-                                                                                <span className="text-muted-foreground">|</span>
-                                                                                <a
-                                                                                    href={`${cls.documentFile.secure_url}.pdf`}
-                                                                                    download={`${cls.className}_document.pdf`}
-                                                                                    target="_blank"
-                                                                                    rel="noopener noreferrer"
-                                                                                    className="inline-flex items-center gap-1 text-purple-600 hover:underline text-sm"
+                                                                                <button
+                                                                                    onClick={() => handleDownloadFile(cls.documentFile.secure_url, cls.className)}
+                                                                                    className="inline-flex items-center gap-1 text-purple-600 hover:underline text-sm bg-transparent border-0 p-0 cursor-pointer"
                                                                                 >
                                                                                     Download <Download className="w-3 h-3" />
-                                                                                </a>
+                                                                                </button>
                                                                             </div>
                                                                         ) : (
                                                                             <span className="text-xs text-muted-foreground">Not added</span>
@@ -590,7 +612,7 @@ const ManageAllClasses: React.FC = () => {
                                                                 {cls.documentFile?.secure_url && (
                                                                     <>
                                                                         <a
-                                                                            href={`${cls.documentFile.secure_url}.pdf`}
+                                                                            href={cls.documentFile.secure_url}
                                                                             target="_blank"
                                                                             rel="noopener noreferrer"
                                                                             className="inline-flex items-center gap-2 text-blue-600 hover:underline text-sm sm:text-base mb-2 font-medium"
@@ -598,16 +620,13 @@ const ManageAllClasses: React.FC = () => {
                                                                             <ExternalLink className="w-4 h-4" />
                                                                             Open Docs
                                                                         </a>
-                                                                        <a
-                                                                            href={`${cls.documentFile.secure_url}.pdf`}
-                                                                            download={`${cls.className}_document.pdf`}
-                                                                            target="_blank"
-                                                                            rel="noopener noreferrer"
-                                                                            className="inline-flex items-center gap-2 text-purple-600 hover:underline text-sm sm:text-base mb-4 font-medium"
+                                                                        <button
+                                                                            onClick={() => handleDownloadFile(cls.documentFile.secure_url, cls.className)}
+                                                                            className="inline-flex items-center gap-2 text-purple-600 hover:underline text-sm sm:text-base mb-4 font-medium bg-transparent border-0 p-0 cursor-pointer"
                                                                         >
                                                                             <Download className="w-4 h-4" />
                                                                             Download Docs
-                                                                        </a>
+                                                                        </button>
                                                                     </>
                                                                 )}
 

@@ -12,6 +12,7 @@ import WhyChooseShell from "./WhyChooseShell";
 import NewsletterSection from "./NewsletterSection";
 import { CertificationsSection } from "@/components/CertificationsSection";
 import { SponsorsSection } from "@/components/SponsorsSection";
+import { UniversitySection } from "@/components/UniversitySection";
 
 // import { TrustedCompanies } from "@/components/TrustedCompanies";
 // import { InstructorsSection } from "@/components/InstructorsSection";
@@ -25,8 +26,8 @@ const Index = () => {
 
       <main className="flex-1">
         <Hero />
-
-        <SponsorsSection/>
+        <SponsorsSection />
+        <UniversitySection />
         <CategoriesSection />
         <FeaturedCourses />
         {/* <InstructorsSection /> */}
