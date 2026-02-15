@@ -49,8 +49,9 @@ export const SponsorsSection = () => {
                     </p>
                 </div>
 
-                {/* Infinite Scroll Animation Container */}
-                <div className="relative">
+                {/* Infinite Scroll Animation Container - Two Lines */}
+                <div className="relative space-y-8">
+                    {/* First Line - Left to Right */}
                     <div className="flex overflow-x-hidden">
                         <div className="flex animate-marquee gap-6 md:gap-8 lg:gap-10 items-center py-6">
                             {/* First set of sponsors */}
@@ -102,6 +103,59 @@ export const SponsorsSection = () => {
                             ))}
                         </div>
                     </div>
+
+                    {/* Second Line - Right to Left */}
+                    <div className="flex overflow-x-hidden">
+                        <div className="flex animate-marquee-reverse gap-6 md:gap-8 lg:gap-10 items-center py-6">
+                            {/* First set of sponsors */}
+                            {sponsors.map((sponsor, index) => (
+                                <div
+                                    key={`sponsor-reverse-1-${index}`}
+                                    className="flex-shrink-0 group"
+                                >
+                                    <div className="relative bg-white dark:bg-card rounded-2xl p-6 md:p-8 shadow-md border border-border/50 hover:shadow-xl hover:border-primary/50 transition-all duration-500 hover:-translate-y-1 w-[140px] h-[140px] md:w-[160px] md:h-[160px] lg:w-[180px] lg:h-[180px] flex items-center justify-center overflow-hidden">
+                                        {/* Gradient overlay on hover */}
+                                        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                                        <img
+                                            src={sponsor}
+                                            alt={`Partner ${index + 1}`}
+                                            className="relative z-10 max-w-full max-h-full object-contain transition-all duration-500 group-hover:scale-110"
+                                            loading="lazy"
+                                            onError={(e) => {
+                                                console.error(`Failed to load sponsor image ${index + 1}`);
+                                                e.currentTarget.style.display = 'none';
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                            ))}
+
+                            {/* Duplicate set for seamless loop */}
+                            {sponsors.map((sponsor, index) => (
+                                <div
+                                    key={`sponsor-reverse-2-${index}`}
+                                    className="flex-shrink-0 group"
+                                >
+                                    <div className="relative bg-white dark:bg-card rounded-2xl p-6 md:p-8 shadow-md border border-border/50 hover:shadow-xl hover:border-primary/50 transition-all duration-500 hover:-translate-y-1 w-[140px] h-[140px] md:w-[160px] md:h-[160px] lg:w-[180px] lg:h-[180px] flex items-center justify-center overflow-hidden">
+                                        {/* Gradient overlay on hover */}
+                                        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                                        <img
+                                            src={sponsor}
+                                            alt={`Partner ${index + 1}`}
+                                            className="relative z-10 max-w-full max-h-full object-contain transition-all duration-500 group-hover:scale-110"
+                                            loading="lazy"
+                                            onError={(e) => {
+                                                console.error(`Failed to load sponsor image ${index + 1}`);
+                                                e.currentTarget.style.display = 'none';
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
 
                 {/* Bottom Stats */}
@@ -129,11 +183,28 @@ export const SponsorsSection = () => {
           }
         }
 
+        @keyframes marquee-reverse {
+          0% {
+            transform: translateX(-50%);
+          }
+          100% {
+            transform: translateX(0);
+          }
+        }
+
         .animate-marquee {
           animation: marquee 80s linear infinite;
         }
 
         .animate-marquee:hover {
+          animation-play-state: paused;
+        }
+
+        .animate-marquee-reverse {
+          animation: marquee-reverse 80s linear infinite;
+        }
+
+        .animate-marquee-reverse:hover {
           animation-play-state: paused;
         }
       `}</style>

@@ -1,5 +1,5 @@
-import certificate1 from "@/assets/certificate12.jpeg";
-import certificate2 from "@/assets/certificate13.png";
+import certificate2 from "@/assets/certificate12.jpeg";
+import certificate1 from "@/assets/certificate13.jpeg";
 
 export const CertificationsSection = () => {
     return (

@@ -4,7 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Target, Users, Award, Zap, CheckCircle, ArrowRight, BookOpen, Briefcase, GraduationCap, Shield, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import logo1 from "../assets/logo1.png";
-import about_img from "../assets/about_img.jpg"
+import about_img from "../assets/about_img.jpg";
+import kartikImg from "../assets/owners/kartik.png";
+import mayankImg from "../assets/owners/mayank.jpeg";
+import omkarImg from "../assets/owners/omkarjpeg.jpeg";
 
 const About = () => {
     const services = [
@@ -276,39 +279,66 @@ const About = () => {
                             </p>
                         </div>
 
-                        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                            {/* Founder 1 */}
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                            {/* Founder 1 - Kartik Gupta */}
                             <div className="bg-card rounded-3xl overflow-hidden shadow-lg border border-border/50 group hover:shadow-xl transition-all duration-300">
-                                <div className="h-48 bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+                                <div className="h-64 bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center overflow-hidden">
                                     <img
-                                        src={logo1}
+                                        src={kartikImg}
                                         alt="Kartik Gupta"
-                                        className="w-32 h-32 object-contain drop-shadow-lg group-hover:scale-110 transition-transform duration-300"
+                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                                     />
                                 </div>
                                 <div className="p-8 text-center">
                                     <h3 className="text-2xl font-bold text-foreground mb-1">Kartik Gupta</h3>
-                                    <p className="text-primary font-semibold mb-4">Founder & Director</p>
+                                    <p className="text-primary font-semibold mb-2">Founder</p>
+                                    <p className="text-muted-foreground text-sm mb-4">
+                                        
+                                    </p>
                                     <p className="text-muted-foreground text-sm leading-relaxed">
-                                        "A visionary entrepreneur focused on transforming education through digital learning. Kartik ensures every learner is empowered for professional success."
+                                        Leads marketing and strategic partnerships, driving brand growth and industry collaborations. Focused on expanding outreach, building strong partner networks, and creating opportunities that connect learners with real-world career pathways.
                                     </p>
                                 </div>
                             </div>
 
-                            {/* Founder 2 */}
+                            {/* Founder 2 - Mayank Jain */}
                             <div className="bg-card rounded-3xl overflow-hidden shadow-lg border border-border/50 group hover:shadow-xl transition-all duration-300">
-                                <div className="h-48 bg-gradient-to-br from-secondary/20 to-secondary/5 flex items-center justify-center">
+                                <div className="h-64 bg-gradient-to-br from-secondary/20 to-secondary/5 flex items-center justify-center overflow-hidden">
                                     <img
-                                        src={logo1}
+                                        src={mayankImg}
                                         alt="Mayank Jain"
-                                        className="w-32 h-32 object-contain drop-shadow-lg group-hover:scale-110 transition-transform duration-300"
+                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                                     />
                                 </div>
                                 <div className="p-8 text-center">
                                     <h3 className="text-2xl font-bold text-foreground mb-1">Mayank Jain</h3>
-                                    <p className="text-primary font-semibold mb-4">Associate Founder</p>
+                                    <p className="text-primary font-semibold mb-2">Director & Co-Founder</p>
+                                    <p className="text-muted-foreground text-sm mb-4">
+                                        
+                                    </p>
                                     <p className="text-muted-foreground text-sm leading-relaxed">
-                                        "A strategic and creative leader who ensures that the curriculum aligns perfectly with evolving industry demands and student career goals."
+                                        Oversees sales, operations, academic development, and financial planning. Ensures smooth execution of programs, strengthens internal processes, and drives sustainable growth while maintaining high training standards.
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Founder 3 - Omkar Dutta */}
+                            <div className="bg-card rounded-3xl overflow-hidden shadow-lg border border-border/50 group hover:shadow-xl transition-all duration-300">
+                                <div className="h-64 bg-gradient-to-br from-accent/20 to-accent/5 flex items-center justify-center overflow-hidden">
+                                    <img
+                                        src={omkarImg}
+                                        alt="Omkar Dutta"
+                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                                    />
+                                </div>
+                                <div className="p-8 text-center">
+                                    <h3 className="text-2xl font-bold text-foreground mb-1">Omkar Dutta</h3>
+                                    <p className="text-primary font-semibold mb-2">Vice President</p>
+                                    <p className="text-muted-foreground text-sm mb-4">
+                                        
+                                    </p>
+                                    <p className="text-muted-foreground text-sm leading-relaxed">
+                                        Manages collaborations, partnerships, and key relationships across the organisation. Focuses on building strong alliances, maintaining partner engagement, and supporting initiatives that enhance growth and credibility.
                                     </p>
                                 </div>
                             </div>

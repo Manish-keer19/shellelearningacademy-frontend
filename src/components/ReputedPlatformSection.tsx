@@ -1,72 +1,47 @@
 import React from 'react';
 
-// Import all university images
-import uni1 from "@/assets/universitys/1.jpeg";
-import uni2 from "@/assets/universitys/2.jpeg";
-import uni3 from "@/assets/universitys/3.jpeg";
-import uni4 from "@/assets/universitys/4.jpeg";
-import uni5 from "@/assets/universitys/5.jpeg";
-import uni6 from "@/assets/universitys/6.jpeg";
-import uni7 from "@/assets/universitys/7.jpeg";
-import uni8 from "@/assets/universitys/8.jpeg";
-import uni9 from "@/assets/universitys/9.jpeg";
-import uni10 from "@/assets/universitys/10.jpeg";
-import uni11 from "@/assets/universitys/11.jpeg";
-import uni12 from "@/assets/universitys/12.jpeg";
-import uni13 from "@/assets/universitys/13.jpeg";
-import uni14 from "@/assets/universitys/14.jpeg";
-import uni15 from "@/assets/universitys/15.jpeg";
-import uni16 from "@/assets/universitys/16.jpeg";
-import uni17 from "@/assets/universitys/17.jpeg";
-import uni18 from "@/assets/universitys/18.jpeg";
-import uni19 from "@/assets/universitys/19.jpeg";
-import uni20 from "@/assets/universitys/20.jpeg";
-import uni21 from "@/assets/universitys/21.jpeg";
-import uni22 from "@/assets/universitys/22.jpeg";
-import uni23 from "@/assets/universitys/23.jpeg";
-import uni24 from "@/assets/universitys/24.jpeg";
-import uni25 from "@/assets/universitys/25.jpeg";
-import uni26 from "@/assets/universitys/26.jpeg";
-import uni27 from "@/assets/universitys/27.jpeg";
+// Import all reputed platform images
+import platform1 from "@/assets/Reputed_plaform/1.jpeg";
+import platform2 from "@/assets/Reputed_plaform/2.jpeg";
+import platform3 from "@/assets/Reputed_plaform/3.jpeg";
+import platform4 from "@/assets/Reputed_plaform/4.jpeg";
+import platform5 from "@/assets/Reputed_plaform/5.jpeg";
+import platform6 from "@/assets/Reputed_plaform/6.jpeg";
+import platform7 from "@/assets/Reputed_plaform/7.jpeg";
+import platform8 from "@/assets/Reputed_plaform/8.jpeg";
+import platform9 from "@/assets/Reputed_plaform/9.jpeg";
+import platform11 from "@/assets/Reputed_plaform/11.jpeg";
+import platform12 from "@/assets/Reputed_plaform/12.jpeg";
+import platform13 from "@/assets/Reputed_plaform/13.jpeg";
+import platform14 from "@/assets/Reputed_plaform/14.jpeg";
+import platform15 from "@/assets/Reputed_plaform/15.jpeg";
 
-const universities = [
-    uni1, uni2, uni3, uni4, uni5, uni6, uni7, uni8, uni9, uni10,
-    uni11, uni12, uni13, uni14, uni15, uni16, uni17, uni18, uni19, uni20,
-    uni21, uni22, uni23, uni24, uni25, uni26, uni27
+const platforms = [
+    platform1, platform2, platform3, platform4, platform5, platform6, platform7,
+    platform8, platform9, platform11, platform12, platform13, platform14, platform15
 ];
 
-export const UniversitySection = () => {
+export const ReputedPlatformSection = () => {
     return (
-        <section className="relative py-16 md:py-24 bg-background overflow-hidden">
+        <section className="relative py-16 md:py-24 bg-gradient-to-b from-muted/30 to-background overflow-hidden">
             {/* Background elements */}
             <div className="absolute inset-0 pointer-events-none opacity-30">
-                <div className="absolute -top-24 -left-24 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
-                <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
+                <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
+                <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
             </div>
 
             <div className="container relative mx-auto px-4 z-10">
                 {/* Section Header */}
                 <div className="text-center mb-16 max-w-4xl mx-auto">
                     <div className="inline-flex items-center rounded-full border px-4 py-1.5 text-sm font-medium mb-6 border-primary/20 bg-primary/5 text-primary">
-                        Pan-India Academic Representation
+                        Media Recognition & Global Presence
                     </div>
                     <h2 className="text-3xl md:text-5xl font-extrabold text-foreground mb-6 leading-tight">
-                        Students From <span className="text-primary">Leading Institutions</span> Across India
+                        Featured on <span className="text-primary">Reputed Platforms</span>
                     </h2>
-                    <p className="text-lg md:text-xl text-primary/80 font-semibold mb-8">
-                        Empowering talent beyond campus boundaries through AI-driven skill development.
+                    <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+                        Shell E-Learning Academy has been highlighted by reputed media platforms and global communities for its commitment to delivering industry-relevant training, AI-powered learning solutions, and career-focused internship programs that empower students with practical, job-ready skills.
                     </p>
-                    <div className="grid md:grid-cols-1 gap-6 text-muted-foreground text-base md:text-lg leading-relaxed text-center px-4">
-                        <p>
-                            We have trained and mentored students from diverse academic institutions across India through our AI-powered skill development programs, live sessions, and practical internship models.
-                        </p>
-                        <p>
-                            Our learners come from engineering, management, and technology backgrounds, seeking industry-relevant skills that go beyond traditional classroom education.
-                        </p>
-                        <p>
-                            Through hands-on projects, real-time case studies, and AI-integrated learning systems, we help students transform academic knowledge into job-ready capabilities.
-                        </p>
-                    </div>
                 </div>
 
                 {/* Two Lines of Infinite Scroll */}
@@ -76,16 +51,16 @@ export const UniversitySection = () => {
                         <div className="flex overflow-x-hidden">
                             <div className="flex animate-marquee gap-8 md:gap-12 items-center py-8">
                                 {/* Duplicate entries for smoother loop */}
-                                {[...universities, ...universities].map((uni, index) => (
+                                {[...platforms, ...platforms].map((platform, index) => (
                                     <div
-                                        key={`uni-ltr-${index}`}
+                                        key={`platform-ltr-${index}`}
                                         className="flex-shrink-0 group"
                                     >
                                         <div className="relative bg-white dark:bg-card rounded-2xl p-4 md:p-6 shadow-sm border border-border/40 hover:shadow-xl hover:border-primary/40 transition-all duration-500 hover:-translate-y-2 w-[120px] h-[120px] md:w-[150px] md:h-[150px] flex items-center justify-center overflow-hidden">
                                             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                                             <img
-                                                src={uni}
-                                                alt={`University ${index + 1}`}
+                                                src={platform}
+                                                alt={`Platform ${index + 1}`}
                                                 className="relative z-10 max-w-full max-h-full object-contain opacity-100 transition-all duration-500 group-hover:scale-110"
                                                 loading="lazy"
                                             />
@@ -104,16 +79,16 @@ export const UniversitySection = () => {
                         <div className="flex overflow-x-hidden">
                             <div className="flex animate-marquee-reverse gap-8 md:gap-12 items-center py-8">
                                 {/* Duplicate entries for smoother loop */}
-                                {[...universities, ...universities].map((uni, index) => (
+                                {[...platforms, ...platforms].map((platform, index) => (
                                     <div
-                                        key={`uni-rtl-${index}`}
+                                        key={`platform-rtl-${index}`}
                                         className="flex-shrink-0 group"
                                     >
                                         <div className="relative bg-white dark:bg-card rounded-2xl p-4 md:p-6 shadow-sm border border-border/40 hover:shadow-xl hover:border-primary/40 transition-all duration-500 hover:-translate-y-2 w-[120px] h-[120px] md:w-[150px] md:h-[150px] flex items-center justify-center overflow-hidden">
                                             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                                             <img
-                                                src={uni}
-                                                alt={`University ${index + 1}`}
+                                                src={platform}
+                                                alt={`Platform ${index + 1}`}
                                                 className="relative z-10 max-w-full max-h-full object-contain opacity-100 transition-all duration-500 group-hover:scale-110"
                                                 loading="lazy"
                                             />

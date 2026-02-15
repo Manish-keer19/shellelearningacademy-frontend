@@ -13,6 +13,7 @@ import NewsletterSection from "./NewsletterSection";
 import { CertificationsSection } from "@/components/CertificationsSection";
 import { SponsorsSection } from "@/components/SponsorsSection";
 import { UniversitySection } from "@/components/UniversitySection";
+import { ReputedPlatformSection } from "@/components/ReputedPlatformSection";
 import { motion, useScroll, useSpring } from "framer-motion";
 import { useEffect } from "react";
 import { LocomotiveScrollWrapper } from "@/components/LocomotiveScrollWrapper";
@@ -177,6 +178,13 @@ const Index = () => {
                     <AnimatedSection variant="slideRight" delay={0.15}>
                         <div data-scroll>
                             <UniversitySection />
+                        </div>
+                    </AnimatedSection>
+
+                    {/* Reputed Platforms - Slide from left with spring */}
+                    <AnimatedSection variant="slideLeft" delay={0.1}>
+                        <div data-scroll>
+                            <ReputedPlatformSection />
                         </div>
                     </AnimatedSection>
 
