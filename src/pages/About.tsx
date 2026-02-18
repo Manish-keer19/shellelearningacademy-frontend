@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Target, Users, Award, Zap, CheckCircle, ArrowRight, BookOpen, Briefcase, GraduationCap, Shield, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import logo1 from "../assets/logo1.png";
-import about_img from "../assets/about_img.jpg";
+import about_img from "../assets/about.jpeg";
 import kartikImg from "../assets/owners/kartik.png";
 import mayankImg from "../assets/owners/mayank.jpeg";
 import omkarImg from "../assets/owners/omkarjpeg.jpeg";
