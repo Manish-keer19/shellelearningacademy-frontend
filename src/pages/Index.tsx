@@ -1,12 +1,8 @@
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
-import { CourseCard } from "@/components/CourseCard";
 import { Footer } from "@/components/Footer";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { ArrowRight, BookOpen, Users, Award, Zap } from "lucide-react";
 import FeaturedCourses from "./Course/FeaturedCourses";
-import { CategoriesSection } from "./CategoriesSection"
+import { CategoriesSection } from "./CategoriesSection";
 import Testimonials from "./Testimonials";
 import WhyChooseShell from "./WhyChooseShell";
 import NewsletterSection from "./NewsletterSection";
@@ -14,225 +10,222 @@ import { CertificationsSection } from "@/components/CertificationsSection";
 import { SponsorsSection } from "@/components/SponsorsSection";
 import { UniversitySection } from "@/components/UniversitySection";
 import { ReputedPlatformSection } from "@/components/ReputedPlatformSection";
-import { motion, useScroll, useSpring } from "framer-motion";
-import { useEffect } from "react";
 import { LocomotiveScrollWrapper } from "@/components/LocomotiveScrollWrapper";
+import { motion, useScroll, useSpring, useTransform, Variants } from "framer-motion";
+import { useRef, useEffect } from "react";
 
-// import { TrustedCompanies } from "@/components/TrustedCompanies";
-// import { InstructorsSection } from "@/components/InstructorsSection";
+// ─────────────────────────────────────────────────────────────────────
+// Reusable animation variants — GPU-safe (opacity + transform only)
+// ─────────────────────────────────────────────────────────────────────
 
-// Smooth scroll configuration - slower and smoother
-const smoothScrollConfig = {
-    damping: 30,
-    stiffness: 60,
-    mass: 0.8
-};
-
-// Animation variants for different directions with smooth spring physics
-const fadeInVariants = {
-    hidden: { opacity: 0, y: 60 },
+/** Fade up — default entrance for most sections */
+const fadeUp: Variants = {
+    hidden: { opacity: 0, y: 40 },
     visible: {
-        opacity: 1,
-        y: 0,
-        transition: {
-            duration: 1.2,
-            ease: [0.16, 1, 0.3, 1] // Smooth easeOutExpo for elegant motion
-        }
-    }
+        opacity: 1, y: 0,
+        transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
+    },
 };
 
-const slideFromLeft = {
-    hidden: { opacity: 0, x: -80 },
+/** Fade in from left */
+const fromLeft: Variants = {
+    hidden: { opacity: 0, x: -50 },
     visible: {
-        opacity: 1,
-        x: 0,
-        transition: {
-            type: "spring",
-            damping: 30,
-            stiffness: 60,
-            mass: 0.8,
-            duration: 1.2
-        }
-    }
+        opacity: 1, x: 0,
+        transition: { type: "spring", damping: 28, stiffness: 70 },
+    },
 };
 
-const slideFromRight = {
-    hidden: { opacity: 0, x: 80 },
+/** Fade in from right */
+const fromRight: Variants = {
+    hidden: { opacity: 0, x: 50 },
     visible: {
-        opacity: 1,
-        x: 0,
-        transition: {
-            type: "spring",
-            damping: 30,
-            stiffness: 60,
-            mass: 0.8,
-            duration: 1.2
-        }
-    }
+        opacity: 1, x: 0,
+        transition: { type: "spring", damping: 28, stiffness: 70 },
+    },
 };
 
-const slideFromBottom = {
-    hidden: { opacity: 0, y: 80 },
+/** Scale + fade — for feature/card-heavy sections */
+const scaleUp: Variants = {
+    hidden: { opacity: 0, scale: 0.94 },
     visible: {
-        opacity: 1,
-        y: 0,
-        transition: {
-            type: "spring",
-            damping: 35,
-            stiffness: 65,
-            mass: 0.9,
-            duration: 1.3
-        }
-    }
+        opacity: 1, scale: 1,
+        transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] },
+    },
 };
 
-const scaleIn = {
-    hidden: { opacity: 0, scale: 0.85 },
-    visible: {
-        opacity: 1,
-        scale: 1,
-        transition: {
-            type: "spring",
-            damping: 25,
-            stiffness: 70,
-            mass: 0.8,
-            duration: 1.4
-        }
-    }
+/** Staggered container — wraps child items that animate one after another */
+const staggerContainer: Variants = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } },
 };
 
-// Enhanced AnimatedSection component with Framer Motion
-const AnimatedSection = ({
-    children,
-    variant = "fadeIn",
-    delay = 0,
-    className = ""
-}: {
+// ─────────────────────────────────────────────────────────────────────
+// AnimatedSection — triggers animation when scrolled into view
+// ─────────────────────────────────────────────────────────────────────
+interface AnimatedSectionProps {
     children: React.ReactNode;
-    variant?: "fadeIn" | "slideLeft" | "slideRight" | "slideBottom" | "scale";
+    variant?: Variants;
     delay?: number;
     className?: string;
-}) => {
-    const variants = {
-        fadeIn: fadeInVariants,
-        slideLeft: slideFromLeft,
-        slideRight: slideFromRight,
-        slideBottom: slideFromBottom,
-        scale: scaleIn
-    };
+    /** How much of the element must be visible before triggering (0–1) */
+    amount?: number;
+}
+
+const AnimatedSection = ({
+    children,
+    variant = fadeUp,
+    delay = 0,
+    className = "",
+    amount = 0.12,
+}: AnimatedSectionProps) => (
+    <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount }}
+        variants={variant}
+        transition={delay ? { delay } : undefined}
+        className={className}
+    >
+        {children}
+    </motion.div>
+);
+
+// ─────────────────────────────────────────────────────────────────────
+// Scroll Progress Bar (top-of-page thin line)
+// ─────────────────────────────────────────────────────────────────────
+const ScrollProgress = () => {
+    const { scrollYProgress } = useScroll();
+    const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 30, restDelta: 0.001 });
 
     return (
         <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.15, margin: "-50px" }}
-            variants={variants[variant]}
-            transition={{ delay }}
-            className={className}
-        >
-            {children}
-        </motion.div>
+            className="fixed top-0 left-0 right-0 h-[3px] origin-left z-[9999] bg-gradient-to-r from-primary via-green-400 to-primary"
+            style={{ scaleX }}
+        />
     );
 };
 
-const Index = () => {
-    // Smooth scroll progress
-    const { scrollYProgress } = useScroll();
-    const scaleX = useSpring(scrollYProgress, smoothScrollConfig);
+// ─────────────────────────────────────────────────────────────────────
+// Divider — subtle glowing separator between sections
+// ─────────────────────────────────────────────────────────────────────
+const SectionDivider = () => (
+    <motion.div
+        initial={{ scaleX: 0, opacity: 0 }}
+        whileInView={{ scaleX: 1, opacity: 1 }}
+        viewport={{ once: true, amount: 0.5 }}
+        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+        className="w-full max-w-2xl mx-auto h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent origin-center"
+    />
+);
 
-    // Remove CSS smooth scroll as Locomotive Scroll handles it
+// ─────────────────────────────────────────────────────────────────────
+// Main Page
+// ─────────────────────────────────────────────────────────────────────
+const Index = () => {
     useEffect(() => {
-        // Locomotive Scroll will handle smooth scrolling
         return () => {
-            document.documentElement.style.scrollBehavior = 'auto';
+            document.documentElement.style.scrollBehavior = "auto";
         };
     }, []);
 
     return (
-        <div className="flex min-h-screen flex-col">
-            {/* Smooth scroll progress indicator */}
-            <motion.div
-                className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 origin-left z-50"
-                style={{ scaleX }}
-            />
+        <div className="flex min-h-screen flex-col bg-background">
+
+            {/* Thin scroll-progress bar at very top */}
+            <ScrollProgress />
 
             <Navbar />
 
             <LocomotiveScrollWrapper>
-                <main className="flex-1 overflow-hidden">
-                    {/* Hero - Fade in with scale */}
-                    <AnimatedSection variant="fadeIn" delay={0}>
-                        <div data-scroll>
-                            <Hero />
-                        </div>
+                <main className="flex-1">
+
+                    {/* ── Hero ───────────────────────────────────────────── */}
+                    {/* Hero itself has internal animations, just fade-in the wrapper */}
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.6, ease: "easeOut" }}
+                    >
+                        <Hero />
+                    </motion.div>
+
+                    {/* ── Sponsors ───────────────────────────────────────── */}
+                    <AnimatedSection variant={fromLeft} delay={0} amount={0.1}>
+                        <SponsorsSection />
                     </AnimatedSection>
 
-                    {/* Sponsors - Slide from left with spring */}
-                    <AnimatedSection variant="slideLeft" delay={0.1}>
-                        <div data-scroll>
-                            <SponsorsSection />
-                        </div>
+                    <div className="py-2"><SectionDivider /></div>
+
+                    {/* ── University ─────────────────────────────────────── */}
+                    <AnimatedSection variant={fromRight} amount={0.1}>
+                        <UniversitySection />
                     </AnimatedSection>
 
-                    {/* University - Slide from right with spring */}
-                    <AnimatedSection variant="slideRight" delay={0.15}>
-                        <div data-scroll>
-                            <UniversitySection />
-                        </div>
+                    <div className="py-2"><SectionDivider /></div>
+
+                    {/* ── Reputed Platforms ──────────────────────────────── */}
+                    <AnimatedSection variant={fromLeft} amount={0.1}>
+                        <ReputedPlatformSection />
                     </AnimatedSection>
 
-                    {/* Reputed Platforms - Slide from left with spring */}
-                    <AnimatedSection variant="slideLeft" delay={0.1}>
-                        <div data-scroll>
-                            <ReputedPlatformSection />
-                        </div>
-                    </AnimatedSection>
+                    <div className="py-2"><SectionDivider /></div>
 
-                    {/* Categories - Slide from bottom */}
-                    <AnimatedSection variant="slideBottom" delay={0.1}>
-                        <div data-scroll>
+                    {/* ── Categories ─────────────────────────────────────── */}
+                    {/* stagger-container makes children animate in one-by-one */}
+                    <motion.div
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, amount: 0.08 }}
+                        variants={staggerContainer}
+                    >
+                        <motion.div variants={fadeUp}>
                             <CategoriesSection />
-                        </div>
+                        </motion.div>
+                    </motion.div>
+
+                    <div className="py-2"><SectionDivider /></div>
+
+                    {/* ── Featured Courses ───────────────────────────────── */}
+                    <AnimatedSection variant={fadeUp} amount={0.08}>
+                        <FeaturedCourses />
                     </AnimatedSection>
 
-                    {/* Featured Courses - Slide from left */}
-                    <AnimatedSection variant="slideLeft" delay={0.15}>
-                        <div data-scroll>
-                            <FeaturedCourses />
-                        </div>
+                    <div className="py-2"><SectionDivider /></div>
+
+                    {/* ── Why Choose Shell ───────────────────────────────── */}
+                    <AnimatedSection variant={fromRight} amount={0.1}>
+                        <WhyChooseShell />
                     </AnimatedSection>
 
-                    {/* Why Choose Shell - Slide from right */}
-                    <AnimatedSection variant="slideRight" delay={0.1}>
-                        <div data-scroll>
-                            <WhyChooseShell />
-                        </div>
+                    <div className="py-2"><SectionDivider /></div>
+
+                    {/* ── Testimonials ───────────────────────────────────── */}
+                    <AnimatedSection variant={scaleUp} amount={0.08}>
+                        <Testimonials />
                     </AnimatedSection>
 
-                    {/* Testimonials - Scale animation with spring */}
-                    <AnimatedSection variant="scale" delay={0.15}>
-                        <div data-scroll>
-                            <Testimonials />
-                        </div>
+                    <div className="py-2"><SectionDivider /></div>
+
+                    {/* ── Certifications ─────────────────────────────────── */}
+                    <AnimatedSection variant={fromLeft} amount={0.1}>
+                        <CertificationsSection />
                     </AnimatedSection>
 
-                    {/* Certifications - Slide from left */}
-                    <AnimatedSection variant="slideLeft" delay={0.1}>
-                        <div data-scroll>
-                            <CertificationsSection />
-                        </div>
-                    </AnimatedSection>
+                    <div className="py-2"><SectionDivider /></div>
 
-                    {/* Newsletter - Slide from bottom */}
-                    <AnimatedSection variant="slideBottom" delay={0.15}>
-                        <div data-scroll>
-                            <NewsletterSection />
-                        </div>
+                    {/* ── Newsletter ─────────────────────────────────────── */}
+                    <AnimatedSection variant={scaleUp} amount={0.1} delay={0.05}>
+                        <NewsletterSection />
                     </AnimatedSection>
 
                 </main>
 
-                <Footer />
+                {/* ── Footer ───────────────────────────────────────────── */}
+                <AnimatedSection variant={fadeUp} amount={0.05}>
+                    <Footer />
+                </AnimatedSection>
+
             </LocomotiveScrollWrapper>
         </div>
     );

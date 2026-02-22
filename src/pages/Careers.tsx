@@ -131,8 +131,8 @@ const Careers = () => {
 
               <div className="flex items-center justify-center lg:justify-start gap-2 text-sm text-muted-foreground font-medium">
                 <span>Or apply via email:</span>
-                <a href="mailto:hr@shellelearningacademy.com" className="text-green-700 hover:underline flex items-center gap-1">
-                  <Mail className="w-3.5 h-3.5" /> hr@shellelearningacademy.com
+                <a href="mailto:career@shellelearningacademy.com" className="text-green-700 hover:underline flex items-center gap-1">
+                  <Mail className="w-3.5 h-3.5" /> career@shellelearningacademy.com
                 </a>
               </div>
             </div>

@@ -7,14 +7,14 @@ import img2 from "../assets/new_student/2.jpeg"
 import img3 from "../assets/new_student/3.jpeg"
 import img4 from "../assets/new_student/4.jpeg"
 import img5 from "../assets/new_student/5.jpeg"
-import dummy from "../assets/students/dummy.png"
-import img6 from "../assets/new_student/6.jpeg"
+import dummy from "../assets/new_student/dummy.png"
+import img6 from "../assets/new_student/8.jpeg"
 
 const Testimonials = () => {
     const testimonials = [
         {
             id: 1,
-            name: "Arif Khan",
+            name: "Piyush Sah",
             role: "Student",
             quote: "The teaching style at Shell E-Learning Academy is very simple and clear. Even difficult topics feel easy because they explain everything step-by-step. I really enjoy learning here.",
             rating: 4,
@@ -22,7 +22,7 @@ const Testimonials = () => {
         },
         {
             id: 2,
-            name: "Sargam Dhangar",
+            name: "Simran Dhangar",
             role: "Student",
             quote: "Their doubt support is amazing. Whenever I asked something, the team replied quickly and solved my problem. It feels like there is always someone to help me.",
             rating: 5,
@@ -30,7 +30,7 @@ const Testimonials = () => {
         },
         {
             id: 3,
-            name: "Saloni Bairagi",
+            name: "harshit chouhan",
             role: "Student",
             quote: "The course quality is very good. The videos are clean, the audio is clear, and the examples are practical. You actually understand how to use the knowledge in real life.",
             rating: 4,
@@ -54,7 +54,7 @@ const Testimonials = () => {
         },
         {
             id: 6,
-            name: "Rajesh Singh",
+            name: "Mayank Sharma",
             role: "Student",
             quote: "The platform is very easy to use. Everything is well-organized—modules, videos, notes, quizzes. I never got confused. Very smooth learning experience.",
             rating: 4,

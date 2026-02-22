@@ -160,7 +160,7 @@ export const Navbar = () => {
                             <div className="flex flex-col leading-none">
                                 {/* Using Tailwind color variables for the custom green primary color */}
                                 <span className="font-extrabold text-base sm:text-lg text-primary transition-colors">Shell E-Learning</span>
-                                <span className="text-xs font-medium text-muted-foreground hidden sm:block">MSME Verified Academy</span>
+                                <span className="text-xs font-medium text-muted-foreground hidden sm:block">ISO Verified Academy</span>
                             </div>
                         </Link>
 

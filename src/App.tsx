@@ -68,6 +68,7 @@ import Settings from "./pages/Settings";
 import CertificateManagement from "./pages/CertificateManagement";
 import CertificateVerification from "./pages/CertificateVerification";
 import EmsPrivateRoute from "./components/EmsPrivateRoute";
+import HeroImageManagement from "./pages/HeroImageManagement";
 
 // EMS Module Imports
 import EmsDashboard from "./ems/pages/Index";
@@ -167,6 +168,7 @@ const App = () => (
                 <Route path="/edit-job/:id" element={<EditJob />} />
                 <Route path="/manage-jobs" element={<ManageJobs />} />
                 <Route path="/admin/user-enrollment" element={<AdminUserEnrollment />} />
+                <Route path="/admin/hero-images" element={<HeroImageManagement />} />
 
                 {/* EMS Module Routes - Protected */}
                 <Route element={<EmsPrivateRoute />}>

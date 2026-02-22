@@ -81,7 +81,7 @@ export const Footer = () => {
                             <img src={logo} alt="Shell E-learning Academy" className="h-10 w-10 object-contain" />
                             <div>
                                 <span className="font-extrabold text-xl text-white block">Shell E-learning Academy</span>
-                                <span className="text-xs font-medium text-white">MSME Verified | Learn Today</span>
+                                <span className="text-xs font-medium text-white">ISO Verified | Learn Today</span>
                             </div>
                         </Link>
 
