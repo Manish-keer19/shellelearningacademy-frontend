@@ -28,25 +28,26 @@ const months = [
 ];
 
 // Sample attendance data
-const attendanceData: Record<string, "present" | "absent" | "late" | "leave"> = {
-  "2024-12-02": "present",
-  "2024-12-03": "present",
-  "2024-12-04": "late",
-  "2024-12-05": "present",
-  "2024-12-06": "present",
-  "2024-12-09": "present",
-  "2024-12-10": "absent",
-  "2024-12-11": "present",
-  "2024-12-12": "present",
-  "2024-12-13": "late",
-  "2024-12-16": "leave",
-  "2024-12-17": "leave",
-  "2024-12-18": "present",
-  "2024-12-19": "present",
-  "2024-12-20": "present",
-  "2024-12-23": "present",
-  "2024-12-24": "present",
-};
+const attendanceData: Record<string, "present" | "absent" | "late" | "leave"> =
+  {
+    "2024-12-02": "present",
+    "2024-12-03": "present",
+    "2024-12-04": "late",
+    "2024-12-05": "present",
+    "2024-12-06": "present",
+    "2024-12-09": "present",
+    "2024-12-10": "absent",
+    "2024-12-11": "present",
+    "2024-12-12": "present",
+    "2024-12-13": "late",
+    "2024-12-16": "leave",
+    "2024-12-17": "leave",
+    "2024-12-18": "present",
+    "2024-12-19": "present",
+    "2024-12-20": "present",
+    "2024-12-23": "present",
+    "2024-12-24": "present",
+  };
 
 const Attendance = () => {
   const [currentDate, setCurrentDate] = useState(new Date(2024, 11, 1));
@@ -73,21 +74,28 @@ const Attendance = () => {
     { label: "Present", value: 18, icon: UserCheck, color: "text-success" },
     { label: "Absent", value: 1, icon: UserX, color: "text-destructive" },
     { label: "Late", value: 2, icon: Clock, color: "text-warning" },
-    { label: "On Leave", value: 2, icon: AlertCircle, color: "text-muted-foreground" },
+    {
+      label: "On Leave",
+      value: 2,
+      icon: AlertCircle,
+      color: "text-muted-foreground",
+    },
   ];
 
   return (
     <DashboardLayout>
       {/* Page Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-foreground">Attendance</h1>
+      <div className="mb-6 md:mb-8">
+        <h1 className="text-xl sm:text-2xl font-bold text-foreground">
+          Attendance
+        </h1>
         <p className="text-muted-foreground mt-1">
           Track and manage employee attendance
         </p>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 md:mb-8">
         {stats.map((stat) => (
           <div
             key={stat.label}
@@ -96,7 +104,7 @@ const Attendance = () => {
             <div
               className={cn(
                 "w-10 h-10 rounded-lg bg-muted flex items-center justify-center",
-                stat.color
+                stat.color,
               )}
             >
               <stat.icon className="w-5 h-5" />
@@ -126,14 +134,15 @@ const Attendance = () => {
         </div>
 
         {/* Calendar Grid */}
-        <div className="grid grid-cols-7 gap-1">
+        <div className="grid grid-cols-7 gap-0.5 sm:gap-1">
           {/* Day Headers */}
           {daysOfWeek.map((day) => (
             <div
               key={day}
-              className="p-3 text-center text-sm font-medium text-muted-foreground"
+              className="p-1 sm:p-3 text-center text-xs sm:text-sm font-medium text-muted-foreground"
             >
-              {day}
+              <span className="hidden sm:inline">{day}</span>
+              <span className="sm:hidden">{day[0]}</span>
             </div>
           ))}
 
@@ -147,28 +156,30 @@ const Attendance = () => {
             const day = index + 1;
             const dateKey = getDateKey(day);
             const status = attendanceData[dateKey];
-            const isWeekend = new Date(year, month, day).getDay() === 0 || new Date(year, month, day).getDay() === 6;
+            const isWeekend =
+              new Date(year, month, day).getDay() === 0 ||
+              new Date(year, month, day).getDay() === 6;
             const isToday = day === 24 && month === 11 && year === 2024;
 
             return (
               <div
                 key={day}
                 className={cn(
-                  "p-3 rounded-lg text-center transition-all cursor-pointer hover:bg-muted",
+                  "p-1 sm:p-3 rounded-lg text-center transition-all cursor-pointer hover:bg-muted",
                   isWeekend && "text-muted-foreground",
                   isToday && "ring-2 ring-primary ring-offset-2",
                   status === "present" && "bg-accent",
                   status === "absent" && "bg-destructive/10",
                   status === "late" && "bg-warning/10",
-                  status === "leave" && "bg-muted"
+                  status === "leave" && "bg-muted",
                 )}
               >
                 <span
                   className={cn(
-                    "text-sm font-medium",
+                    "text-xs sm:text-sm font-medium",
                     status === "present" && "text-primary",
                     status === "absent" && "text-destructive",
-                    status === "late" && "text-warning"
+                    status === "late" && "text-warning",
                   )}
                 >
                   {day}

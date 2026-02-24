@@ -15,14 +15,20 @@ const columns = [
         title: "Update course curriculum",
         priority: "High",
         dueDate: "Dec 26",
-        assignee: { name: "Priya", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=priya" },
+        assignee: {
+          name: "Priya",
+          avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=priya",
+        },
       },
       {
         id: 2,
         title: "Review student feedback",
         priority: "Medium",
         dueDate: "Dec 27",
-        assignee: { name: "Rahul", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=rahul" },
+        assignee: {
+          name: "Rahul",
+          avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=rahul",
+        },
       },
     ],
   },
@@ -36,21 +42,30 @@ const columns = [
         title: "Create marketing campaign",
         priority: "High",
         dueDate: "Dec 25",
-        assignee: { name: "Anita", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=anita" },
+        assignee: {
+          name: "Anita",
+          avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=anita",
+        },
       },
       {
         id: 4,
         title: "Prepare Q4 report",
         priority: "Medium",
         dueDate: "Dec 28",
-        assignee: { name: "Sanjay", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=sanjay" },
+        assignee: {
+          name: "Sanjay",
+          avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=sanjay",
+        },
       },
       {
         id: 5,
         title: "Update website content",
         priority: "Low",
         dueDate: "Dec 30",
-        assignee: { name: "Neha", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=neha" },
+        assignee: {
+          name: "Neha",
+          avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=neha",
+        },
       },
     ],
   },
@@ -64,7 +79,10 @@ const columns = [
         title: "New course outline",
         priority: "High",
         dueDate: "Dec 24",
-        assignee: { name: "Vikram", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=vikram" },
+        assignee: {
+          name: "Vikram",
+          avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=vikram",
+        },
       },
     ],
   },
@@ -78,14 +96,20 @@ const columns = [
         title: "Setup LMS integration",
         priority: "High",
         dueDate: "Dec 20",
-        assignee: { name: "Kavita", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=kavita" },
+        assignee: {
+          name: "Kavita",
+          avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=kavita",
+        },
       },
       {
         id: 8,
         title: "Employee onboarding docs",
         priority: "Medium",
         dueDate: "Dec 18",
-        assignee: { name: "Amit", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=amit" },
+        assignee: {
+          name: "Amit",
+          avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=amit",
+        },
       },
     ],
   },
@@ -95,9 +119,11 @@ const Tasks = () => {
   return (
     <DashboardLayout>
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 md:mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Tasks & Workflow</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-foreground">
+            Tasks & Workflow
+          </h1>
           <p className="text-muted-foreground mt-1">
             Manage and track team tasks
           </p>
@@ -109,14 +135,16 @@ const Tasks = () => {
       </div>
 
       {/* Kanban Board */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {columns.map((column) => (
           <div key={column.id} className="space-y-4">
             {/* Column Header */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className={cn("w-3 h-3 rounded-full", column.color)} />
-                <h3 className="font-semibold text-foreground">{column.title}</h3>
+                <h3 className="font-semibold text-foreground">
+                  {column.title}
+                </h3>
                 <span className="text-sm text-muted-foreground">
                   ({column.tasks.length})
                 </span>
@@ -142,7 +170,7 @@ const Tasks = () => {
                           "status-badge text-[10px]",
                           task.priority === "High" && "status-error",
                           task.priority === "Medium" && "status-warning",
-                          task.priority === "Low" && "status-active"
+                          task.priority === "Low" && "status-active",
                         )}
                       >
                         {task.priority}

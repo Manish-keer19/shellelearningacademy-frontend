@@ -45,7 +45,7 @@ const Dashboard = () => {
     totalEmployees: { value: 0, subtext: "+0 this month" },
     presentToday: { value: 0, subtext: "0% attendance" },
     activeTasks: { value: 0, subtext: "0 due today" },
-    monthlyRevenue: { value: 0, subtext: "+0% vs last month" }
+    monthlyRevenue: { value: 0, subtext: "+0% vs last month" },
   };
 
   return (

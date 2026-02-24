@@ -71,30 +71,48 @@ const Targets = () => {
 
   const handleAssignTarget = async () => {
     if (!targetData.employeeId || !targetData.amount) {
-      toast({ title: "Error", description: "All fields required", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: "All fields required",
+        variant: "destructive",
+      });
       return;
     }
     setIsSubmitting(true);
     try {
       await emsService.assignTarget({
         employeeId: targetData.employeeId,
-        targetAmount: parseFloat(targetData.amount)
+        targetAmount: parseFloat(targetData.amount),
       });
       toast({ title: "Success", description: "Target assigned successfully" });
       setIsTargetOpen(false);
       fetchStaff();
     } catch (error: any) {
-      toast({ title: "Error", description: error.message || "Failed", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: error.message || "Failed",
+        variant: "destructive",
+      });
     } finally {
       setIsSubmitting(false);
     }
   };
 
   // Calculate totals
-  const totalTarget = staff.reduce((sum, s) => sum + (s.employeePerformance?.monthlyTarget || 0), 0);
-  const totalAchieved = staff.reduce((sum, s) => sum + (s.employeePerformance?.achievedTarget || 0), 0);
-  const totalCommission = staff.reduce((sum, s) => sum + (s.employeePerformance?.totalCommissionEarned || 0), 0);
-  const overallProgress = totalTarget > 0 ? (totalAchieved / totalTarget) * 100 : 0;
+  const totalTarget = staff.reduce(
+    (sum, s) => sum + (s.employeePerformance?.monthlyTarget || 0),
+    0,
+  );
+  const totalAchieved = staff.reduce(
+    (sum, s) => sum + (s.employeePerformance?.achievedTarget || 0),
+    0,
+  );
+  const totalCommission = staff.reduce(
+    (sum, s) => sum + (s.employeePerformance?.totalCommissionEarned || 0),
+    0,
+  );
+  const overallProgress =
+    totalTarget > 0 ? (totalAchieved / totalTarget) * 100 : 0;
 
   if (isLoading) {
     return <EmsDashboardSkeleton />;
@@ -103,16 +121,17 @@ const Targets = () => {
   return (
     <DashboardLayout>
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 md:mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">
+          <h1 className="text-xl sm:text-2xl font-bold text-foreground">
             Targets & Commissions
           </h1>
-          <p className="text-muted-foreground mt-1">
+          <p className="text-muted-foreground mt-1 text-sm sm:text-base">
             Track sales targets and commission payouts
           </p>
         </div>
-        {(user?.accountType === "Manager" || user?.accountType === "Super Admin") && (
+        {(user?.accountType === "Manager" ||
+          user?.accountType === "Super Admin") && (
           <Dialog open={isTargetOpen} onOpenChange={setIsTargetOpen}>
             <DialogTrigger asChild>
               <Button className="gap-2">
@@ -123,30 +142,49 @@ const Targets = () => {
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>Set Monthly Target</DialogTitle>
-                <DialogDescription>Assign sales target to an employee.</DialogDescription>
+                <DialogDescription>
+                  Assign sales target to an employee.
+                </DialogDescription>
               </DialogHeader>
               <div className="space-y-4 py-4">
                 <div>
                   <Label>Employee</Label>
-                  <Select value={targetData.employeeId} onValueChange={(val) => setTargetData({ ...targetData, employeeId: val })}>
+                  <Select
+                    value={targetData.employeeId}
+                    onValueChange={(val) =>
+                      setTargetData({ ...targetData, employeeId: val })
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Select Employee" />
                     </SelectTrigger>
                     <SelectContent>
-                      {staff.map(s => (
-                        <SelectItem key={s._id} value={s._id}>{s.fullName}</SelectItem>
+                      {staff.map((s) => (
+                        <SelectItem key={s._id} value={s._id}>
+                          {s.fullName}
+                        </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
                 <div>
                   <Label>Target Amount</Label>
-                  <Input type="number" value={targetData.amount} onChange={(e) => setTargetData({ ...targetData, amount: e.target.value })} />
+                  <Input
+                    type="number"
+                    value={targetData.amount}
+                    onChange={(e) =>
+                      setTargetData({ ...targetData, amount: e.target.value })
+                    }
+                  />
                 </div>
               </div>
               <DialogFooter>
                 <Button onClick={handleAssignTarget} disabled={isSubmitting}>
-                  {isSubmitting ? <Loader2 className="animate-spin" /> : "Assign Target"}
+                  {isSubmitting ? (
+                    <Loader2 className="animate-spin" />
+                  ) : (
+                    "Assign Target"
+                  )}
                 </Button>
               </DialogFooter>
             </DialogContent>
@@ -155,8 +193,8 @@ const Targets = () => {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="bg-card rounded-xl border border-border p-5 col-span-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 md:mb-8">
+        <div className="bg-card rounded-xl border border-border p-5 sm:col-span-2">
           <div className="flex items-center gap-3 mb-4">
             <div className="kpi-icon">
               <TrendingUp className="w-5 h-5" />
@@ -200,11 +238,13 @@ const Targets = () => {
             </div>
           </div>
           <p className="text-2xl font-bold text-foreground">
-            {staff.filter((s) => {
-              const t = s.employeePerformance?.monthlyTarget || 0;
-              const a = s.employeePerformance?.achievedTarget || 0;
-              return t > 0 && (a / t) >= 0.9;
-            }).length}
+            {
+              staff.filter((s) => {
+                const t = s.employeePerformance?.monthlyTarget || 0;
+                const a = s.employeePerformance?.achievedTarget || 0;
+                return t > 0 && a / t >= 0.9;
+              }).length
+            }
           </p>
           <p className="text-sm text-muted-foreground mt-1">On Target (90%+)</p>
         </div>
@@ -217,14 +257,20 @@ const Targets = () => {
         </div>
         <div className="divide-y divide-border">
           {isLoading ? (
-            <div className="p-8 text-center text-muted-foreground">Loading...</div>
+            <div className="p-8 text-center text-muted-foreground">
+              Loading...
+            </div>
           ) : staff.length === 0 ? (
-            <div className="p-8 text-center text-muted-foreground">No employees found.</div>
+            <div className="p-8 text-center text-muted-foreground">
+              No employees found.
+            </div>
           ) : (
             staff.map((employee, index) => {
               const target = employee.employeePerformance?.monthlyTarget || 0;
-              const achieved = employee.employeePerformance?.achievedTarget || 0;
-              const commission = employee.employeePerformance?.totalCommissionEarned || 0;
+              const achieved =
+                employee.employeePerformance?.achievedTarget || 0;
+              const commission =
+                employee.employeePerformance?.totalCommissionEarned || 0;
               const progress = target > 0 ? (achieved / target) * 100 : 0;
               const remaining = Math.max(0, target - achieved);
 
@@ -234,8 +280,8 @@ const Targets = () => {
                   className="p-6 hover:bg-muted/30 transition-colors animate-fade-in"
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
-                  <div className="flex items-center gap-4 mb-4">
-                    <Avatar className="w-12 h-12">
+                  <div className="flex flex-wrap items-center gap-3 sm:gap-4 mb-4">
+                    <Avatar className="w-10 h-10 sm:w-12 sm:h-12">
                       <AvatarImage src={employee.image} />
                       <AvatarFallback className="bg-primary/10 text-primary">
                         {employee.fullName ? employee.fullName[0] : "U"}
@@ -251,21 +297,27 @@ const Targets = () => {
                     </div>
                     <div className="text-right">
                       <p className="font-semibold text-primary">
-                        ₹{(commission).toFixed(0)}
+                        ₹{commission.toFixed(0)}
                       </p>
-                      <p className="text-xs text-muted-foreground">Commission</p>
+                      <p className="text-xs text-muted-foreground">
+                        Commission
+                      </p>
                     </div>
                   </div>
 
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">
-                        Achieved: ₹{(achieved).toFixed(0)}
+                        Achieved: ₹{achieved.toFixed(0)}
                       </span>
                       <span
                         className={cn(
                           "font-medium",
-                          progress >= 90 ? "text-success" : progress >= 70 ? "text-warning" : "text-destructive"
+                          progress >= 90
+                            ? "text-success"
+                            : progress >= 70
+                              ? "text-warning"
+                              : "text-destructive",
                         )}
                       >
                         {progress.toFixed(0)}%
@@ -277,17 +329,18 @@ const Targets = () => {
                         "h-2",
                         progress >= 90 && "[&>div]:bg-success",
                         progress >= 70 && progress < 90 && "[&>div]:bg-warning",
-                        progress < 70 && "[&>div]:bg-destructive"
+                        progress < 70 && "[&>div]:bg-destructive",
                       )}
                     />
                     <div className="flex justify-between text-xs text-muted-foreground">
-                      <span>Remaining: ₹{(remaining).toFixed(0)}</span>
-                      <span>Target: ₹{(target).toFixed(0)}</span>
+                      <span>Remaining: ₹{remaining.toFixed(0)}</span>
+                      <span>Target: ₹{target.toFixed(0)}</span>
                     </div>
                   </div>
                 </div>
               );
-            }))}
+            })
+          )}
         </div>
       </div>
     </DashboardLayout>

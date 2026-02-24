@@ -18,32 +18,50 @@ const Settings = () => {
   return (
     <DashboardLayout>
       {/* Page Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-foreground">Settings</h1>
-        <p className="text-muted-foreground mt-1">
+      <div className="mb-6 md:mb-8">
+        <h1 className="text-xl sm:text-2xl font-bold text-foreground">
+          Settings
+        </h1>
+        <p className="text-muted-foreground mt-1 text-sm sm:text-base">
           Configure system settings and preferences
         </p>
       </div>
 
       <Tabs defaultValue="organization" className="space-y-6">
-        <TabsList className="bg-muted p-1">
-          <TabsTrigger value="organization" className="gap-2">
+        <TabsList className="bg-muted p-1 flex-wrap h-auto gap-1">
+          <TabsTrigger
+            value="organization"
+            className="gap-1 sm:gap-2 text-xs sm:text-sm"
+          >
             <Building className="w-4 h-4" />
             Organization
           </TabsTrigger>
-          <TabsTrigger value="roles" className="gap-2">
+          <TabsTrigger
+            value="roles"
+            className="gap-1 sm:gap-2 text-xs sm:text-sm"
+          >
             <Shield className="w-4 h-4" />
             Roles
           </TabsTrigger>
-          <TabsTrigger value="attendance" className="gap-2">
+          <TabsTrigger
+            value="attendance"
+            className="gap-1 sm:gap-2 text-xs sm:text-sm"
+          >
             <Clock className="w-4 h-4" />
             Attendance
           </TabsTrigger>
-          <TabsTrigger value="leave" className="gap-2">
+          <TabsTrigger
+            value="leave"
+            className="gap-1 sm:gap-2 text-xs sm:text-sm"
+          >
             <Calendar className="w-4 h-4" />
-            Leave
+            <span className="hidden sm:inline">Leave</span>
+            <span className="sm:hidden">Leave</span>
           </TabsTrigger>
-          <TabsTrigger value="notifications" className="gap-2">
+          <TabsTrigger
+            value="notifications"
+            className="gap-1 sm:gap-2 text-xs sm:text-sm"
+          >
             <Bell className="w-4 h-4" />
             Notifications
           </TabsTrigger>
@@ -86,7 +104,7 @@ const Settings = () => {
               {["Super Admin", "Admin", "Manager", "Employee"].map((role) => (
                 <div
                   key={role}
-                  className="flex items-center justify-between p-4 rounded-lg border border-border"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-lg border border-border"
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-lg bg-accent flex items-center justify-center">
@@ -98,10 +116,10 @@ const Settings = () => {
                         {role === "Super Admin"
                           ? "Full access to all modules"
                           : role === "Admin"
-                          ? "Access to most modules"
-                          : role === "Manager"
-                          ? "Team management access"
-                          : "Limited access"}
+                            ? "Access to most modules"
+                            : role === "Manager"
+                              ? "Team management access"
+                              : "Limited access"}
                       </p>
                     </div>
                   </div>

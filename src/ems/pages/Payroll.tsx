@@ -90,9 +90,9 @@ const Payroll = () => {
   return (
     <DashboardLayout>
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 md:mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">
+          <h1 className="text-xl sm:text-2xl font-bold text-foreground">
             Payroll & Salary
           </h1>
           <p className="text-muted-foreground mt-1">
@@ -112,7 +112,7 @@ const Payroll = () => {
       </div>
 
       {/* Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 md:mb-8">
         <div className="bg-card rounded-xl border border-border p-5">
           <p className="text-sm text-muted-foreground">Total Payroll</p>
           <p className="text-2xl font-bold text-foreground mt-1">
@@ -122,122 +122,135 @@ const Payroll = () => {
         <div className="bg-card rounded-xl border border-border p-5">
           <p className="text-sm text-muted-foreground">Total Basic</p>
           <p className="text-2xl font-bold text-foreground mt-1">
-            ₹{(payrollData.reduce((s, p) => s + p.basic, 0) / 100000).toFixed(2)}L
+            ₹
+            {(payrollData.reduce((s, p) => s + p.basic, 0) / 100000).toFixed(2)}
+            L
           </p>
         </div>
         <div className="bg-card rounded-xl border border-border p-5">
           <p className="text-sm text-muted-foreground">Total Incentives</p>
           <p className="text-2xl font-bold text-primary mt-1">
-            ₹{(payrollData.reduce((s, p) => s + p.incentive + p.commission, 0) / 1000).toFixed(0)}K
+            ₹
+            {(
+              payrollData.reduce((s, p) => s + p.incentive + p.commission, 0) /
+              1000
+            ).toFixed(0)}
+            K
           </p>
         </div>
         <div className="bg-card rounded-xl border border-border p-5">
           <p className="text-sm text-muted-foreground">Total Deductions</p>
           <p className="text-2xl font-bold text-destructive mt-1">
-            ₹{(payrollData.reduce((s, p) => s + p.deductions, 0) / 1000).toFixed(0)}K
+            ₹
+            {(payrollData.reduce((s, p) => s + p.deductions, 0) / 1000).toFixed(
+              0,
+            )}
+            K
           </p>
         </div>
       </div>
 
       {/* Payroll Table */}
       <div className="bg-card rounded-xl border border-border overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-muted/50">
-              <TableHead className="font-semibold text-foreground">
-                Employee
-              </TableHead>
-              <TableHead className="font-semibold text-foreground text-right">
-                Basic
-              </TableHead>
-              <TableHead className="font-semibold text-foreground text-right">
-                Incentive
-              </TableHead>
-              <TableHead className="font-semibold text-foreground text-right">
-                Commission
-              </TableHead>
-              <TableHead className="font-semibold text-foreground text-right">
-                Deductions
-              </TableHead>
-              <TableHead className="font-semibold text-foreground text-right">
-                Net Pay
-              </TableHead>
-              <TableHead className="font-semibold text-foreground text-center">
-                Status
-              </TableHead>
-              <TableHead className="font-semibold text-foreground text-right">
-                Actions
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {payrollData.map((item, index) => (
-              <TableRow
-                key={item.id}
-                className="animate-fade-in"
-                style={{ animationDelay: `${index * 50}ms` }}
-              >
-                <TableCell>
-                  <div className="flex items-center gap-3">
-                    <Avatar className="w-10 h-10">
-                      <AvatarImage src={item.employee.avatar} />
-                      <AvatarFallback className="bg-primary/10 text-primary text-sm">
-                        {item.employee.name
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="font-medium text-foreground">
-                        {item.employee.name}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {item.employee.role}
-                      </p>
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell className="text-right text-muted-foreground">
-                  ₹{item.basic.toLocaleString()}
-                </TableCell>
-                <TableCell className="text-right text-muted-foreground">
-                  ₹{item.incentive.toLocaleString()}
-                </TableCell>
-                <TableCell className="text-right text-primary font-medium">
-                  ₹{item.commission.toLocaleString()}
-                </TableCell>
-                <TableCell className="text-right text-destructive">
-                  -₹{item.deductions.toLocaleString()}
-                </TableCell>
-                <TableCell className="text-right font-bold text-foreground">
-                  ₹{item.netPay.toLocaleString()}
-                </TableCell>
-                <TableCell className="text-center">
-                  <span
-                    className={`status-badge ${
-                      item.status === "Processed"
-                        ? "status-active"
-                        : "status-warning"
-                    }`}
-                  >
-                    {item.status}
-                  </span>
-                </TableCell>
-                <TableCell className="text-right">
-                  <div className="flex justify-end gap-1">
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
-                      <Eye className="w-4 h-4" />
-                    </Button>
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
-                      <Download className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </TableCell>
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-muted/50">
+                <TableHead className="font-semibold text-foreground">
+                  Employee
+                </TableHead>
+                <TableHead className="font-semibold text-foreground text-right">
+                  Basic
+                </TableHead>
+                <TableHead className="font-semibold text-foreground text-right">
+                  Incentive
+                </TableHead>
+                <TableHead className="font-semibold text-foreground text-right">
+                  Commission
+                </TableHead>
+                <TableHead className="font-semibold text-foreground text-right">
+                  Deductions
+                </TableHead>
+                <TableHead className="font-semibold text-foreground text-right">
+                  Net Pay
+                </TableHead>
+                <TableHead className="font-semibold text-foreground text-center">
+                  Status
+                </TableHead>
+                <TableHead className="font-semibold text-foreground text-right">
+                  Actions
+                </TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {payrollData.map((item, index) => (
+                <TableRow
+                  key={item.id}
+                  className="animate-fade-in"
+                  style={{ animationDelay: `${index * 50}ms` }}
+                >
+                  <TableCell>
+                    <div className="flex items-center gap-3">
+                      <Avatar className="w-10 h-10">
+                        <AvatarImage src={item.employee.avatar} />
+                        <AvatarFallback className="bg-primary/10 text-primary text-sm">
+                          {item.employee.name
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="font-medium text-foreground">
+                          {item.employee.name}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {item.employee.role}
+                        </p>
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-right text-muted-foreground">
+                    ₹{item.basic.toLocaleString()}
+                  </TableCell>
+                  <TableCell className="text-right text-muted-foreground">
+                    ₹{item.incentive.toLocaleString()}
+                  </TableCell>
+                  <TableCell className="text-right text-primary font-medium">
+                    ₹{item.commission.toLocaleString()}
+                  </TableCell>
+                  <TableCell className="text-right text-destructive">
+                    -₹{item.deductions.toLocaleString()}
+                  </TableCell>
+                  <TableCell className="text-right font-bold text-foreground">
+                    ₹{item.netPay.toLocaleString()}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <span
+                      className={`status-badge ${
+                        item.status === "Processed"
+                          ? "status-active"
+                          : "status-warning"
+                      }`}
+                    >
+                      {item.status}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex justify-end gap-1">
+                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <Eye className="w-4 h-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <Download className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </DashboardLayout>
   );

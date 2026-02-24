@@ -64,9 +64,9 @@ const Leaves = () => {
   return (
     <DashboardLayout>
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 md:mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">
+          <h1 className="text-xl sm:text-2xl font-bold text-foreground">
             Leave Management
           </h1>
           <p className="text-muted-foreground mt-1">
@@ -114,7 +114,7 @@ const Leaves = () => {
                     "status-badge",
                     request.status === "approved" && "status-active",
                     request.status === "pending" && "status-warning",
-                    request.status === "rejected" && "status-error"
+                    request.status === "rejected" && "status-error",
                   )}
                 >
                   {request.status.charAt(0).toUpperCase() +
@@ -122,7 +122,7 @@ const Leaves = () => {
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-4">
                 <div>
                   <p className="text-xs text-muted-foreground">Type</p>
                   <p className="text-sm font-medium text-foreground">
@@ -192,7 +192,10 @@ const Leaves = () => {
                   </div>
                   <div className="h-2 rounded-full bg-muted overflow-hidden">
                     <div
-                      className={cn("h-full rounded-full transition-all", leave.color)}
+                      className={cn(
+                        "h-full rounded-full transition-all",
+                        leave.color,
+                      )}
                       style={{
                         width: `${(leave.used / leave.total) * 100}%`,
                       }}
