@@ -503,10 +503,9 @@ const CourseDetail = () => {
       // The previous logic was correct, checking if the logged-in user's ID exists in the list of enrolled student IDs.
       const isUserEnrolled =
         courseData.studentsEnrolled?.some((student: any) =>
-          // Check if the item is a string (ID) or an object (populated user)
-          typeof student === "string"
+          student && (typeof student === "string"
             ? student === userId
-            : student._id === userId,
+            : student._id === userId),
         ) || false;
       console.log("Enrollment status:", isUserEnrolled);
       setIsEnrolled(isUserEnrolled);

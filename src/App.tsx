@@ -37,7 +37,7 @@ import EditCourse from "./pages/Course/EditCourse";
 import ManageCourses from "./pages/Course/ManageCourses";
 import ManageAllClasses from "./pages/Course/ManageAllClasses";
 import MyClasses from "./pages/Course/MyClasses";
-import Navigation from "./pages/Navigation";
+
 import NotFound from "./pages/NotFound";
 import { Certifications } from "./pages/Certifications";
 import { Interviews } from "./pages/Interviews";

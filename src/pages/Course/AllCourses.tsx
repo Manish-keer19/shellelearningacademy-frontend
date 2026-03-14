@@ -431,14 +431,14 @@ const AllCourses = () => {
           return {
             id: course._id,
             title: course.courseName,
-            instructorEmail: course.instructor.email,
+            instructorEmail: course.instructor?.email || "N/A",
             instructorName: "Manish Keer",
             rating: parseFloat(course.ratingValue) || 4.5,
             reviews: parseInt(course.reviewCount) || 25,
             students: parseInt(course.studentCount) || 50,
             duration: course.courseDuration || "Varies",
             level: course.courseLevel || "All Levels",
-            category: course.category.name,
+            category: course.category?.name || "Uncategorized",
             image:
               course.thumbnail ||
               "https://via.placeholder.com/800x450/4C7C33/FFFFFF?text=Course+Image",
@@ -453,6 +453,7 @@ const AllCourses = () => {
 
         // Enrich categories with icons and colors
         const enrichedCategories = (categoriesRes.data || [])
+          .filter((cat: any) => cat && cat.name)
           .map((cat: any) => {
             const courseCount = mappedCourses.filter(
               (c) => c.category === cat.name,
